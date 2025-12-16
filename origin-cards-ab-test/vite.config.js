@@ -6,9 +6,10 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: 'copy-404',
+      name: 'copy-files',
       closeBundle() {
         copyFileSync('404.html', 'dist/404.html');
+        copyFileSync('.nojekyll', 'dist/.nojekyll');
       }
     }
   ],

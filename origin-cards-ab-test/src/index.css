@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap');
+
+/* Hide scrollbar for carousel */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fade/scale-in animation for newly added country chips */
+@keyframes chipFadeIn {
+  0% { opacity: 0; transform: scale(.85); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.country-btn.chip-added {
+  animation: chipFadeIn .38s cubic-bezier(.23,.72,.34,1);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .country-btn.chip-added {
+    animation: none;
+  }
+}
+
+/* Ensure scrollbar is hidden on carousel */
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-x-auto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Grid that fills remaining space on last row */
+.grid-fill-last-row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-fill-last-row {
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(max(280px, calc((100% - 3rem) / 3)), 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-fill-last-row {
+    grid-template-columns: repeat(auto-fill, minmax(max(280px, calc((100% - 1rem) / 2)), 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .grid-fill-last-row {
+    grid-template-columns: 1fr;
+  }
+}

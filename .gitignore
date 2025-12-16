@@ -1,0 +1,25 @@
+# Root level gitignore for FSDmodugno-testing repo
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Data files (if you don't want to commit these)
+*.csv
+*.xlsx
+*.numbers

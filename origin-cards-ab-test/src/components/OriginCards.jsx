@@ -1,6 +1,7 @@
 import { originCardsContent } from '../data.jsx';
 
 export default function OriginCards({ country, skipAncestorSearch = false }) {
+  const baseUrl = import.meta.env.BASE_URL;
   let cards = originCardsContent[country] || [];
   
   // Filter out multi-field ancestor search cards if requested
@@ -202,7 +203,7 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
           <div className="order-1 md:order-2">
             {card.image !== 'Placeholder' ? (
               <img 
-                src={`/${card.image}`} 
+                src={`${baseUrl}${card.image}`} 
                 alt="" 
                 className="w-full h-full min-h-[260px] object-cover"
               />

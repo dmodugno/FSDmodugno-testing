@@ -58,7 +58,7 @@ export default function Header({ testCountry, onTestCountryChange }) {
           {/* Logo */}
           <div className="flex items-center font-bold text-xl text-teal-700 tracking-wide lg:order-1">
             <a href="/" aria-label="FamilySearch Home" className="inline-flex items-center">
-              <img src="/FS Logo.svg" alt="FamilySearch" className="h-8 w-auto align-middle" />
+              <img src={`${import.meta.env.BASE_URL}FS Logo.svg`} alt="FamilySearch" className="h-8 w-auto align-middle" />
             </a>
           </div>
 

@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 export default function Hero({ testCountry }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isPhilippines, setIsPhilippines] = useState(false);
+  const baseUrl = import.meta.env.BASE_URL;
 
-  const defaultImages = ['/Country=US.png', '/Country=Mexico.png', '/Country=UK.png'];
-  const philippinesImages = ['/Country=Philippines.png', '/Country=Korea.png', '/Country=Cambodia.png'];
+  const defaultImages = [`${baseUrl}Country=US.png`, `${baseUrl}Country=Mexico.png`, `${baseUrl}Country=UK.png`];
+  const philippinesImages = [`${baseUrl}Country=Philippines.png`, `${baseUrl}Country=Korea.png`, `${baseUrl}Country=Cambodia.png`];
 
   useEffect(() => {
     setIsPhilippines(testCountry === 'Philippines');

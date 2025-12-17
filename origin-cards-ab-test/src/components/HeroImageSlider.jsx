@@ -1,13 +1,14 @@
 export default function HeroImageSlider() {
+  const baseUrl = import.meta.env.BASE_URL;
   const images = [
-    '/assets/animation/Frame01.png',
-    '/assets/animation/Frame02.png',
-    '/assets/animation/Frame03.png',
-    '/assets/animation/Frame04.png',
-    '/assets/animation/Frame05.png',
-    '/assets/animation/Frame06.png',
-    '/assets/animation/Frame07.png',
-    '/assets/animation/Frame08.png'
+    `${baseUrl}assets/animation/Frame01.png`,
+    `${baseUrl}assets/animation/Frame02.png`,
+    `${baseUrl}assets/animation/Frame03.png`,
+    `${baseUrl}assets/animation/Frame04.png`,
+    `${baseUrl}assets/animation/Frame05.png`,
+    `${baseUrl}assets/animation/Frame06.png`,
+    `${baseUrl}assets/animation/Frame07.png`,
+    `${baseUrl}assets/animation/Frame08.png`
   ];
 
   const totalDuration = images.length * 5; // 40 seconds total

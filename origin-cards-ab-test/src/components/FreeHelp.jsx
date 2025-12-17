@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default function FreeHelp() {
+  const baseUrl = import.meta.env.BASE_URL;
   return (
     <section className="bg-[#EEEFC9] py-16 px-6">
       <div className="max-w-7xl mx-auto">
@@ -11,7 +12,7 @@ export default function FreeHelp() {
           {/* In-person help */}
           <div className="flex flex-col items-start">
             <div className="w-16 h-16 mb-6">
-              <img src="/assets/icon/Help.svg" alt="" className="w-full h-full" />
+              <img src={`${baseUrl}Icon/Help.svg`} alt="" className="w-full h-full" />
             </div>
             <h3 className="text-xl font-bold mb-3">Get in-person help at a local center</h3>
             <p className="text-gray-700 mb-4 flex-grow">
@@ -28,7 +29,7 @@ export default function FreeHelp() {
           {/* Learning center */}
           <div className="flex flex-col items-start">
             <div className="w-16 h-16 mb-6">
-              <img src="/assets/icon/Questions.svg" alt="" className="w-full h-full" />
+              <img src={`${baseUrl}Icon/Questions.svg`} alt="" className="w-full h-full" />
             </div>
             <h3 className="text-xl font-bold mb-3">Visit our learning center</h3>
             <p className="text-gray-700 mb-4 flex-grow">
@@ -45,7 +46,7 @@ export default function FreeHelp() {
           {/* Online consultation */}
           <div className="flex flex-col items-start">
             <div className="w-16 h-16 mb-6">
-              <img src="/assets/icon/Support.svg" alt="" className="w-full h-full" />
+              <img src={`${baseUrl}Icon/Support.svg`} alt="" className="w-full h-full" />
             </div>
             <h3 className="text-xl font-bold mb-3">Schedule an online consultation</h3>
             <p className="text-gray-700 mb-4 flex-grow">

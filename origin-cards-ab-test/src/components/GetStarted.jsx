@@ -1,4 +1,5 @@
 function GetStarted() {
+  const baseUrl = import.meta.env.BASE_URL;
   return (
     <section className="my-8 bg-white rounded-xl p-8" aria-label="How do you want to get started?">
       <h2 className="text-2xl font-semibold text-gray-900 text-center mb-2">
@@ -12,7 +13,7 @@ function GetStarted() {
         {/* Create a family tree */}
         <div className="flex flex-col">
           <div className="w-12 h-12 mb-4">
-            <img src="/assets/icon/familytree.svg" alt="" className="w-full h-full" />
+            <img src={`${baseUrl}Icon/familytree.svg`} alt="" className="w-full h-full" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Create a family tree</h3>
           <p className="text-sm text-gray-600 mb-3 flex-grow">
@@ -26,7 +27,7 @@ function GetStarted() {
         {/* Preserve family photos and stories */}
         <div className="flex flex-col">
           <div className="w-12 h-12 mb-4">
-            <img src="/assets/icon/Memories.svg" alt="" className="w-full h-full" />
+            <img src={`${baseUrl}Icon/Memories.svg`} alt="" className="w-full h-full" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Preserve family photos and stories</h3>
           <p className="text-sm text-gray-600 mb-3 flex-grow">
@@ -40,7 +41,7 @@ function GetStarted() {
         {/* Find ancestors in historical documents */}
         <div className="flex flex-col">
           <div className="w-12 h-12 mb-4">
-            <img src="/assets/icon/Records.svg" alt="" className="w-full h-full" />
+            <img src={`${baseUrl}Icon/Records.svg`} alt="" className="w-full h-full" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Find ancestors in historical documents</h3>
           <p className="text-sm text-gray-600 mb-3 flex-grow">
@@ -54,7 +55,7 @@ function GetStarted() {
         {/* Volunteer to make records searchable */}
         <div className="flex flex-col">
           <div className="w-12 h-12 mb-4">
-            <img src="/assets/icon/Volunteer.svg" alt="" className="w-full h-full" />
+            <img src={`${baseUrl}Icon/Volunteer.svg`} alt="" className="w-full h-full" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Volunteer to make records searchable</h3>
           <p className="text-sm text-gray-600 mb-3 flex-grow">
@@ -68,7 +69,7 @@ function GetStarted() {
         {/* Discover the origin and meaning of your last name */}
         <div className="flex flex-col">
           <div className="w-12 h-12 mb-4">
-            <img src="/assets/icon/Discover.svg" alt="" className="w-full h-full" />
+            <img src={`${baseUrl}Icon/Discover.svg`} alt="" className="w-full h-full" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Discover the origin and meaning of your last name</h3>
           <p className="text-sm text-gray-600 mb-3 flex-grow">
@@ -107,7 +108,7 @@ function GetStarted() {
                 </svg>
               </button>
               <button className="bg-white rounded-full w-12 h-12 flex items-center justify-center shadow hover:shadow-md transition-shadow">
-                <img src="/assets/icon/Christ.svg" alt="" className="w-6 h-6" />
+                <img src={`${baseUrl}Icon/Christ.svg`} alt="" className="w-6 h-6" />
               </button>
             </div>
           </div>

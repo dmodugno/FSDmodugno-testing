@@ -1,18 +1,19 @@
-export default function HeroImageSlider() {
+export default function HeroImageSlider({ useAlternateFrames = false }) {
   const baseUrl = import.meta.env.BASE_URL;
   const images = [
     `${baseUrl}animation/Frame01.png`,
     `${baseUrl}animation/Frame02.png`,
-    `${baseUrl}animation/Frame03.png`,
-    `${baseUrl}animation/Frame04.png`,
-    `${baseUrl}animation/Frame05.png`,
+    useAlternateFrames ? `${baseUrl}animation/Frame03-b.png` : `${baseUrl}animation/Frame03.png`,
+    useAlternateFrames ? `${baseUrl}animation/Frame04-b.png` : `${baseUrl}animation/Frame04.png`,
+    useAlternateFrames ? `${baseUrl}animation/Frame05-b.png` : `${baseUrl}animation/Frame05.png`,
     `${baseUrl}animation/Frame06.png`,
     `${baseUrl}animation/Frame07.png`,
-    `${baseUrl}animation/Frame08.png`
+    `${baseUrl}animation/Frame08.png`,
+    `${baseUrl}animation/Frame09.png`
   ];
 
-  const totalDuration = images.length * 5; // 40 seconds total
-  const frameDuration = 100 / images.length; // 12.5% per frame
+  const totalDuration = images.length * 5; // 45 seconds total
+  const frameDuration = 100 / images.length; // 11.11% per frame
 
   return (
     <>

@@ -6,11 +6,12 @@ export const countryChipsConfig = {
   'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland', 'United States'],
   'Brasil': ['Brazil', 'Portugal', 'Italy', 'Spain', 'Germany'],
   'Egypt': ['Egypt', 'England'],
-  'China': ['China', 'Taiwan', 'United States', 'England']
+  'China': ['China', 'Taiwan', 'United States', 'England'],
+  'South Africa': ['South Africa', 'England', 'Germany', 'United States', 'Norway']
 };
 
 // All countries available in the overlay
-export const overlayCountries = ['Australia','Brazil','Cambodia','Canada','China','Egypt','England','Germany','Ireland','Italy','Japan','Korea','Mexico','New Zealand','Northern Ireland','Norway','Philippines','Portugal','Scotland','Spain','Taiwan','United States','Wales'];
+export const overlayCountries = ['Australia','Brazil','Cambodia','Canada','China','Egypt','England','Germany','Ireland','Italy','Japan','Korea','Mexico','New Zealand','Northern Ireland','Norway','Philippines','Portugal','Scotland','South Africa','Spain','Taiwan','United States','Wales'];
 
 // Origin cards content by country
 export const originCardsContent = {
@@ -571,6 +572,13 @@ export const countryCollections = {
     { title: 'Scotland, Marriages, 1561-1910', desc: '1,999,716 records', description: 'Parish marriage records', link: 'https://www.familysearch.org/en/search/collection/1771074', icon: icons.church },
     { title: 'Scotland, Death Records,1998-2015', desc: '429,095 records', description: 'Recent death registration records', link: 'https://www.familysearch.org/en/search/collection/4441753', icon: icons.civil },
     { title: 'Scotland, Church Records and Kirk Session Records, 1658-1919', desc: '227,382 records', description: 'Church session and membership records', link: 'https://www.familysearch.org/en/search/collection/2390848', icon: icons.church }
+  ],
+  'South Africa': [
+    { title: 'South Africa, Dutch Reformed Church Registers (Cape Town Archives), 1660-1994', desc: '3,030,218 records', description: 'Church registers from Cape Town', link: 'https://www.familysearch.org/en/search/collection/1478678', icon: icons.church },
+    { title: 'South Africa, Cape Province, Civil Records, 1840-1972', desc: '2,800,824 records', description: 'Birth, marriage, and death certificates from Cape Province', link: 'https://www.familysearch.org/en/search/collection/1779109', icon: icons.civil },
+    { title: 'South Africa, Civil Marriage Records, 1801-1974', desc: '2,557,010 records', description: 'Marriage registration records nationwide', link: 'https://www.familysearch.org/en/search/collection/2821281', icon: icons.civil },
+    { title: 'South Africa, Gauteng, Johannesburg, Cemetery Records, 1840-2019', desc: '2,272,299 records', description: 'Cemetery records and burial registers from Johannesburg', link: 'https://www.familysearch.org/en/search/collection/4453927', icon: icons.historical },
+    { title: 'South Africa, Cape, Probate Records of the Master of the High Court, 1822-1990', desc: '2,014,794 records', description: 'Estate and probate records from Cape Province', link: 'https://www.familysearch.org/en/search/collection/2517051', icon: icons.historical }
   ],
   'Wales': [
     { title: 'Wales, Births and Baptisms, 1541-1907', desc: '686,084 records', description: 'Parish baptism and birth records', link: 'https://www.familysearch.org/en/search/collection/1783957', icon: icons.church },

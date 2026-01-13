@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Header({ testCountry, onTestCountryChange }) {
+export default function Header({ testCountry, onTestCountryChange, showTestBanner = true }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguagePickerOpen, setIsLanguagePickerOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
@@ -25,22 +25,25 @@ export default function Header({ testCountry, onTestCountryChange }) {
 
   return (
     <div className="sticky top-0 z-50">
-      <div className="bg-[#9EA1A1] border-b border-[#eee6c9] px-4 py-1.5 flex items-center gap-2 text-sm" role="region" aria-label="Test country selection">
-        <label htmlFor="test-country-select" className="text-white font-semibold">Test country:</label>
-        <select 
-          id="test-country-select" 
-          className="border border-white rounded px-3 py-1 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
-          value={testCountry}
-          onChange={(e) => onTestCountryChange(e.target.value)}
-        >
-          <option>United States</option>
-          <option>Philippines</option>
-          <option>United Kingdom</option>
-          <option>Brasil</option>
-          <option>Egypt</option>
-          <option>China</option>
-        </select>
-      </div>
+      {showTestBanner && (
+        <div className="bg-[#9EA1A1] border-b border-[#eee6c9] px-4 py-1.5 flex items-center gap-2 text-sm" role="region" aria-label="Test country selection">
+          <label htmlFor="test-country-select" className="text-white font-semibold">Test country:</label>
+          <select 
+            id="test-country-select" 
+            className="border border-white rounded px-3 py-1 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
+            value={testCountry}
+            onChange={(e) => onTestCountryChange(e.target.value)}
+          >
+            <option>United States</option>
+            <option>Philippines</option>
+            <option>United Kingdom</option>
+            <option>Brasil</option>
+            <option>Egypt</option>
+            <option>China</option>
+            <option>South Africa</option>
+          </select>
+        </div>
+      )}
       <header className="bg-white shadow">
         <div className="flex items-center justify-between py-4 px-4 md:px-8">
           {/* Mobile/Tablet: Hamburger Menu */}

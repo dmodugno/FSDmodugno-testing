@@ -3,24 +3,28 @@ import { useState, useEffect } from 'react';
 export default function Hero({ testCountry }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isPhilippines, setIsPhilippines] = useState(false);
+  const [isSouthAfrica, setIsSouthAfrica] = useState(false);
   const baseUrl = import.meta.env.BASE_URL;
 
   const defaultImages = [`${baseUrl}Country=US.png`, `${baseUrl}Country=Mexico.png`, `${baseUrl}Country=UK.png`];
   const philippinesImages = [`${baseUrl}Country=Philippines.png`, `${baseUrl}Country=Korea.png`, `${baseUrl}Country=Cambodia.png`];
+  const southAfricaImages = [`${baseUrl}animation/Frame01.png`, `${baseUrl}animation/Frame07.png`, `${baseUrl}animation/Frame09.png`];
 
   useEffect(() => {
     setIsPhilippines(testCountry === 'Philippines');
+    setIsSouthAfrica(testCountry === 'South Africa');
     setCurrentImageIndex(0);
   }, [testCountry]);
 
   useEffect(() => {
+    const imageCount = isSouthAfrica ? southAfricaImages.length : (isPhilippines ? philippinesImages.length : defaultImages.length);
     const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % (isPhilippines ? philippinesImages.length : defaultImages.length));
-    }, 3000);
+      setCurrentImageIndex((prev) => (prev + 1) % imageCount);
+    }, 5000);
     return () => clearInterval(timer);
-  }, [isPhilippines]);
+  }, [isPhilippines, isSouthAfrica]);
 
-  const currentImages = isPhilippines ? philippinesImages : defaultImages;
+  const currentImages = isSouthAfrica ? southAfricaImages : (isPhilippines ? philippinesImages : defaultImages);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -40,11 +44,15 @@ export default function Hero({ testCountry }) {
       {/* Mobile: Image first, stacked vertically */}
       <div className="flex flex-col md:hidden overflow-hidden">
         <div className="relative w-full h-[300px] overflow-hidden">
-          <img 
-            className="hero-image w-full h-full object-cover transition-opacity duration-700" 
-            src={currentImages[currentImageIndex]} 
-            alt="Cultural heritage collage"
-          />
+          {currentImages.map((image, index) => (
+            <img 
+              key={index}
+              className="hero-image absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" 
+              src={image} 
+              alt="Cultural heritage collage"
+              style={{ opacity: index === currentImageIndex ? 1 : 0 }}
+            />
+          ))}
         </div>
         <div className="flex flex-col gap-3 px-4 py-6">
           <p className="text-sm text-gray-800 font-medium m-0">Welcome to FamilySearch</p>
@@ -137,11 +145,15 @@ export default function Hero({ testCountry }) {
               </div>
             )}
           </div>
-          <img 
-            className="hero-image absolute right-0 bottom-0 h-full object-none pointer-events-none transition-opacity duration-700 z-0" 
-            src={currentImages[currentImageIndex]} 
-            alt="Cultural heritage collage"
-          />
+          {currentImages.map((image, index) => (
+            <img 
+              key={index}
+              className="hero-image absolute right-0 bottom-0 h-full object-none pointer-events-none transition-opacity duration-1000 z-0" 
+              src={image} 
+              alt="Cultural heritage collage"
+              style={{ opacity: index === currentImageIndex ? 1 : 0 }}
+            />
+          ))}
         </div>
       </div>
     </section>

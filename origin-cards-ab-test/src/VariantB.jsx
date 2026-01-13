@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from './components/Header';
 import CountryChips from './components/CountryChips';
@@ -15,6 +15,10 @@ export default function VariantB() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTestCountry = searchParams.get('country') || 'United States';
   const [testCountry, setTestCountry] = useState(initialTestCountry);
+  
+  // Hide test banner if country param exists (user testing mode)
+  // Show test banner if no params (internal testing mode)
+  const [showTestBanner, setShowTestBanner] = useState(!searchParams.has('country'));
   
   // Default to test country on load (or England if UK)
   const getDefaultCountry = () => {
@@ -48,14 +52,30 @@ export default function VariantB() {
     setSelectedCountry(chipCountries[0]);
   };
 
+  // Keyboard shortcut to toggle test banner (Cmd+Shift+T on Mac, Ctrl+Shift+T on Windows)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'T') {
+        e.preventDefault();
+        setShowTestBanner(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header testCountry={testCountry} onTestCountryChange={handleTestCountryChange} />
+      <Header 
+        testCountry={testCountry} 
+        onTestCountryChange={handleTestCountryChange} 
+        showTestBanner={showTestBanner}
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-[#E0E594] to-gray-50 relative overflow-hidden">
         {/* Background Animation - Right Aligned */}
         <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 flex items-center justify-end">
-          <HeroImageSlider />
+          <HeroImageSlider useAlternateFrames={true} />
         </div>
         
         {/* Content */}
@@ -64,11 +84,8 @@ export default function VariantB() {
             <h1 className="text-5xl font-bold text-gray-900 mb-4 max-w-xl">
               Where are your relatives from?
             </h1>
-            <p className="text-lg text-gray-700 mb-6 max-w-xl">
-              Uncover your heritage by exploring your ancestors' stories and building your family tree! FamilySearch International collaborates with global archives to offer free online access to records from over 200 countries.
-            </p>
             <p className="text-base text-gray-700 mb-8 max-w-xl">
-              Choose an available country to discover its resources, and check back regularly for updates.
+              Select a country to explore its resources, and remember to check back often for updates. The chips listed below represent the most common origin countries based on your current location.
             </p>
             
             <CountryChips 
@@ -82,7 +99,7 @@ export default function VariantB() {
 
       {/* Content Section */}
       <main className="mx-auto px-4 py-8 max-w-[1200px] xl:max-w-[1280px] 2xl:max-w-[1440px]">
-        {showDefaultSearch && <DefaultSearchCard />}
+        {showDefaultSearch && <DefaultSearchCard selectedCountry={selectedCountry} />}
         {hasOriginCards && <OriginCards country={selectedCountry} skipAncestorSearch={true} />}
         {hasRecordCollections && <RecordCollections country={selectedCountry} collections={countryCollections[selectedCountry]} />}
         

@@ -43,14 +43,20 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const year = formData.get('birthYear');
+    const surname = formData.get('lastName');
     
-    console.log('Form submitted:', { buttonLink, year });
+    console.log('Form submitted:', { buttonLink, year, surname });
     
     if (buttonLink && year) {
       // Button link already ends with '/', just append the year
       const fullUrl = buttonLink + year;
       console.log('Opening URL:', fullUrl);
       window.open(fullUrl, '_blank');
+    } else if (surname) {
+      // For surname searches, use the surname URL format
+      const searchUrl = `https://www.familysearch.org/en/surname?surname=${encodeURIComponent(surname)}`;
+      console.log('Opening URL:', searchUrl);
+      window.open(searchUrl, '_blank');
     }
   };
 
@@ -66,18 +72,19 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const params = new URLSearchParams();
+        params.append('results', '12');
         
         card.formFields.forEach(field => {
           const value = formData.get(field.name);
           if (value) {
-            if (field.name === 'firstName') params.append('givenName', value);
-            else if (field.name === 'lastName') params.append('surname', value);
-            else if (field.name === 'placeLived') params.append('place', value);
-            else if (field.name === 'birthYear') params.append('birthYear', value);
+            if (field.name === 'firstName') params.append('q.givenName', value);
+            else if (field.name === 'lastName') params.append('q.surname', value);
+            else if (field.name === 'placeLived') params.append('q.anyPlace', value);
+            else if (field.name === 'birthYear') params.append('q.birthLikeDate.from', value);
           }
         });
         
-        const searchUrl = `${card.buttons?.[0]?.link}?${params.toString()}`;
+        const searchUrl = `https://www.familysearch.org/en/search/discovery/results?${params.toString()}`;
         window.open(searchUrl, '_blank');
       };
 
@@ -303,7 +310,7 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
             <div className="order-1 md:order-2">
               {card.image !== 'Placeholder' ? (
                 <img 
-                  src={`/${card.image}`} 
+                  src={`${baseUrl}${card.image}`} 
                   alt="" 
                   className="w-full h-full min-h-[260px] object-cover"
                 />
@@ -348,18 +355,19 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const params = new URLSearchParams();
+        params.append('results', '12');
         
         card.formFields.forEach(field => {
           const value = formData.get(field.name);
           if (value) {
-            if (field.name === 'firstName') params.append('givenName', value);
-            else if (field.name === 'lastName') params.append('surname', value);
-            else if (field.name === 'placeLived') params.append('place', value);
-            else if (field.name === 'birthYear') params.append('birthYear', value);
+            if (field.name === 'firstName') params.append('q.givenName', value);
+            else if (field.name === 'lastName') params.append('q.surname', value);
+            else if (field.name === 'placeLived') params.append('q.anyPlace', value);
+            else if (field.name === 'birthYear') params.append('q.birthLikeDate.from', value);
           }
         });
         
-        const searchUrl = `${card.buttons?.[0]?.link}?${params.toString()}`;
+        const searchUrl = `https://www.familysearch.org/en/search/discovery/results?${params.toString()}`;
         window.open(searchUrl, '_blank');
       };
 
@@ -432,7 +440,7 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
           <div>
             {card.image !== 'Placeholder' ? (
               <img 
-                src={`/${card.image}`} 
+                src={`${baseUrl}${card.image}`} 
                 alt="" 
                 className="w-full h-[220px] object-cover"
               />

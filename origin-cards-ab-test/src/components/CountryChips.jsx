@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 import { countryChipsConfig, overlayCountries } from '../data.jsx';
 
-export default function CountryChips({ testCountry, selectedCountry, onCountrySelect }) {
+export default function CountryChips({ testCountry, selectedCountry, onCountrySelect, moreCountriesLink }) {
   const [countries, setCountries] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -65,7 +67,7 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
         {countries.map((country, index) => {
           const isSelected = normalize(country) === normalize(selectedCountry);
           const isMore = country === 'More...';
-          
+
           return (
             <button
               key={country}
@@ -86,8 +88,8 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
         })}
       </div>
 
-      {showOverlay && (
-        <div 
+      {showOverlay && createPortal(
+        <div
           className="fixed inset-0 bg-black/50 flex items-start justify-center z-[60] pt-16"
           aria-modal="true"
           role="dialog"
@@ -97,9 +99,9 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
           <div className="bg-gray-50 rounded-xl shadow-lg w-[min(1100px,calc(100%-2rem))] p-6">
             <div className="flex items-center justify-between">
               <h2 id="countryOverlayTitle" className="text-2xl font-semibold text-gray-900">Select a country to explore its resources</h2>
-              <button 
+              <button
                 onClick={() => setShowOverlay(false)}
-                className="p-2 rounded hover:bg-gray-200" 
+                className="p-2 rounded hover:bg-gray-200"
                 aria-label="Close country list"
               >
                 <span className="text-2xl leading-none">×</span>
@@ -108,7 +110,7 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
             <p className="text-gray-600 text-sm mb-8">
               Note that the options below only represent the countries we have experience with. Check back regularly for updates to discover new resources.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-6 text-teal-700">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-6 text-teal-700 mb-6">
               {availableCountries().map(country => (
                 <button
                   key={country}
@@ -122,8 +124,16 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
                 </button>
               ))}
             </div>
+            <p className="text-gray-600 text-sm text-center">
+              Is the country you are looking for missing? {moreCountriesLink?.internal ? (
+                <Link to={moreCountriesLink.url} target="_blank" className="text-teal-700 hover:underline">Click here</Link>
+              ) : (
+                <a href={moreCountriesLink?.url || 'https://www.familysearch.org/en/search/location/list'} target="_blank" rel="noopener noreferrer" className="text-teal-700 hover:underline">Click here</a>
+              )} to discover more.
+            </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

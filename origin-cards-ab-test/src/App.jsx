@@ -13,8 +13,15 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTestCountry = searchParams.get('country') || 'United States';
   const [testCountry, setTestCountry] = useState(initialTestCountry);
-  const [selectedCountry, setSelectedCountry] = useState('United States');
-  
+
+  // Default to test country on load (or England if UK)
+  const getDefaultCountry = () => {
+    if (testCountry === 'United Kingdom') return 'England';
+    return testCountry;
+  };
+
+  const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
+
   // Hide test banner if country param exists (user testing mode)
   // Show test banner if no params (internal testing mode)
   const [showTestBanner, setShowTestBanner] = useState(!searchParams.has('country'));
@@ -58,10 +65,11 @@ function App() {
             Choose an available country to discover its resources, and check back regularly for updates.
           </p>
           
-          <CountryChips 
+          <CountryChips
             testCountry={testCountry}
             selectedCountry={selectedCountry}
             onCountrySelect={setSelectedCountry}
+            moreCountriesLink={{ url: 'https://www.familysearch.org/en/search/location/list', internal: false }}
           />
           
           <div className="mt-6">

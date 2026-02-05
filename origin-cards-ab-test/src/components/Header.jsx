@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Header({ testCountry, onTestCountryChange, showTestBanner = true }) {
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguagePickerOpen, setIsLanguagePickerOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
@@ -26,22 +28,47 @@ export default function Header({ testCountry, onTestCountryChange, showTestBanne
   return (
     <div className="sticky top-0 z-50">
       {showTestBanner && (
-        <div className="bg-[#9EA1A1] border-b border-[#eee6c9] px-4 py-1.5 flex items-center gap-2 text-sm" role="region" aria-label="Test country selection">
-          <label htmlFor="test-country-select" className="text-white font-semibold">Test country:</label>
-          <select 
-            id="test-country-select" 
-            className="border border-white rounded px-3 py-1 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
-            value={testCountry}
-            onChange={(e) => onTestCountryChange(e.target.value)}
-          >
-            <option>United States</option>
-            <option>Philippines</option>
-            <option>United Kingdom</option>
-            <option>Brasil</option>
-            <option>Egypt</option>
-            <option>China</option>
-            <option>South Africa</option>
-          </select>
+        <div className="bg-[#9EA1A1] border-b border-[#eee6c9] px-4 py-1.5 flex items-center gap-4 text-sm" role="region" aria-label="Test country selection">
+          <div className="flex items-center gap-2">
+            <label htmlFor="test-country-select" className="text-white font-semibold">Test country:</label>
+            <select
+              id="test-country-select"
+              className="border border-white rounded px-3 py-1 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
+              value={testCountry}
+              onChange={(e) => onTestCountryChange(e.target.value)}
+            >
+              <option>United States</option>
+              <option>Philippines</option>
+              <option>United Kingdom</option>
+              <option>Brasil</option>
+              <option>Egypt</option>
+              <option>China</option>
+              <option>South Africa</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-white font-semibold">Variant:</span>
+            <Link
+              to="/"
+              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                location.pathname === '/'
+                  ? 'bg-white text-gray-900'
+                  : 'bg-transparent text-white border border-white hover:bg-white/10'
+              }`}
+            >
+              A
+            </Link>
+            <Link
+              to="/explore"
+              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                location.pathname === '/explore'
+                  ? 'bg-white text-gray-900'
+                  : 'bg-transparent text-white border border-white hover:bg-white/10'
+              }`}
+            >
+              B
+            </Link>
+          </div>
         </div>
       )}
       <header className="bg-white shadow">

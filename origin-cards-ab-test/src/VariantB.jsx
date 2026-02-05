@@ -15,7 +15,7 @@ export default function VariantB() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTestCountry = searchParams.get('country') || 'United States';
   const [testCountry, setTestCountry] = useState(initialTestCountry);
-  
+
   // Hide test banner if country param exists (user testing mode)
   // Show test banner if no params (internal testing mode)
   const [showTestBanner, setShowTestBanner] = useState(!searchParams.has('country'));
@@ -88,10 +88,11 @@ export default function VariantB() {
               Select a country to explore its resources, and remember to check back often for updates. The chips listed below represent the most common origin countries based on your current location.
             </p>
             
-            <CountryChips 
+            <CountryChips
               testCountry={testCountry}
               selectedCountry={selectedCountry}
               onCountrySelect={setSelectedCountry}
+              moreCountriesLink={{ url: '/search-by-place', internal: true }}
             />
           </div>
         </div>

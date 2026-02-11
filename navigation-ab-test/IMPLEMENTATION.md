@@ -1189,3 +1189,228 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
 - Collapsed bar: `fixed bottom-0 right-16` (right of icon bar)
 - Content column: Flexbox layout (not fixed)
 
+---
+
+## AI Split-View Pattern Implementation (Variant B)
+
+This section documents Variant B's AI Assistant implementation, which differs from Variant A in trigger behavior and initial state.
+
+### Key Differences from Variant A
+
+**Variant A:**
+- Persistent minimized bar visible on page load
+- "AI Help" button only opens/maximizes (never closes)
+- Minimized bar always present when AI exists
+
+**Variant B:**
+- NO persistent minimized bar on page load
+- "Assistant" button acts as toggle (open/close/maximize)
+- Minimized bar only appears after user minimizes an open chat
+- Clean slate on initial page load
+
+### Three AI States (Variant B)
+
+**1. No Chat State (Default)**
+- No UI visible at all
+- No minimized bar, no content column
+- User must click "Assistant" button to create chat
+- Clean initial experience
+
+**2. Chat Open State**
+- 320px content column appears on right side
+- AI renders in top section (or bottom if drawer exists)
+- Supports split view with context drawers (50/50 vertical split)
+- White theme with light gray border
+
+**3. Chat Minimized State**
+- Minimized bar appears at bottom-right (320px wide, 48px height)
+- White background (`bg-white`) with dark text
+- Light gray border (`border-gray-300`)
+- Fixed overlay positioned at `right: 64px` (next to icon bar)
+- Button shows "Open Split" or "Open Full" based on drawer state
+- Clicking close button on minimized bar removes chat entirely
+
+### Toggle Button Behavior
+
+**Assistant Button Logic:**
+```jsx
+const handleOpenNewChat = () => {
+  if (!chat) {
+    // Create new chat if none exists
+    const newChat = {
+      id: 1,
+      title: 'AI Chat',
+      messages: [],
+      isMinimized: false
+    };
+    setChat(newChat);
+  } else if (chat.isMinimized) {
+    // Maximize existing chat if minimized
+    setChat({ ...chat, isMinimized: false });
+  } else {
+    // If chat exists and is open, close it (toggle behavior)
+    setChat(null);
+  }
+};
+```
+
+**Three Actions:**
+1. **No chat exists** → Creates and opens new chat
+2. **Chat is minimized** → Maximizes existing chat
+3. **Chat is open** → Closes chat completely (returns to no chat state)
+
+### Minimized Bar Conditional Rendering
+
+**Only show when chat is minimized:**
+```jsx
+{/* Collapsed/Minimized AI bar (fixed overlay) */}
+{(chat && chat.isMinimized) && (
+  <div className="fixed bottom-0 right-16 w-80 h-12 bg-white border border-gray-300 rounded-t-lg flex items-center justify-between px-4 z-40 shadow-lg">
+    <div className="flex items-center gap-2">
+      <img src={`${baseUrl}icons/HelpAI.svg`} alt="AI" className="w-5 h-5" />
+      <span className="text-sm font-medium text-gray-900">AI Assistant</span>
+    </div>
+    <div className="flex gap-2">
+      <button
+        onClick={chat ? handleMaximizeChat : handleOpenNewChat}
+        className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded text-gray-700"
+      >
+        {activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen ? 'Open Split' : 'Open Full'}
+      </button>
+      {chat && (
+        <button
+          onClick={handleCloseChat}
+          className="p-1 hover:bg-gray-100 rounded"
+        >
+          <img src={`${baseUrl}icons/MenuClose.svg`} alt="Close" className="w-4 h-4" />
+        </button>
+      )}
+    </div>
+  </div>
+)}
+```
+
+**Key Point:** Condition is `(chat && chat.isMinimized)` NOT `(!chat || chat.isMinimized)` (Variant A pattern)
+
+### Split View Layout
+
+**Same 50/50 split structure as Variant A:**
+```jsx
+{/* Right side container with split view support */}
+{((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
+  <div className="w-80 flex-shrink-0 flex flex-col">
+    {/* Top section - Drawer area */}
+    {(activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
+      <div className={`${
+        chat && !chat.isMinimized ? 'h-1/2 border-b border-gray-300' : 'h-full'
+      } overflow-y-auto bg-white`}>
+        {/* Context drawer or global tool drawer content */}
+      </div>
+    )}
+
+    {/* Bottom section - AI Chat area */}
+    {chat && !chat.isMinimized && (
+      <div className={`${
+        activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen ? 'h-1/2' : 'h-full'
+      } overflow-hidden`}>
+        <AIChatOverlay
+          chat={chat}
+          onClose={handleCloseChat}
+          onMinimize={handleMinimizeChat}
+          onReset={handleResetChat}
+          isMinimized={false}
+          isSplit={activeDrawer !== null || !!selectedPerson || organizeGalleryOpen || filterReservationsOpen}
+          index={0}
+          drawerOpen={false}
+        />
+      </div>
+    )}
+  </div>
+)}
+```
+
+### RightDrawerB Split View Support
+
+**Three rendering modes:**
+```jsx
+export default function RightDrawerB({ activeDrawer, onDrawerToggle, iconBarOnly = false, inSplitView = false }) {
+  // Mode 1: Split view content only (used inside split view container)
+  if (inSplitView && activeDrawer !== null) {
+    return (
+      <div className="p-4 bg-white h-full overflow-y-auto">
+        {/* Header with close button */}
+        {/* Drawer content */}
+      </div>
+    );
+  }
+
+  // Mode 2: Icon bar only (used for far-right fixed icon bar)
+  if (iconBarOnly) {
+    return (
+      <aside className="w-16 bg-white h-full flex flex-col items-center py-4">
+        {/* Icon bar only */}
+      </aside>
+    );
+  }
+
+  // Mode 3: Default (not used in Variant B, kept for consistency)
+  return (/* sliding drawer + icon bar */);
+}
+```
+
+### Design Specifications
+
+**Colors:**
+- AI container background: `white`
+- AI header text: `text-gray-900` (dark)
+- AI header border: `border-b border-gray-200`
+- Container border: `border border-gray-300` (light gray)
+- Chat content background: `white`
+- Minimized bar background: `white`
+- Minimized bar text: `text-gray-900`
+- Minimized bar border: `border border-gray-300`
+- Button styles: `bg-gray-100 hover:bg-gray-200 text-gray-700`
+
+**Dimensions:**
+- Same as Variant A: 320px content column, 64px icon bar, 48px minimized bar height
+
+**Visual Theme:**
+- Clean white theme throughout
+- Light gray borders for subtle definition
+- Dark text for good contrast
+- Matches overall interface design
+
+### User Experience Flow
+
+**Initial Load:**
+1. User sees clean interface with no AI elements
+2. "Assistant" button in top navigation is only indicator
+
+**Opening AI:**
+1. User clicks "Assistant" button → Chat appears in right column
+2. If drawer is open → Split view (50/50)
+3. If no drawer → Full height AI
+
+**Toggle Behavior:**
+1. User clicks "Assistant" button again → Chat closes completely
+2. Returns to initial state (no UI visible)
+3. Different from Variant A where button doesn't close chat
+
+**Minimize/Maximize:**
+1. User clicks minimize in AI header → Minimized bar appears
+2. User clicks maximize on minimized bar → Chat reopens
+3. User clicks close on minimized bar → Chat removed entirely
+
+### Implementation Checklist
+
+When implementing Variant B AI Assistant pattern:
+
+- [ ] Use toggle logic in `handleOpenNewChat` (three states: create, maximize, close)
+- [ ] Minimized bar conditional: `(chat && chat.isMinimized)` not `(!chat || chat.isMinimized)`
+- [ ] Use white background with light gray borders (`bg-white`, `border-gray-300`)
+- [ ] Use dark text and icons (no `invert` class needed)
+- [ ] Support split view with context drawers
+- [ ] Pass `inSplitView` prop to RightDrawerB when rendering in split view
+- [ ] Pass `iconBarOnly` prop to RightDrawerB for far-right icon bar
+- [ ] Update `isSplit` prop calculation to include all context drawers
+

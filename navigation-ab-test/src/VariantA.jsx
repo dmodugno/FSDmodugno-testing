@@ -49,6 +49,28 @@ export default function VariantA() {
 
   // Handle drawer toggle
   const handleDrawerToggle = (index) => {
+    // Special handling for AI Assistant (index 1)
+    if (index === 1) {
+      if (!chat) {
+        // Create new chat if none exists
+        const newChat = {
+          id: 1,
+          title: 'AI Chatbot',
+          messages: [],
+          isMinimized: false
+        };
+        setChat(newChat);
+      } else if (chat.isMinimized) {
+        // Maximize existing chat if minimized
+        setChat({ ...chat, isMinimized: false });
+      } else {
+        // If chat exists and is open, close it
+        setChat(null);
+      }
+      return;
+    }
+
+    // Normal drawer toggle for other drawers
     setActiveDrawer(activeDrawer === index ? null : index);
     // Close person detail drawer, organize gallery, and filter reservations when opening right drawer
     if (activeDrawer !== index) {
@@ -64,7 +86,7 @@ export default function VariantA() {
       // Create new chat if none exists
       const newChat = {
         id: 1,
-        title: 'AI Chat',
+        title: 'AI Chatbot',
         messages: [],
         isMinimized: false
       };
@@ -210,7 +232,7 @@ export default function VariantA() {
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
-        <main className="flex-1 overflow-y-auto relative">
+        <main className="flex-1 overflow-y-auto relative bg-gray-200">
           {currentPage === 'Home' ? (
             <HomePage />
           ) : currentPage === 'Family Tree' ? (
@@ -238,7 +260,7 @@ export default function VariantA() {
                 <div
                   className={`${
                     chat && !chat.isMinimized
-                      ? 'h-1/2 border-b border-gray-300'
+                      ? 'h-1/2'
                       : 'h-full'
                   } overflow-y-auto bg-white`}
                 >
@@ -314,11 +336,11 @@ export default function VariantA() {
           )}
 
           {/* Icon bar (64px) */}
-          <RightDrawer activeDrawer={activeDrawer} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} />
+          <RightDrawer activeDrawer={activeDrawer} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} aiChatOpen={chat && !chat.isMinimized} />
         </div>
 
         {/* Collapsed/Minimized AI bar (fixed overlay) - matching AI chat header */}
-        {(!chat || chat.isMinimized) && (
+        {(chat && chat.isMinimized) && (
           <div className="fixed bottom-0 right-16 w-80 h-12 bg-[#3a3a3a] rounded-t-lg flex items-center justify-between px-4 z-40">
             <div className="flex items-center gap-2">
               <img

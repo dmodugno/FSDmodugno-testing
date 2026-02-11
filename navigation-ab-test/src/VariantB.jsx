@@ -60,7 +60,7 @@ export default function VariantB() {
       // Create new chat if none exists
       const newChat = {
         id: 1,
-        title: 'AI Chat',
+        title: 'AI Chatbot',
         messages: [],
         isMinimized: false
       };
@@ -68,8 +68,10 @@ export default function VariantB() {
     } else if (chat.isMinimized) {
       // Maximize existing chat if minimized
       setChat({ ...chat, isMinimized: false });
+    } else {
+      // If chat exists and is open, close it (toggle behavior)
+      setChat(null);
     }
-    // If chat exists and is open, do nothing
   };
 
   const handleCloseChat = () => {
@@ -159,7 +161,7 @@ export default function VariantB() {
           onPageChange={handlePageChange}
           onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
-        <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto relative rounded-t-xl bg-gray-100">
+        <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto relative rounded-t-xl bg-gray-200">
           {currentPage === 'Home' ? (
             <HomePage />
           ) : currentPage === 'Family Tree' ? (
@@ -185,7 +187,7 @@ export default function VariantB() {
               <div
                 className={`${
                   chat && !chat.isMinimized
-                    ? 'h-1/2 border-b border-gray-300'
+                    ? 'h-1/2'
                     : 'h-full'
                 } overflow-y-auto bg-white`}
               >
@@ -237,35 +239,35 @@ export default function VariantB() {
           </div>
         )}
 
-        <RightDrawerB activeDrawer={null} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} />
+        <RightDrawerB activeDrawer={activeDrawer} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} />
 
         {/* Collapsed/Minimized AI bar (fixed overlay) - matching AI chat header */}
         {(chat && chat.isMinimized) && (
-          <div className="fixed bottom-0 right-16 w-80 h-12 bg-black rounded-t-lg flex items-center justify-between px-4 z-40">
+          <div className="fixed bottom-0 right-16 w-80 h-12 bg-white border border-gray-300 rounded-t-lg flex items-center justify-between px-4 z-40 shadow-lg">
             <div className="flex items-center gap-2">
               <img
                 src={`${baseUrl}icons/HelpAI.svg`}
                 alt="AI"
                 className="w-5 h-5"
               />
-              <span className="text-sm font-medium text-white">AI Assistant</span>
+              <span className="text-sm font-medium text-gray-900">AI Assistant</span>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={chat ? handleMaximizeChat : handleOpenNewChat}
-                className="px-3 py-1 text-sm bg-gray-600 hover:bg-gray-500 rounded text-white"
+                className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded text-gray-700"
               >
                 {activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen ? 'Open Split' : 'Open Full'}
               </button>
               {chat && (
                 <button
                   onClick={handleCloseChat}
-                  className="p-1 hover:bg-gray-600 rounded"
+                  className="p-1 hover:bg-gray-100 rounded"
                 >
                   <img
                     src={`${baseUrl}icons/MenuClose.svg`}
                     alt="Close"
-                    className="w-4 h-4 invert"
+                    className="w-4 h-4"
                   />
                 </button>
               )}

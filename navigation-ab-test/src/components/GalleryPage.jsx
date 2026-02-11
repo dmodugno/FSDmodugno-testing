@@ -69,7 +69,7 @@ export default function GalleryPage({ onOrganizeGalleryClick }) {
   ];
 
   return (
-    <div className="h-full bg-gray-50 flex flex-col">
+    <div className="h-full bg-gray-200 flex flex-col">
       {/* Toolbar */}
       <div className="mx-4 mt-4 bg-white border border-gray-300 rounded-lg shadow-sm px-6 py-4">
         <div className="flex items-center justify-between gap-4">

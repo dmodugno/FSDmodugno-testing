@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Toast from './Toast';
 import RightDrawerContent from './RightDrawerContent';
 
-export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false }) {
+export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false, aiChatOpen = false }) {
   const baseUrl = import.meta.env.BASE_URL;
   const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
   const [showToast, setShowToast] = useState(false);
@@ -52,6 +52,7 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
       label: 'Environment switcher',
       bgColor: 'bg-white'
     },
+    { icon: `${baseUrl}icons/HelpAI.svg`, label: 'AI Assistant', bgColor: 'bg-white' },
     { icon: `${baseUrl}icons/SocialMessage.svg`, label: 'Messages', bgColor: 'bg-white' },
     { icon: `${baseUrl}icons/Notice.svg`, label: 'Notifications', bgColor: 'bg-white' },
     { icon: `${baseUrl}icons/Person.svg`, label: 'Recent people viewed', bgColor: 'bg-white' },
@@ -67,14 +68,16 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
     return (
       <>
         <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} />
-        <aside className="w-16 bg-white border-l border-gray-200 h-full flex flex-col items-center py-4">
+        <aside className="w-16 bg-white h-full flex flex-col items-center py-4">
           <div className="flex flex-col items-center space-y-2 w-full">
             {drawerItems.map((item, index) => (
               <button
                 key={index}
                 onClick={() => onDrawerToggle(index)}
                 className={`w-12 h-12 flex items-center justify-center rounded-lg ${
-                  activeDrawer === index ? 'bg-green-50 border-2 border-green-600' : item.bgColor
+                  (index === 1 && aiChatOpen) || activeDrawer === index
+                    ? 'bg-green-50 border-2 border-green-600'
+                    : item.bgColor
                 } hover:bg-gray-100 transition-colors`}
                 title={item.label}
               >
@@ -95,7 +98,7 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
                   <img
                     src={item.icon}
                     alt={item.label}
-                    className="w-6 h-6"
+                    className={`w-6 h-6 ${index === 1 ? 'brightness-0' : ''}`}
                   />
                 )}
               </button>
@@ -150,14 +153,16 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
         </div>
 
         {/* Icon Bar */}
-        <aside className="w-16 bg-white border-l border-gray-200 h-full flex flex-col items-center py-4">
+        <aside className="w-16 bg-white h-full flex flex-col items-center py-4">
           <div className="flex flex-col items-center space-y-2 w-full">
             {drawerItems.map((item, index) => (
               <button
                 key={index}
                 onClick={() => onDrawerToggle(index)}
                 className={`w-12 h-12 flex items-center justify-center rounded-lg ${
-                  activeDrawer === index ? 'bg-green-50 border-2 border-green-600' : item.bgColor
+                  (index === 1 && aiChatOpen) || activeDrawer === index
+                    ? 'bg-green-50 border-2 border-green-600'
+                    : item.bgColor
                 } hover:bg-gray-100 transition-colors`}
                 title={item.label}
               >
@@ -178,7 +183,7 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
                   <img
                     src={item.icon}
                     alt={item.label}
-                    className="w-6 h-6"
+                    className={`w-6 h-6 ${index === 1 ? 'brightness-0' : ''}`}
                   />
                 )}
               </button>

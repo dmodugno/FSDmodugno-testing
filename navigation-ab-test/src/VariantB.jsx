@@ -167,7 +167,7 @@ export default function VariantB() {
           ) : currentPage === 'Family Tree' ? (
             <FamilyTreePage onPersonClick={handlePersonClick} />
           ) : currentPage === 'Gallery' ? (
-            <GalleryPage onOrganizeGalleryClick={handleOrganizeGalleryClick} />
+            <GalleryPage onOrganizeGalleryClick={handleOrganizeGalleryClick} organizeGalleryOpen={organizeGalleryOpen} />
           ) : currentPage === 'My Reservations' ? (
             <MyReservationsPage onFilterClick={handleFilterReservationsClick} />
           ) : (

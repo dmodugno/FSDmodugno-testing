@@ -1,4 +1,4 @@
-export default function GalleryPage({ onOrganizeGalleryClick }) {
+export default function GalleryPage({ onOrganizeGalleryClick, organizeGalleryOpen = false }) {
   const baseUrl = import.meta.env.BASE_URL;
 
   // Mock memory data
@@ -71,7 +71,7 @@ export default function GalleryPage({ onOrganizeGalleryClick }) {
   return (
     <div className="h-full bg-gray-200 flex flex-col">
       {/* Toolbar */}
-      <div className="mx-4 mt-4 bg-white border border-gray-300 rounded-lg shadow-sm px-6 py-4">
+      <div className="mx-4 mt-4 bg-white border border-gray-300 rounded-full shadow-sm px-6 py-4">
         <div className="flex items-center justify-between gap-4">
           {/* Left section */}
           <div className="flex items-center gap-4">
@@ -119,7 +119,11 @@ export default function GalleryPage({ onOrganizeGalleryClick }) {
             {/* Gallery icon */}
             <button
               onClick={onOrganizeGalleryClick}
-              className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+              className={`p-2 rounded-lg transition-colors ${
+                organizeGalleryOpen
+                  ? 'bg-green-50 border-2 border-green-600 text-green-600'
+                  : 'text-teal-600 hover:bg-teal-50'
+              }`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />

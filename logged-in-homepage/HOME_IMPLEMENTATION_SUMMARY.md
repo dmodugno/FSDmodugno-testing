@@ -1,3 +1,13 @@
+> ⚠️ **Experimental Prototype Status**
+>
+> This document describes the current state of the **Home experience prototype**.
+> It is **not** a source of truth for architectural or product decisions.
+>
+> Canonical documentation lives in:
+> - **WHY** → `ARCHITECTURE.md`
+> - **HOW** → `IMPLEMENTATION.md`
+> - **WHEN** → `DECISION_LOG.md`
+
 # Home Page Implementation - Summary
 
 ## ✅ What's Been Built

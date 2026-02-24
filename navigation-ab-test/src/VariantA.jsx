@@ -14,8 +14,10 @@ import RightDrawerContent from './components/RightDrawerContent';
 import AIChatOverlay from './components/AIChatOverlay';
 import FloatingTestPanel from './components/FloatingTestPanel';
 import Toast from './components/Toast';
+import { useUser } from './contexts/UserContext';
 
 export default function VariantA() {
+  const { user } = useUser();
   const [searchParams] = useSearchParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState('Home');
@@ -178,6 +180,12 @@ export default function VariantA() {
 
   const baseUrl = import.meta.env.BASE_URL;
 
+  // Extract last name from user for dynamic tree naming
+  const lastName = user?.name ? user.name.split(' ').slice(-1)[0] : 'Family';
+  const userTreeName = `${lastName} Family`;
+  const familyGroupName = `${lastName} family group`;
+  const userTreeAvatar = lastName.charAt(0).toUpperCase();
+
   const environments = {
     'familysearch-tree': {
       id: 'familysearch-tree',
@@ -188,21 +196,21 @@ export default function VariantA() {
     },
     'famiglia-modugno': {
       id: 'famiglia-modugno',
-      name: 'Famiglia Modugno',
-      avatar: 'F',
+      name: familyGroupName,
+      avatar: userTreeAvatar,
       type: 'family-group'
     },
     'cet-modugno': {
       id: 'cet-modugno',
-      name: 'CET - Modugno',
-      avatar: 'C',
+      name: userTreeName,
+      avatar: userTreeAvatar,
       type: 'cet'
     }
   };
 
   const currentEnv = environments[selectedEnvironment];
 
-  // Drawer items for Variant A (9 drawers including environment switcher)
+  // Drawer items for Variant A (10 drawers including environment switcher and AI Assistant)
   const drawerItems = [
     {
       icon: currentEnv.icon || null,
@@ -210,6 +218,7 @@ export default function VariantA() {
       label: 'Environment switcher',
       bgColor: 'bg-white'
     },
+    { icon: `${baseUrl}icons/HelpAI.svg`, label: 'AI Assistant', bgColor: 'bg-white' },
     { icon: `${baseUrl}icons/SocialMessage.svg`, label: 'Messages', bgColor: 'bg-white' },
     { icon: `${baseUrl}icons/Notice.svg`, label: 'Notifications', bgColor: 'bg-white' },
     { icon: `${baseUrl}icons/Person.svg`, label: 'Recent people viewed', bgColor: 'bg-white' },

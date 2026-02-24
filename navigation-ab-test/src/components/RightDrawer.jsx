@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import Toast from './Toast';
 import RightDrawerContent from './RightDrawerContent';
+import { useUser } from '../contexts/UserContext';
 
 export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false, aiChatOpen = false }) {
+  const { user } = useUser();
   const baseUrl = import.meta.env.BASE_URL;
   const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  // Extract last name from user for dynamic tree naming
+  const lastName = user?.name ? user.name.split(' ').slice(-1)[0] : 'Family';
+  const userTreeName = `${lastName} Family`;
+  const familyGroupName = `${lastName} family group`;
+  const userTreeAvatar = lastName.charAt(0).toUpperCase();
 
   const environments = {
     'familysearch-tree': {
@@ -18,14 +26,14 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
     },
     'famiglia-modugno': {
       id: 'famiglia-modugno',
-      name: 'Famiglia Modugno',
-      avatar: 'F',
+      name: familyGroupName,
+      avatar: userTreeAvatar,
       type: 'family-group'
     },
     'cet-modugno': {
       id: 'cet-modugno',
-      name: 'CET - Modugno',
-      avatar: 'C',
+      name: userTreeName,
+      avatar: userTreeAvatar,
       type: 'cet'
     }
   };

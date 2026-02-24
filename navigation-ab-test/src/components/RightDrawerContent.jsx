@@ -13,6 +13,12 @@ export default function RightDrawerContent({
   const { user } = useUser();
   const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
 
+  // Extract last name from user
+  const lastName = user?.name ? user.name.split(' ').slice(-1)[0] : 'Family';
+  const userTreeName = `${lastName} Family`;
+  const familyGroupName = `${lastName} family group`;
+  const userTreeAvatar = lastName.charAt(0).toUpperCase();
+
   const environments = {
     'familysearch-tree': {
       id: 'familysearch-tree',
@@ -23,14 +29,14 @@ export default function RightDrawerContent({
     },
     'famiglia-modugno': {
       id: 'famiglia-modugno',
-      name: 'Famiglia Modugno',
-      avatar: 'F',
+      name: familyGroupName,
+      avatar: userTreeAvatar,
       type: 'family-group'
     },
     'cet-modugno': {
       id: 'cet-modugno',
-      name: 'CET - Modugno',
-      avatar: 'C',
+      name: userTreeName,
+      avatar: userTreeAvatar,
       type: 'cet'
     }
   };
@@ -81,18 +87,18 @@ export default function RightDrawerContent({
             }`}
           >
             <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-lg font-semibold text-gray-700 mr-3 flex-shrink-0">
-              F
+              {userTreeAvatar}
             </div>
             <div className="flex-1 text-left">
-              <div className="font-medium text-gray-900">Famiglia Modugno</div>
+              <div className="font-medium text-gray-900">{familyGroupName}</div>
             </div>
           </button>
         </div>
 
-        {/* Group-Owned Trees (CETs) Section */}
+        {/* User Trees Section */}
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="px-2 py-2 text-sm font-semibold text-gray-700">
-            Group-Owned Trees (CETs)
+            User Trees
           </div>
           <button
             onClick={() => handleEnvironmentSelect('cet-modugno')}
@@ -101,10 +107,10 @@ export default function RightDrawerContent({
             }`}
           >
             <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-lg font-semibold text-gray-700 mr-3 flex-shrink-0">
-              C
+              {userTreeAvatar}
             </div>
             <div className="flex-1 text-left">
-              <div className="font-medium text-gray-900">CET - Modugno</div>
+              <div className="font-medium text-gray-900">{userTreeName}</div>
             </div>
           </button>
         </div>
@@ -123,13 +129,15 @@ export default function RightDrawerContent({
   }
 
   // Messages Content - adjust drawer index based on whether environment switcher exists
-  const messagesIndex = showEnvironmentSwitcher ? 1 : 1;
+  // Note: In Variant A (showEnvironmentSwitcher=true), RightDrawer has AI Assistant at index 1,
+  // so Messages is at index 2. In Variant B, Messages is at index 1.
+  const messagesIndex = showEnvironmentSwitcher ? 2 : 1;
   if (activeDrawer === messagesIndex) {
     return <Messages />;
   }
 
   // Notifications Content - adjust index based on variant
-  const notificationsIndex = showEnvironmentSwitcher ? 2 : 2;
+  const notificationsIndex = showEnvironmentSwitcher ? 3 : 2;
   if (activeDrawer === notificationsIndex) {
     return (
       <div className="text-gray-700">
@@ -140,7 +148,7 @@ export default function RightDrawerContent({
   }
 
   // Recent People Viewed Content - adjust index based on variant
-  const recentPeopleIndex = showEnvironmentSwitcher ? 3 : 3;
+  const recentPeopleIndex = showEnvironmentSwitcher ? 4 : 3;
   if (activeDrawer === recentPeopleIndex) {
     return <RecentPeopleViewed />;
   }

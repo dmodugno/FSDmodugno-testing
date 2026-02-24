@@ -1,13 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
 import Toast from './Toast';
+import { useUser } from '../contexts/UserContext';
 
 export default function EnvironmentSwitcher() {
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const dropdownRef = useRef(null);
   const baseUrl = import.meta.env.BASE_URL;
+
+  // Extract last name from user
+  const lastName = user?.name ? user.name.split(' ').slice(-1)[0] : 'Family';
+  const userTreeName = `${lastName} Family`;
+  const familyGroupName = `${lastName} family group`;
+  const userTreeAvatar = lastName.charAt(0).toUpperCase();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -36,14 +44,14 @@ export default function EnvironmentSwitcher() {
     },
     'famiglia-modugno': {
       id: 'famiglia-modugno',
-      name: 'Famiglia Modugno',
-      avatar: 'F',
+      name: familyGroupName,
+      avatar: userTreeAvatar,
       type: 'family-group'
     },
     'cet-modugno': {
       id: 'cet-modugno',
-      name: 'CET - Modugno',
-      avatar: 'C',
+      name: userTreeName,
+      avatar: userTreeAvatar,
       type: 'cet'
     }
   };
@@ -131,18 +139,18 @@ export default function EnvironmentSwitcher() {
               }`}
             >
               <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-lg font-semibold text-gray-700 mr-3 flex-shrink-0">
-                F
+                {userTreeAvatar}
               </div>
               <div className="flex-1 text-left">
-                <div className="font-medium text-gray-900">Famiglia Modugno</div>
+                <div className="font-medium text-gray-900">{familyGroupName}</div>
               </div>
             </button>
           </div>
 
-          {/* Group-Owned Trees (CETs) Section */}
+          {/* User Trees Section */}
           <div className="mt-2 pt-2 border-t border-gray-200">
             <div className="px-4 py-2 text-sm font-semibold text-gray-700">
-              Group-Owned Trees (CETs)
+              User Trees
             </div>
             <button
               onClick={() => handleEnvironmentSelect('cet-modugno')}
@@ -151,10 +159,10 @@ export default function EnvironmentSwitcher() {
               }`}
             >
               <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-lg font-semibold text-gray-700 mr-3 flex-shrink-0">
-                C
+                {userTreeAvatar}
               </div>
               <div className="flex-1 text-left">
-                <div className="font-medium text-gray-900">CET - Modugno</div>
+                <div className="font-medium text-gray-900">{userTreeName}</div>
               </div>
             </button>
           </div>

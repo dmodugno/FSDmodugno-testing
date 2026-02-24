@@ -77,14 +77,7 @@ export default function LeftNavigation({
       subItems: [
         { label: 'Family Tree', link: '#' },
         { label: 'Person List', link: '#' },
-        {
-          label: 'Collaboration & Groups',
-          expandable: true,
-          subItems: [
-            { label: 'Family Groups', link: '#' },
-            { label: 'Group-Owned Trees (CETs)', link: '#' }
-          ]
-        }
+        { label: 'Manage Trees', link: '#' }
       ]
     },
     {

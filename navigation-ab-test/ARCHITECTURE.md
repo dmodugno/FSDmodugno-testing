@@ -291,9 +291,7 @@ These are explicit non-goals to prevent navigation bloat and confusion.
 3. **Build my family tree** (expandable)
    - Family Tree
    - Person List
-   - Collaboration & Groups (nested expandable)
-     - Family Groups
-     - Group-Owned Trees (CETs)
+   - Manage Trees
 4. **Preserve memories** (expandable)
    - Gallery
    - Family Feed

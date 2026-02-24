@@ -14,7 +14,16 @@ import RightDrawerContent from './components/RightDrawerContent';
 import AIChatOverlay from './components/AIChatOverlay';
 import FloatingTestPanel from './components/FloatingTestPanel';
 import Toast from './components/Toast';
+import Messages from './components/Messages';
 import { useUser } from './contexts/UserContext';
+import { useMobileNavigation } from './hooks/useMobileNavigation';
+import {
+  HamburgerOverlay,
+  BottomSheet,
+  ToolsHub,
+  MobileAIFull,
+  MobileTopBar
+} from './components/mobile';
 
 export default function VariantA() {
   const { user } = useUser();
@@ -30,6 +39,21 @@ export default function VariantA() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
+  // Mobile navigation state machine
+  const mobile = useMobileNavigation();
+
+  // Responsive detection
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Tailwind 'md' breakpoint
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Initialize page from URL hash
   useEffect(() => {
     const hash = window.location.hash.slice(1); // Remove the #
@@ -43,10 +67,15 @@ export default function VariantA() {
     setCurrentPage(pageName);
     window.location.hash = pageName;
 
-    // Close context drawers when changing pages (global tool drawers stay open)
-    setSelectedPerson(null);
-    setOrganizeGalleryOpen(false);
-    setFilterReservationsOpen(false);
+    if (isMobile) {
+      // Mobile: Use state machine's navigation (preserves AI session)
+      mobile.navigateToPage(pageName);
+    } else {
+      // Desktop: Close context drawers
+      setSelectedPerson(null);
+      setOrganizeGalleryOpen(false);
+      setFilterReservationsOpen(false);
+    }
   };
 
   // Handle drawer toggle
@@ -229,6 +258,257 @@ export default function VariantA() {
     { icon: `${baseUrl}icons/ControlTranslate.svg`, label: 'Language picker', bgColor: 'bg-white' }
   ];
 
+  // Mobile menu items for hamburger
+  const mobileMenuItems = [
+    {
+      id: 'home',
+      label: 'Home',
+      icon: `${baseUrl}icons/MenuHome.svg`,
+      subItems: []
+    },
+    {
+      id: 'search',
+      label: 'Search records',
+      icon: `${baseUrl}icons/DocumentRecordSearch.svg`,
+      subItems: [
+        { label: 'Historical Records' },
+        { label: 'People in Family Tree' },
+        { label: 'Catalog' }
+      ]
+    },
+    {
+      id: 'build-tree',
+      label: 'Build my family tree',
+      icon: `${baseUrl}icons/TreePedigree.svg`,
+      subItems: [
+        { label: 'Family Tree' },
+        { label: 'Person List' },
+        { label: 'Manage Trees' }
+      ]
+    },
+    {
+      id: 'memories',
+      label: 'Preserve memories',
+      icon: `${baseUrl}icons/MediaCamera.svg`,
+      subItems: [
+        { label: 'Gallery' },
+        { label: 'Family Feed' }
+      ]
+    }
+  ];
+
+  // Mobile tools for tools hub
+  const mobileTools = [
+    {
+      id: 'env-switcher',
+      label: 'Environment Switcher',
+      icon: currentEnv.icon || `${baseUrl}icons/LogoFamilySearch.svg`,
+      description: 'Switch between trees'
+    },
+    {
+      id: 'recent-people',
+      label: 'Recent People Viewed',
+      icon: `${baseUrl}icons/Person.svg`,
+      description: 'See people you recently viewed'
+    },
+    {
+      id: 'followed',
+      label: 'Followed People',
+      icon: `${baseUrl}icons/SocialStar.svg`,
+      description: 'People you are following'
+    },
+    {
+      id: 'todo',
+      label: 'To-do List',
+      icon: `${baseUrl}icons/ControlList.svg`,
+      description: 'Your tasks and reminders'
+    },
+    {
+      id: 'ai-assistant',
+      label: 'AI Assistant',
+      icon: `${baseUrl}icons/HelpAI.svg`,
+      description: 'Get help with research'
+    }
+  ];
+
+  // Handle tool selection in mobile
+  const handleToolSelect = (toolId) => {
+    if (toolId === 'ai-assistant') {
+      mobile.openAIFull();
+    } else {
+      mobile.openToolChild(toolId);
+    }
+  };
+
+  // Render tool content in mobile
+  const renderMobileToolContent = () => {
+    if (!mobile.selectedTool) return null;
+
+    switch (mobile.selectedTool) {
+      case 'env-switcher':
+        return (
+          <RightDrawerContent
+            activeDrawer={0}
+            drawerItems={drawerItems}
+            showEnvironmentSwitcher={true}
+            onEnvironmentChange={handleEnvironmentChange}
+          />
+        );
+      case 'recent-people':
+        return (
+          <RightDrawerContent
+            activeDrawer={4}
+            drawerItems={drawerItems}
+            showEnvironmentSwitcher={true}
+          />
+        );
+      case 'followed':
+        return <div className="text-gray-700">Followed people content coming soon...</div>;
+      case 'todo':
+        return <div className="text-gray-700">To-do list content coming soon...</div>;
+      default:
+        return null;
+    }
+  };
+
+  // Render page content
+  const renderPageContent = () => {
+    if (currentPage === 'Home') {
+      return <HomePage />;
+    } else if (currentPage === 'Family Tree') {
+      return <FamilyTreePage onPersonClick={handlePersonClick} />;
+    } else if (currentPage === 'Gallery') {
+      return <GalleryPage onOrganizeGalleryClick={handleOrganizeGalleryClick} organizeGalleryOpen={organizeGalleryOpen} />;
+    } else if (currentPage === 'My Reservations') {
+      return <MyReservationsPage onFilterClick={handleFilterReservationsClick} />;
+    } else {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <h1 className="text-3xl font-semibold text-gray-700">
+            This is the {currentPage} page
+          </h1>
+        </div>
+      );
+    }
+  };
+
+  // MOBILE LAYOUT
+  if (isMobile) {
+    return (
+      <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+        <Header hideMainHeader={true} />
+        <FloatingTestPanel variant="Variant A (Mobile)" />
+        <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} />
+
+        {/* INVARIANT CHECK: AI_FULL replaces all chrome */}
+        {mobile.isActive(mobile.SURFACES.AI_FULL) ? (
+          <MobileAIFull
+            aiSession={mobile.aiSession}
+            onMinimize={mobile.minimizeAI}
+            onClose={mobile.closeAI}
+            onReset={mobile.resetAIChat}
+          />
+        ) : (
+          <>
+            {/* Top Bar */}
+            <MobileTopBar
+              onOpenHamburger={mobile.openHamburger}
+              onOpenNotifications={mobile.openNotifications}
+              onOpenMessages={mobile.openMessages}
+              onOpenTools={mobile.openTools}
+              notificationCount={3}
+              messageCount={5}
+            />
+
+            {/* Main Content */}
+            <main className="flex-1 overflow-y-auto bg-gray-200">
+              {renderPageContent()}
+            </main>
+
+            {/* INVARIANT CHECK: Only one surface at a time */}
+
+            {/* Hamburger Overlay */}
+            {mobile.isActive(mobile.SURFACES.HAMBURGER) && (
+              <HamburgerOverlay
+                isOpen={true}
+                onClose={mobile.closeHamburger}
+                currentPage={currentPage}
+                onNavigate={handlePageChange}
+                menuItems={mobileMenuItems}
+              />
+            )}
+
+            {/* Notifications Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_NOTIFICATIONS) && (
+              <BottomSheet
+                isOpen={true}
+                onClose={mobile.closeBottomSheet}
+                title="Notifications"
+              >
+                <div className="text-gray-700">
+                  <p>You have no new notifications.</p>
+                  <p className="mt-2 text-sm text-gray-500">We'll notify you when there's something new.</p>
+                </div>
+              </BottomSheet>
+            )}
+
+            {/* Messages Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_MESSAGES) && (
+              <BottomSheet
+                isOpen={true}
+                onClose={mobile.closeBottomSheet}
+                title="Messages"
+              >
+                <Messages />
+              </BottomSheet>
+            )}
+
+            {/* Tools Hub Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_TOOLS) && (
+              <BottomSheet
+                isOpen={true}
+                onClose={mobile.closeBottomSheet}
+                title="Tools"
+              >
+                <ToolsHub
+                  onSelectTool={handleToolSelect}
+                  tools={mobileTools}
+                />
+              </BottomSheet>
+            )}
+
+            {/* Tool Child Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_TOOL_CHILD) && (
+              <BottomSheet
+                isOpen={true}
+                onClose={mobile.closeBottomSheet}
+                title={mobileTools.find(t => t.id === mobile.selectedTool)?.label || 'Tool'}
+              >
+                {renderMobileToolContent()}
+              </BottomSheet>
+            )}
+
+            {/* Minimized AI Indicator */}
+            {mobile.aiSession && !mobile.isActive(mobile.SURFACES.AI_FULL) && (
+              <button
+                onClick={mobile.openAIFull}
+                className="fixed bottom-4 right-4 bg-[#3a3a3a] text-white px-4 py-3 rounded-full shadow-lg flex items-center gap-2 z-30"
+              >
+                <img
+                  src={`${baseUrl}icons/HelpAI.svg`}
+                  alt="AI"
+                  className="w-5 h-5 brightness-0 invert"
+                />
+                <span className="text-sm font-medium">AI Assistant</span>
+              </button>
+            )}
+          </>
+        )}
+      </div>
+    );
+  }
+
+  // DESKTOP LAYOUT (unchanged)
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} />
@@ -242,21 +522,7 @@ export default function VariantA() {
           onPageChange={handlePageChange}
         />
         <main className="flex-1 overflow-y-auto relative bg-gray-200">
-          {currentPage === 'Home' ? (
-            <HomePage />
-          ) : currentPage === 'Family Tree' ? (
-            <FamilyTreePage onPersonClick={handlePersonClick} />
-          ) : currentPage === 'Gallery' ? (
-            <GalleryPage onOrganizeGalleryClick={handleOrganizeGalleryClick} organizeGalleryOpen={organizeGalleryOpen} />
-          ) : currentPage === 'My Reservations' ? (
-            <MyReservationsPage onFilterClick={handleFilterReservationsClick} />
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <h1 className="text-3xl font-semibold text-gray-700">
-                This is the {currentPage} page
-              </h1>
-            </div>
-          )}
+          {renderPageContent()}
         </main>
 
         {/* Right side container with split view support */}

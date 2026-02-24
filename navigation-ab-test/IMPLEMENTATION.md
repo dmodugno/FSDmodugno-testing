@@ -442,6 +442,50 @@ src/components/
 
 This section translates the mobile architectural rules into implementable state logic.
 
+### Mobile Hamburger Menu Content Contract (Must Match Desktop)
+
+The mobile hamburger overlay is **not a new navigation model**. It must render the **same information architecture and interaction model** as the desktop left navigation.
+
+#### Source of Truth
+
+- The hamburger overlay MUST render navigation items from the same source as desktop (i.e., the `LeftNavigation.jsx` menu model / `allMenuItems`).
+- Do **NOT** hardcode a reduced set of items (e.g., only Home + 3 intents). If the desktop nav has a section/item, mobile hamburger must also include it.
+
+#### Required Visible Structure (Parity)
+
+When the hamburger is open, users must be able to reach:
+- `Home`
+- All intent sections and their sub-items (e.g., **Search records**, **Build my family tree**, **Preserve memories**, **Get involved**, **Temple**, **Help and learning**)
+- `Account settings` (including nested groups if present on desktop)
+- `Sign Out`
+
+#### Accordion Rules (Same as Desktop)
+
+- Accordion behavior must match desktop: **only one top-level section expanded at a time**.
+- The section containing `currentPage` auto-expands on open.
+- The active page row is highlighted.
+- Tapping a different section expands it and collapses the previously expanded section.
+
+#### Destination Tap Behavior
+
+- Tapping a destination applies pressed feedback (~100–150ms) and then:
+  1) navigates to the destination
+  2) closes the hamburger overlay (`mobileSurface = 'NONE'`)
+
+#### Header + Close
+
+- Hamburger overlay must have a clear header label (e.g., `Menu`) and an `X` close affordance.
+- While hamburger overlay is open, the top-bar icons (notifications/messages/tools) must be non-interactive.
+
+#### Implementation Guidance (Preferred)
+
+Preferred approach is to **reuse** `LeftNavigation.jsx` inside a full-screen mobile overlay with `isCollapsed={false}` and a dedicated `mobileMode` flag if needed.
+
+Anti-patterns:
+- Do not create a separate mobile-only menu model.
+- Do not filter the menu list for mobile.
+- Do not introduce multi-open accordion behavior on mobile.
+
 ### Canonical Mobile Surface States
 
 Only ONE of the following may be active at a time:

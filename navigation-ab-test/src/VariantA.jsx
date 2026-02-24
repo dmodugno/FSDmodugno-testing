@@ -17,8 +17,8 @@ import Toast from './components/Toast';
 import Messages from './components/Messages';
 import { useUser } from './contexts/UserContext';
 import { useMobileNavigation } from './hooks/useMobileNavigation';
+import LeftNavigation from './components/LeftNavigation';
 import {
-  HamburgerOverlay,
   BottomSheet,
   ToolsHub,
   MobileAIFull,
@@ -427,14 +427,16 @@ export default function VariantA() {
 
             {/* INVARIANT CHECK: Only one surface at a time */}
 
-            {/* Hamburger Overlay */}
+            {/* Hamburger Overlay - Full Navigation */}
             {mobile.isActive(mobile.SURFACES.HAMBURGER) && (
-              <HamburgerOverlay
-                isOpen={true}
-                onClose={mobile.closeHamburger}
+              <LeftNavigation
+                isCollapsed={false}
+                onToggleSidebar={() => {}}
                 currentPage={currentPage}
-                onNavigate={handlePageChange}
-                menuItems={mobileMenuItems}
+                onPageChange={handlePageChange}
+                showHeader={false}
+                mobileMode={true}
+                onMobileClose={mobile.closeHamburger}
               />
             )}
 

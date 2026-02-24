@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 
 export default function LeftNavigation({
@@ -6,11 +6,14 @@ export default function LeftNavigation({
   onToggleSidebar,
   currentPage,
   onPageChange,
-  showHeader = true
+  showHeader = true,
+  mobileMode = false, // Mobile full-screen mode
+  onMobileClose = null // Close handler for mobile
 }) {
   const { user } = useUser();
   const [expandedSection, setExpandedSection] = useState(null); // Start with all sections collapsed
   const [expandedSubItems, setExpandedSubItems] = useState({});
+  const [pressedItem, setPressedItem] = useState(null); // For mobile tap feedback
 
   if (!user) return null;
 
@@ -20,8 +23,32 @@ export default function LeftNavigation({
     setExpandedSection(expandedSection === section ? null : section);
   };
 
+  // Auto-expand section containing current page when in mobile mode
+  useEffect(() => {
+    if (mobileMode && currentPage && allMenuItems) {
+      const sectionId = findSectionWithCurrentPage(allMenuItems);
+      if (sectionId) {
+        setExpandedSection(sectionId);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mobileMode, currentPage]);
+
   const handleNavigate = (pageName) => {
-    onPageChange(pageName);
+    if (mobileMode) {
+      // Mobile: Add pressed feedback (120ms) before navigating
+      setPressedItem(pageName);
+      setTimeout(() => {
+        onPageChange(pageName);
+        if (onMobileClose) {
+          onMobileClose();
+        }
+        setPressedItem(null);
+      }, 120);
+    } else {
+      // Desktop: Navigate immediately
+      onPageChange(pageName);
+    }
   };
 
   // Helper function to check if any sub-item in a section is the current page
@@ -219,12 +246,17 @@ export default function LeftNavigation({
       }
 
       const isActive = currentPage === item.label;
+      const isPressed = mobileMode && pressedItem === item.label;
       return (
         <button
           key={itemKey}
           onClick={() => handleNavigate(item.label)}
           className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-            isActive ? 'bg-green-50 text-green-700 font-medium border-l-4 border-green-600' : 'text-gray-700 hover:bg-gray-100'
+            isPressed
+              ? 'bg-green-100 border-l-4 border-green-600'
+              : isActive
+              ? 'bg-green-50 text-green-700 font-medium border-l-4 border-green-600'
+              : 'text-gray-700 hover:bg-gray-100'
           }`}
         >
           {item.label}
@@ -234,10 +266,25 @@ export default function LeftNavigation({
   };
 
   return (
-    <nav className={`flex-shrink-0 bg-white h-full transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+    <nav className={mobileMode ? 'fixed inset-0 z-50 bg-white overflow-y-auto' : `flex-shrink-0 bg-white h-full transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
       <div className="flex flex-col h-full">
-        {/* Header with Logo and Toggle - Only shown in Variant A */}
-        {showHeader && (
+        {/* Mobile Header with Close Button */}
+        {mobileMode && onMobileClose && (
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+            <button
+              onClick={onMobileClose}
+              className="p-2 hover:bg-gray-100 rounded-lg"
+              aria-label="Close menu"
+            >
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+        {/* Header with Logo and Toggle - Only shown in Variant A desktop */}
+        {showHeader && !mobileMode && (
           <div className={`flex items-center border-b border-gray-200 ${isCollapsed ? 'justify-center p-3' : 'justify-between p-4'}`}>
             {!isCollapsed && (
               <img src={`${baseUrl}icons/FSLogo.svg`} alt="FamilySearch" className="h-8" />
@@ -277,7 +324,11 @@ export default function LeftNavigation({
                 <button
                   onClick={() => handleNavigate(item.label)}
                   className={`w-full flex items-center p-4 transition-colors ${
-                    currentPage === item.label ? 'bg-green-50 border-l-4 border-green-600' : 'hover:bg-gray-50'
+                    mobileMode && pressedItem === item.label
+                      ? 'bg-green-100 border-l-4 border-green-600'
+                      : currentPage === item.label
+                      ? 'bg-green-50 border-l-4 border-green-600'
+                      : 'hover:bg-gray-50'
                   }`}
                   title={isCollapsed ? item.label : ''}
                 >
@@ -361,7 +412,11 @@ export default function LeftNavigation({
                 <button
                   onClick={() => handleNavigate(item.label)}
                   className={`w-full flex items-center p-4 transition-colors ${
-                    currentPage === item.label ? 'bg-green-50 border-l-4 border-green-600' : 'hover:bg-gray-50'
+                    mobileMode && pressedItem === item.label
+                      ? 'bg-green-100 border-l-4 border-green-600'
+                      : currentPage === item.label
+                      ? 'bg-green-50 border-l-4 border-green-600'
+                      : 'hover:bg-gray-50'
                   }`}
                   title={isCollapsed ? item.label : ''}
                 >

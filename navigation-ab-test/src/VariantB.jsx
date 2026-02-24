@@ -271,7 +271,7 @@ export default function VariantB() {
     if (currentPage === 'Home') {
       return <HomePage />;
     } else if (currentPage === 'Family Tree') {
-      return <FamilyTreePage onPersonClick={handlePersonClick} />;
+      return <FamilyTreePage onPersonClick={handlePersonClick} mobileMode={isMobile} />;
     } else if (currentPage === 'Gallery') {
       return <GalleryPage onOrganizeGalleryClick={handleOrganizeGalleryClick} organizeGalleryOpen={organizeGalleryOpen} />;
     } else if (currentPage === 'My Reservations') {

@@ -433,6 +433,108 @@ src/components/
 
 ---
 
+
+---
+
+## Mobile State Machine Implementation Contract
+
+This section translates the mobile architectural rules into implementable state logic.
+
+### Canonical Mobile Surface States
+
+Only ONE of the following may be active at a time:
+
+- `NONE` (Main content only)
+- `HAMBURGER`
+- `BOTTOM_SHEET_NOTIFICATIONS`
+- `BOTTOM_SHEET_MESSAGES`
+- `BOTTOM_SHEET_TOOLS`
+- `BOTTOM_SHEET_TOOL_CHILD`
+- `AI_FULL`
+
+### Required State Structure
+
+Mobile layout must maintain a single source of truth similar to:
+
+```jsx
+const [mobileSurface, setMobileSurface] = useState('NONE');
+const [aiSession, setAiSession] = useState(null); // persistent
+```
+
+Do NOT create multiple booleans for different surfaces. Use a single discriminated surface state.
+
+---
+
+### Transition Rules (Non-Negotiable)
+
+#### Opening Hamburger
+
+```jsx
+setMobileSurface('HAMBURGER');
+```
+
+Effects:
+- Immediately dismiss any open bottom sheet
+- Immediately exit AI_FULL (if open)
+
+#### Opening Notifications
+
+```jsx
+setMobileSurface('BOTTOM_SHEET_NOTIFICATIONS');
+```
+
+If another bottom sheet is open:
+- Close current sheet first (animate out)
+- Then open new sheet
+
+#### Opening Messages
+
+Same behavior as Notifications.
+
+#### Opening Tools
+
+```jsx
+setMobileSurface('BOTTOM_SHEET_TOOLS');
+```
+
+Selecting a tool inside Tools:
+
+```jsx
+setMobileSurface('BOTTOM_SHEET_TOOL_CHILD');
+```
+
+Tools hub is replaced — not stacked.
+
+#### Opening AI
+
+```jsx
+setMobileSurface('AI_FULL');
+```
+
+Effects:
+- Dismiss any bottom sheet immediately
+- Replace entire app chrome
+
+AI session persistence:
+
+- Minimize → `setMobileSurface('NONE')` but keep `aiSession`
+- Close → `setAiSession(null); setMobileSurface('NONE')`
+
+---
+
+### Invariants
+
+The implementation MUST guarantee:
+
+- Hamburger never coexists with bottom sheets.
+- Bottom sheets never stack.
+- AI_FULL never coexists with hamburger or bottom sheets.
+- Hamburger always replaces current surface immediately.
+- Bottom sheet switching always closes first sheet before opening the next.
+- Navigation between pages never mutates AI session state.
+
+Any violation of these invariants is considered a structural bug.
+
 ## Appendix: Development Workflow
 
 ### Local Development

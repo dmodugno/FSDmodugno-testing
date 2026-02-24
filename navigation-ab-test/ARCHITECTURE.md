@@ -11,6 +11,7 @@ This document captures architectural decisions, design rationale, and guiding pr
 - [AI Assistant (Chat) Placement](#ai-assistant-chat-placement)
 - [AI Split-View Pattern (Variant A)](#ai-split-view-pattern-variant-a)
 - [What Does Not Belong in Navigation](#what-does-not-belong-in-navigation)
+- [Mobile Navigation & AI State Machine](#mobile-navigation--ai-state-machine)
 - [Mobile & Responsive Guidance](#mobile--responsive-guidance)
 - [Navigation Menu Items](#navigation-menu-items)
 - [Logged-in Home Architecture](#logged-in-home-architecture)
@@ -256,6 +257,79 @@ These are explicit non-goals to prevent navigation bloat and confusion.
 - Conversational AI (keep as overlay, not as a drawer mode)
 
 ---
+## Mobile Navigation & AI State Machine
+
+This section defines the canonical mobile interaction hierarchy and state transitions.
+
+Mobile must preserve the same mental model as desktop while serializing surfaces into a single active layer at a time.
+
+### Surface Hierarchy (Highest to Lowest Priority)
+
+1. **Hamburger Navigation (Full-Screen Overlay)**
+2. **AI Assistant (Full-Screen Mode)**
+3. **Bottom Sheets (Notifications, Messages, Tools, Context Drawers)**
+4. **Main Content**
+
+At any moment, only one surface layer may be interactive.
+
+---
+
+### Global Rules
+
+- The Hamburger menu is a full-screen overlay and blocks all other surfaces.
+- Only one bottom sheet may be open at a time.
+- Bottom sheets do not stack.
+- Opening the Hamburger immediately dismisses any open bottom sheet.
+- Opening AI dismisses any open bottom sheet and replaces the application chrome.
+- AI full-screen mode hides the top navigation bar.
+- Minimizing AI preserves the session globally.
+- Closing AI destroys the session.
+- Navigation between pages does not mutate AI session context.
+
+---
+
+### Hamburger Navigation Behavior (Mobile)
+
+- Opens as a full-screen overlay.
+- Only one navigation section may be expanded at a time (accordion behavior).
+- The section containing the current page auto-expands on open.
+- The current page is highlighted.
+- All other sections remain collapsed.
+- User may collapse all sections.
+- Selecting a destination immediately closes the overlay and navigates.
+
+---
+
+### Bottom Sheet Behavior (Mobile)
+
+- Notifications, Messages, and Tools open as bottom sheets.
+- Switching between top-bar icons closes the current sheet before opening the next.
+- Tapping Hamburger while a bottom sheet is open immediately replaces the sheet with the Hamburger overlay.
+- Tools acts as a hub. Selecting a tool replaces the current sheet with the selected tool sheet.
+
+---
+
+### AI Assistant (Mobile)
+
+- AI opens as a full-screen immersive mode.
+- AI replaces the top bar and all navigation chrome.
+- AI may be opened from Tools or contextual page affordances.
+- AI context persists across navigation when minimized.
+- AI context remains attached to the session until explicitly removed or the chat is closed.
+- AI does not auto-update context when navigating to a new page.
+
+---
+
+### State Exclusivity Invariant
+
+The system must never allow:
+- Hamburger + Bottom Sheet simultaneously.
+- Multiple bottom sheets simultaneously.
+- Bottom Sheet + AI simultaneously.
+
+All transitions must result in a single active surface.
+
+---
 
 ## Mobile & Responsive Guidance
 
@@ -263,8 +337,10 @@ These are explicit non-goals to prevent navigation bloat and confusion.
 
 ### Recommended Mobile Navigation Pattern
 
-- Use **bottom navigation** for 4–5 primary destinations (e.g., Home, Search, Tree, Memories, More).
-- Use **More** to expose secondary destinations (Temple, Get Involved, Help & Learning, Account).
+- Use a top-bar Hamburger as the single entry point for destinations.
+- The Hamburger opens as a full-screen overlay.
+- No bottom navigation is used.
+- Global utilities are exposed via top-bar icons (Notifications, Messages, Tools).
 
 ### Drawer Adaptation
 

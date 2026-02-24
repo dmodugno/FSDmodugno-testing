@@ -12,6 +12,7 @@ This document captures architectural decisions, design rationale, and guiding pr
 - [AI Split-View Pattern (Variant A)](#ai-split-view-pattern-variant-a)
 - [What Does Not Belong in Navigation](#what-does-not-belong-in-navigation)
 - [Mobile Navigation & AI State Machine](#mobile-navigation--ai-state-machine)
+- [Mobile Acceptance Criteria](#mobile-acceptance-criteria)
 - [Mobile & Responsive Guidance](#mobile--responsive-guidance)
 - [Navigation Menu Items](#navigation-menu-items)
 - [Logged-in Home Architecture](#logged-in-home-architecture)
@@ -331,6 +332,52 @@ All transitions must result in a single active surface.
 
 ---
 
+## Mobile Acceptance Criteria
+
+These criteria are the definition of “done” for mobile behavior. They are written to be testable via prototype walkthrough or QA.
+
+### Navigation Layering
+
+- **Hamburger is full-screen.** When open, the top-bar icons are not interactive.
+- **Hamburger blocks everything.** No bottom sheet or AI surface may be open simultaneously.
+- **Hamburger replaces current surface immediately.** If a bottom sheet is open, tapping Hamburger must open Hamburger without a perceived delay.
+
+### Hamburger Orientation + Accordion Rules
+
+- On open, the section containing the current page **auto-expands**.
+- The current page item is **highlighted**.
+- Only one section may be expanded at a time (accordion).
+- User may collapse all sections (no section expanded).
+- If the user expands a different section, the previously expanded section collapses.
+- Selecting a destination closes Hamburger immediately and navigates.
+- Provide brief pressed feedback (~100–150ms) on destination tap before closing.
+
+### Bottom Sheets (Notifications / Messages / Tools)
+
+- Only one bottom sheet may be open at a time.
+- Bottom sheets never stack.
+- Switching between Notifications and Messages uses **Option B** behavior: close current sheet, then open the next.
+- Tools opens as a hub sheet; selecting a tool replaces the hub with the selected tool sheet.
+- Tool sheets provide a **Back** affordance to return to the Tools hub.
+
+### AI Assistant (Mobile)
+
+- AI opens as **full-screen immersive mode** and replaces the application chrome.
+- While AI is open, Hamburger and bottom sheets are not available.
+- **Minimize** preserves the AI session and returns to the app; a globally persistent entry point remains available.
+- **Close** destroys the AI session.
+- AI context persists with the session across navigation when minimized.
+- AI does not auto-update context when navigating to a new page.
+
+### Required Demo Scenarios (Must Pass)
+
+1. Open Hamburger → current section auto-expands; active item highlighted; only one section open; can collapse all.
+2. Open Notifications → tap Messages → Notifications closes then Messages opens.
+3. With any bottom sheet open → tap Hamburger → Hamburger opens immediately (sheet dismissed without a perceived delay).
+4. Open Tools → open a child tool → child replaces hub; Back returns to hub.
+5. Open AI → chrome replaced; cannot open Hamburger or bottom sheets.
+6. Minimize AI → persistent entry remains across pages; reopen continues same session.
+
 ## Mobile & Responsive Guidance
 
 **Goal:** Preserve the same mental model while adapting surfaces for small screens.
@@ -347,7 +394,7 @@ All transitions must result in a single active surface.
 - Desktop right drawer becomes a **bottom sheet** on mobile.
 - Details/Context is a bottom sheet opened by explicit affordances.
 - Tools is a separate bottom sheet opened by a tools icon.
-- AI assistant is a separate modal/bottom sheet (do not stack sheets).
+- AI assistant is a separate full-screen mode on mobile (do not stack; replaces chrome).
 
 ---
 

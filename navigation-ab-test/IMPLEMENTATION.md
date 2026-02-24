@@ -17,6 +17,7 @@ If you add new guidance:
 - How to Add New Context Drawers
 - AI Assistant State Management
 - AI Split-View Pattern Implementation (Variant A)
+- Mobile Implementation Checklist
 - Appendix: Development Workflow
 - Appendix: Troubleshooting
 
@@ -436,6 +437,7 @@ src/components/
 
 ---
 
+
 ## Mobile State Machine Implementation Contract
 
 This section translates the mobile architectural rules into implementable state logic.
@@ -534,6 +536,62 @@ The implementation MUST guarantee:
 - Navigation between pages never mutates AI session state.
 
 Any violation of these invariants is considered a structural bug.
+
+## Mobile Implementation Checklist
+
+This checklist is used to validate the mobile implementation against ARCHITECTURE.md → **Mobile Acceptance Criteria**. Claude Code and engineers must complete it after changes.
+
+### Single Source of Truth
+
+- [ ] `mobileSurface` is the single discriminated source of truth for mobile overlays/sheets/AI.
+- [ ] There are no parallel booleans (e.g., `isHamburgerOpen`, `isToolsOpen`) that can desync surface state.
+- [ ] `mobileSurface` is owned at the layout/root level (not inside page components).
+
+### Hamburger (Full-Screen)
+
+- [ ] Hamburger renders as a full-screen overlay and blocks top-bar icon interaction.
+- [ ] On open, the section containing `currentPage` auto-expands and the active item is highlighted.
+- [ ] Accordion behavior: only one section open; user can collapse all.
+- [ ] Destination tap provides brief pressed feedback (~100–150ms) and then closes the overlay.
+- [ ] If any bottom sheet is open, tapping Hamburger replaces it immediately (no perceived delay).
+
+### Bottom Sheets
+
+- [ ] Only one bottom sheet may be open at a time.
+- [ ] Notifications ↔ Messages switching uses Option B: close (animate out) then open.
+- [ ] Tools opens as a hub sheet.
+- [ ] Selecting a tool replaces the hub with the tool sheet (not stacked).
+- [ ] Tool sheets include a Back affordance returning to the Tools hub.
+
+### AI (Mobile)
+
+- [ ] AI opens as `AI_FULL` and replaces application chrome (no top bar, no hamburger, no sheets).
+- [ ] Minimize returns to `NONE` while preserving `aiSession`.
+- [ ] A globally persistent minimized entry point is visible across pages when an AI session exists and is minimized.
+- [ ] Close destroys session: `aiSession` cleared and surface returns to `NONE`.
+- [ ] AI context persists with the session across navigation; navigation does not auto-mutate context.
+
+### Exclusivity / Non-Stacking Invariants
+
+- [ ] Hamburger never coexists with any bottom sheet.
+- [ ] Bottom sheets never stack.
+- [ ] AI never coexists with hamburger or bottom sheets.
+
+### Must-Pass Demo Scenarios
+
+- [ ] Scenario 1: Open Hamburger → current section auto-expands; active item highlighted; only one section open; can collapse all.
+- [ ] Scenario 2: Open Notifications → tap Messages → Notifications closes then Messages opens.
+- [ ] Scenario 3: With any bottom sheet open → tap Hamburger → Hamburger opens immediately (sheet dismissed without a perceived delay).
+- [ ] Scenario 4: Open Tools → open a child tool → child replaces hub; Back returns to hub.
+- [ ] Scenario 5: Open AI → chrome replaced; cannot open Hamburger or bottom sheets.
+- [ ] Scenario 6: Minimize AI → persistent entry remains across pages; reopen continues same session.
+
+### Recommended Timing (Non-Blocking)
+
+These are recommended to maintain consistent feel; they are not architectural requirements.
+
+- Option B sheet switch: close animation 200–250ms, then open animation 200–250ms.
+- Pressed feedback on destination tap: 100–150ms before overlay closes.
 
 ## Appendix: Development Workflow
 

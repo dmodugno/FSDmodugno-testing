@@ -5,6 +5,7 @@
  * - Only one bottom sheet may be open at a time (no stacking)
  * - Switching sheets animates close → open
  * - Tapping hamburger immediately replaces sheet
+ * - Tool child sheets show Back button to return to hub
  *
  * See ARCHITECTURE.md → Bottom Sheet Behavior (Mobile)
  */
@@ -16,7 +17,9 @@ export default function BottomSheet({
   onClose,
   title,
   children,
-  height = 'h-2/3' // Default to 2/3 screen height
+  height = 'h-2/3', // Default to 2/3 screen height
+  showBack = false, // Show back button for tool children
+  onBack = null // Back handler
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -50,7 +53,22 @@ export default function BottomSheet({
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+          {/* Left: Back button (if tool child) or empty space */}
+          <div className="flex items-center gap-2">
+            {showBack && onBack && (
+              <button
+                onClick={onBack}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Back"
+              >
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+          </div>
+          {/* Right: Close button */}
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg"

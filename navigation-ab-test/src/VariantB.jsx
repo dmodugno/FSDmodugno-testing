@@ -377,6 +377,8 @@ export default function VariantB() {
                 isOpen={true}
                 onClose={mobile.closeBottomSheet}
                 title={mobileTools.find(t => t.id === mobile.selectedTool)?.label || 'Tool'}
+                showBack={true}
+                onBack={mobile.backToToolsHub}
               >
                 {renderMobileToolContent()}
               </BottomSheet>

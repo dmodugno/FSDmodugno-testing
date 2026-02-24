@@ -20,6 +20,7 @@ export default function HamburgerOverlay({
   menuItems
 }) {
   const [expandedSection, setExpandedSection] = useState(null);
+  const [pressedItem, setPressedItem] = useState(null); // For tap feedback
   const baseUrl = import.meta.env.BASE_URL;
 
   // Auto-expand section containing current page when opening
@@ -40,8 +41,13 @@ export default function HamburgerOverlay({
   };
 
   const handleItemClick = (pageName) => {
-    onNavigate(pageName);
-    onClose(); // Immediately close overlay after navigation
+    // Add pressed feedback (100-150ms) before closing
+    setPressedItem(pageName);
+    setTimeout(() => {
+      onNavigate(pageName);
+      onClose();
+      setPressedItem(null);
+    }, 120); // 120ms pressed feedback
   };
 
   if (!isOpen) return null;
@@ -80,8 +86,10 @@ export default function HamburgerOverlay({
                     handleItemClick(item.label);
                   }
                 }}
-                className={`w-full flex items-center justify-between p-4 ${
-                  isCurrentPage
+                className={`w-full flex items-center justify-between p-4 transition-colors ${
+                  pressedItem === item.label
+                    ? 'bg-green-100 border-l-4 border-green-600'
+                    : isCurrentPage
                     ? 'bg-green-50 border-l-4 border-green-600 text-green-700'
                     : 'hover:bg-gray-50'
                 }`}
@@ -122,8 +130,10 @@ export default function HamburgerOverlay({
                       <button
                         key={index}
                         onClick={() => handleItemClick(subItem.label)}
-                        className={`w-full text-left px-4 py-3 pl-14 ${
-                          isCurrentSubPage
+                        className={`w-full text-left px-4 py-3 pl-14 transition-colors ${
+                          pressedItem === subItem.label
+                            ? 'bg-green-100 border-l-4 border-green-600'
+                            : isCurrentSubPage
                             ? 'bg-green-50 border-l-4 border-green-600 text-green-700'
                             : 'hover:bg-gray-100'
                         }`}

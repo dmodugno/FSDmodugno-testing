@@ -107,6 +107,15 @@ export function useMobileNavigation() {
   };
 
   /**
+   * Back to Tools Hub
+   * Returns from tool child to tools hub
+   */
+  const backToToolsHub = () => {
+    setSelectedTool(null);
+    setMobileSurface(MOBILE_SURFACES.BOTTOM_SHEET_TOOLS);
+  };
+
+  /**
    * Close any bottom sheet
    * Returns to NONE state
    */
@@ -219,6 +228,7 @@ export function useMobileNavigation() {
     openMessages,
     openTools,
     openToolChild,
+    backToToolsHub,
     closeBottomSheet,
 
     // AI actions

@@ -8,7 +8,7 @@ import VariantB from './VariantB'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/navigation-ab-test">
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <UserProvider>
         <Routes>
           <Route path="/" element={<VariantA />} />

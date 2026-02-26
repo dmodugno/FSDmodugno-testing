@@ -19,7 +19,8 @@ export default function BottomSheet({
   children,
   height = 'h-2/3', // Default to 2/3 screen height
   showBack = false, // Show back button for tool children
-  onBack = null // Back handler
+  onBack = null, // Back handler
+  customHeader = null // Optional custom header content (ReactNode)
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -53,31 +54,52 @@ export default function BottomSheet({
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          {/* Left: Back button (if tool child) or empty space */}
-          <div className="flex items-center gap-2">
-            {showBack && onBack && (
+          {customHeader ? (
+            // Custom header content with close button
+            <>
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {customHeader}
+              </div>
               <button
-                onClick={onBack}
-                className="p-2 hover:bg-gray-100 rounded-lg"
-                aria-label="Back"
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-lg flex-shrink-0"
+                aria-label="Close"
               >
                 <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-            )}
-            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          </div>
-          {/* Right: Close button */}
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg"
-            aria-label="Close"
-          >
-            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            </>
+          ) : (
+            // Default header with title
+            <>
+              {/* Left: Back button (if tool child) or empty space */}
+              <div className="flex items-center gap-2">
+                {showBack && onBack && (
+                  <button
+                    onClick={onBack}
+                    className="p-2 hover:bg-gray-100 rounded-lg"
+                    aria-label="Back"
+                  >
+                    <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                )}
+                <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+              </div>
+              {/* Right: Close button */}
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </>
+          )}
         </div>
 
         {/* Content */}

@@ -1,5 +1,33 @@
 This document defines non-negotiable system rules.
 
+## Documentation Governance Rules
+
+This repository enforces a strict separation between behavioral architecture and implementation mechanics.
+
+### ARCHITECTURE.md Owns:
+
+- Behavioral rules
+- Interaction invariants
+- Surface hierarchy definitions
+- State exclusivity rules
+- Non-goals
+- Acceptance criteria
+
+This file must NOT contain:
+
+- JSX or React code
+- Hook implementations
+- CSS classes or Tailwind utilities
+- Component file paths
+- State variable names
+- Animation durations or pixel values
+
+If a new behavior is introduced, it must be defined here first before it is implemented.
+
+If ARCHITECTURE.md and IMPLEMENTATION.md contradict each other, ARCHITECTURE.md is the source of truth.
+
+Do not reorganize or refactor documentation structure unless explicitly instructed.
+
 # FamilySearch Navigation Architecture
 
 This document captures architectural decisions, design rationale, and guiding principles for the FamilySearch Navigation A/B Test project.

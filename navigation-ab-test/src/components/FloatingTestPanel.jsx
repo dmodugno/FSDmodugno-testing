@@ -178,7 +178,7 @@ export default function FloatingTestPanel({ variant }) {
               <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Variant</h3>
               <div className="flex gap-2">
                 <a
-                  href="/navigation-ab-test/"
+                  href={`${import.meta.env.BASE_URL}`}
                   className={`flex-1 px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant A'
                       ? 'bg-green-100 border-green-600 text-green-900'
@@ -188,7 +188,7 @@ export default function FloatingTestPanel({ variant }) {
                   Variant A
                 </a>
                 <a
-                  href="/navigation-ab-test/variant-b"
+                  href={`${import.meta.env.BASE_URL}variant-b`}
                   className={`flex-1 px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant B'
                       ? 'bg-green-100 border-green-600 text-green-900'

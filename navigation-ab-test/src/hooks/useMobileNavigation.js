@@ -22,6 +22,10 @@ export const MOBILE_SURFACES = {
   BOTTOM_SHEET_MESSAGES: 'BOTTOM_SHEET_MESSAGES',
   BOTTOM_SHEET_TOOLS: 'BOTTOM_SHEET_TOOLS',
   BOTTOM_SHEET_TOOL_CHILD: 'BOTTOM_SHEET_TOOL_CHILD',
+  BOTTOM_SHEET_PERSON: 'BOTTOM_SHEET_PERSON',
+  BOTTOM_SHEET_ORGANIZE_GALLERY: 'BOTTOM_SHEET_ORGANIZE_GALLERY',
+  BOTTOM_SHEET_GALLERY_TOOLS: 'BOTTOM_SHEET_GALLERY_TOOLS',
+  BOTTOM_SHEET_GALLERY_SEARCH: 'BOTTOM_SHEET_GALLERY_SEARCH',
   AI_FULL: 'AI_FULL'
 };
 
@@ -113,6 +117,50 @@ export function useMobileNavigation() {
   const backToToolsHub = () => {
     setSelectedTool(null);
     setMobileSurface(MOBILE_SURFACES.BOTTOM_SHEET_TOOLS);
+  };
+
+  /**
+   * Open Bottom Sheet - Person Detail
+   * Shows person details drawer
+   */
+  const openPersonDrawer = () => {
+    if (mobileSurface === MOBILE_SURFACES.AI_FULL) {
+      return;
+    }
+    setMobileSurface(MOBILE_SURFACES.BOTTOM_SHEET_PERSON);
+  };
+
+  /**
+   * Open Bottom Sheet - Organize Gallery
+   * Shows gallery organization drawer
+   */
+  const openOrganizeGallery = () => {
+    if (mobileSurface === MOBILE_SURFACES.AI_FULL) {
+      return;
+    }
+    setMobileSurface(MOBILE_SURFACES.BOTTOM_SHEET_ORGANIZE_GALLERY);
+  };
+
+  /**
+   * Open Bottom Sheet - Gallery Tools
+   * Shows gallery tools menu (View, Filter, Sort, Organize Gallery)
+   */
+  const openGalleryTools = () => {
+    if (mobileSurface === MOBILE_SURFACES.AI_FULL) {
+      return;
+    }
+    setMobileSurface(MOBILE_SURFACES.BOTTOM_SHEET_GALLERY_TOOLS);
+  };
+
+  /**
+   * Open Bottom Sheet - Gallery Search
+   * Shows gallery search interface (search memories by name)
+   */
+  const openGallerySearch = () => {
+    if (mobileSurface === MOBILE_SURFACES.AI_FULL) {
+      return;
+    }
+    setMobileSurface(MOBILE_SURFACES.BOTTOM_SHEET_GALLERY_SEARCH);
   };
 
   /**
@@ -229,6 +277,10 @@ export function useMobileNavigation() {
     openTools,
     openToolChild,
     backToToolsHub,
+    openPersonDrawer,
+    openOrganizeGallery,
+    openGalleryTools,
+    openGallerySearch,
     closeBottomSheet,
 
     // AI actions

@@ -1,6 +1,6 @@
 import { useUser } from '../../contexts/UserContext';
 
-export default function PersonDetailDrawer({ person, isOpen, onClose, isSplit }) {
+export default function PersonDetailDrawer({ person, isOpen, onClose, isSplit, hideHeader = false }) {
   const { user } = useUser();
   const baseUrl = import.meta.env.BASE_URL;
 
@@ -28,39 +28,41 @@ export default function PersonDetailDrawer({ person, isOpen, onClose, isSplit })
     <div className="bg-white h-full overflow-y-auto w-full">
         {person && (
           <div>
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Profile Photo */}
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-              {person.photo ? (
-                <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
-              ) : (
-                <svg className="w-full h-full text-gray-400 p-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
-              )}
+        {/* Header - conditionally rendered */}
+        {!hideHeader && (
+          <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* Profile Photo */}
+              <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                {person.photo ? (
+                  <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
+                ) : (
+                  <svg className="w-full h-full text-gray-400 p-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </div>
+
+              <div>
+                <h2 className="font-semibold text-lg text-gray-900">{person.name}</h2>
+                <p className="text-sm text-gray-600">{person.id}</p>
+              </div>
             </div>
 
-            <div>
-              <h2 className="font-semibold text-lg text-gray-900">{person.name}</h2>
-              <p className="text-sm text-gray-600">{person.id}</p>
-            </div>
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-gray-100 rounded"
+              aria-label="Close drawer"
+            >
+              <img
+                src={`${baseUrl}icons/MenuClose.svg`}
+                alt="Close"
+                className="w-5 h-5"
+              />
+            </button>
           </div>
-
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded"
-            aria-label="Close drawer"
-          >
-            <img
-              src={`${baseUrl}icons/MenuClose.svg`}
-              alt="Close"
-              className="w-5 h-5"
-            />
-          </button>
-        </div>
+        )}
 
         {/* Content */}
         <div className="p-4">

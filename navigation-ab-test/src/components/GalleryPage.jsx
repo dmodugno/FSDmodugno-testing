@@ -1,4 +1,11 @@
-export default function GalleryPage({ onOrganizeGalleryClick, organizeGalleryOpen = false }) {
+export default function GalleryPage({
+  onOrganizeGalleryClick,
+  organizeGalleryOpen = false,
+  mobileMode = false,
+  onGalleryToolsClick,
+  onGallerySearchClick,
+  onAddMemoriesClick
+}) {
   const baseUrl = import.meta.env.BASE_URL;
 
   // Mock memory data
@@ -70,68 +77,110 @@ export default function GalleryPage({ onOrganizeGalleryClick, organizeGalleryOpe
 
   return (
     <div className="h-full bg-gray-200 flex flex-col">
-      {/* Toolbar */}
-      <div className="mx-4 mt-4 bg-white border border-gray-300 rounded-full shadow-sm px-6 py-4">
-        <div className="flex items-center justify-between gap-4">
-          {/* Left section */}
-          <div className="flex items-center gap-4">
-            <button className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded transition-colors">
-              ADD MEMORIES
-            </button>
-            <button className="text-teal-600 hover:text-teal-700 font-medium">
-              SELECT
-            </button>
-          </div>
-
-          {/* Right section */}
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <span className="text-sm font-medium">LIST</span>
-            </button>
-            <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              <span className="text-sm font-medium">FILTER</span>
-            </button>
-            <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-              </svg>
-              <span className="text-sm font-medium">SORT</span>
-            </button>
-
-            {/* Search field */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Find memories"
-                className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-              />
-              <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+      {/* Desktop Toolbar - Hidden on mobile */}
+      {!mobileMode && (
+        <div className="mx-4 mt-4 bg-white border border-gray-300 rounded-full shadow-sm px-6 py-4">
+          <div className="flex items-center justify-between gap-4">
+            {/* Left section */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={onAddMemoriesClick}
+                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded transition-colors"
+              >
+                ADD MEMORIES
+              </button>
+              <button className="text-teal-600 hover:text-teal-700 font-medium">
+                SELECT
+              </button>
             </div>
 
-            {/* Gallery icon */}
-            <button
-              onClick={onOrganizeGalleryClick}
-              className={`p-2 rounded-lg transition-colors ${
-                organizeGalleryOpen
-                  ? 'bg-green-50 border-2 border-green-600 text-green-600'
-                  : 'text-teal-600 hover:bg-teal-50'
-              }`}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
-              </svg>
-            </button>
+            {/* Right section */}
+            <div className="flex items-center gap-4">
+              <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <span className="text-sm font-medium">LIST</span>
+              </button>
+              <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span className="text-sm font-medium">FILTER</span>
+              </button>
+              <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                </svg>
+                <span className="text-sm font-medium">SORT</span>
+              </button>
+
+              {/* Search field */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Find memories"
+                  className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                />
+                <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+
+              {/* Gallery icon */}
+              <button
+                onClick={onOrganizeGalleryClick}
+                className={`p-2 rounded-lg transition-colors ${
+                  organizeGalleryOpen
+                    ? 'bg-green-50 border-2 border-green-600 text-green-600'
+                    : 'text-teal-600 hover:bg-teal-50'
+                }`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Mobile Toolbar Strip - Below global top bar */}
+      {mobileMode && (
+        <div className="bg-white border-b border-gray-200 px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* SELECT button */}
+            <button className="text-teal-600 hover:text-teal-700 font-medium text-sm">
+              SELECT
+            </button>
+
+            {/* Right section: Search + More */}
+            <div className="flex items-center gap-4">
+              {/* Search icon */}
+              <button
+                onClick={onGallerySearchClick}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Search memories"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+
+              {/* More (⋯) icon */}
+              <button
+                onClick={onGalleryToolsClick}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Gallery tools"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Grid */}
       <div className="flex-1 p-6 overflow-y-auto">
@@ -205,6 +254,19 @@ export default function GalleryPage({ onOrganizeGalleryClick, organizeGalleryOpe
           ))}
         </div>
       </div>
+
+      {/* Mobile FAB - Add Memories */}
+      {mobileMode && (
+        <button
+          onClick={onAddMemoriesClick}
+          className="fixed bottom-6 right-6 w-14 h-14 bg-teal-600 hover:bg-teal-700 text-white rounded-full shadow-lg flex items-center justify-center z-30 transition-colors"
+          aria-label="Add memories"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

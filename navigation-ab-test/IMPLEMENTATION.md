@@ -2,10 +2,41 @@
 
 This document must comply with ARCHITECTURE.md.
 
+
 If you add new guidance:
 - Place it in the most specific section.
 - Operational notes go in the Appendix.
 - Rationale belongs in ARCHITECTURE.md.
+
+## Documentation Governance Rules
+
+This file implements the behavioral contracts defined in `ARCHITECTURE.md`.
+
+### IMPLEMENTATION.md Owns:
+
+- State models (e.g., `mobileSurface`, `aiSession`)
+- Rendering conditions
+- Component ownership and composition
+- Transition logic and handlers
+- Implementation invariants
+- QA / verification checklists
+
+This file must NOT contain:
+
+- Product rationale
+- UX philosophy
+- Feature justification
+- High-level interaction decisions
+- Changes to behavioral rules without first updating `ARCHITECTURE.md`
+
+If implementation requires changing a behavioral rule:
+1. Update `ARCHITECTURE.md` first.
+2. Then update this file.
+3. Then implement the code.
+
+If contradictions are detected between `ARCHITECTURE.md` and `IMPLEMENTATION.md`, do NOT guess. Stop and report the inconsistency.
+
+Do not reorganize or refactor documentation structure unless explicitly instructed.
 
 ## Table of Contents
 
@@ -496,6 +527,10 @@ Only ONE of the following may be active at a time:
 - `BOTTOM_SHEET_MESSAGES`
 - `BOTTOM_SHEET_TOOLS`
 - `BOTTOM_SHEET_TOOL_CHILD`
+- `BOTTOM_SHEET_PERSON`
+- `BOTTOM_SHEET_ORGANIZE_GALLERY`
+- `BOTTOM_SHEET_GALLERY_TOOLS`
+- `BOTTOM_SHEET_GALLERY_SEARCH`
 - `AI_FULL`
 
 ### Required State Structure
@@ -566,6 +601,22 @@ AI session persistence:
 - Minimize → `setMobileSurface('NONE')` but keep `aiSession`
 - Close → `setAiSession(null); setMobileSurface('NONE')`
 
+#### Opening Gallery Tools (Mobile)
+
+```jsx
+setMobileSurface('BOTTOM_SHEET_GALLERY_TOOLS');
+```
+
+Same behavior as other bottom sheets.
+
+#### Opening Gallery Search (Mobile)
+
+```jsx
+setMobileSurface('BOTTOM_SHEET_GALLERY_SEARCH');
+```
+
+Same behavior as other bottom sheets.
+
 ---
 
 ### Invariants
@@ -606,6 +657,10 @@ This checklist is used to validate the mobile implementation against ARCHITECTUR
 - [ ] Tools opens as a hub sheet.
 - [ ] Selecting a tool replaces the hub with the tool sheet (not stacked).
 - [ ] Tool sheets include a Back affordance returning to the Tools hub.
+- [ ] Gallery Tools bottom sheet opens from mobile Gallery page More (⋯) icon.
+- [ ] Gallery Tools bottom sheet contains: View, Filter, Sort, Organize Gallery.
+- [ ] Gallery Search bottom sheet opens from mobile Gallery page Search icon.
+- [ ] Gallery Search bottom sheet is scoped to Gallery memories only.
 
 ### AI (Mobile)
 

@@ -1,22 +1,24 @@
-export default function OrganizeGalleryDrawer({ isOpen, onClose }) {
+export default function OrganizeGalleryDrawer({ isOpen, onClose, hideHeader = false }) {
   const baseUrl = import.meta.env.BASE_URL;
 
   return (
     <div className="bg-white h-full overflow-y-auto w-full">
       <div className="p-4">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Organize Gallery</h2>
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded"
-              aria-label="Close drawer"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          {/* Header - conditionally rendered */}
+          {!hideHeader && (
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">Organize Gallery</h2>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-gray-100 rounded"
+                aria-label="Close drawer"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
 
           {/* Main Sections */}
           <div className="space-y-1 mb-6">

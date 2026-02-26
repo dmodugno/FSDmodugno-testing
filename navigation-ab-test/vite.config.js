@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { copyFileSync } from 'fs'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     {
@@ -13,8 +13,8 @@ export default defineConfig({
       }
     }
   ],
-  base: '/navigation-ab-test/',
+  base: mode === 'production' ? '/navigation-ab-test/' : '/',
   build: {
     outDir: 'dist'
   }
-})
+}))

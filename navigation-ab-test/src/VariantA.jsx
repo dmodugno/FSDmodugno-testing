@@ -18,6 +18,8 @@ import Messages from './components/Messages';
 import { useUser } from './contexts/UserContext';
 import { useMobileNavigation } from './hooks/useMobileNavigation';
 import LeftNavigation from './components/LeftNavigation';
+import GalleryToolsContent from './components/mobile/GalleryToolsContent';
+import GallerySearchContent from './components/mobile/GallerySearchContent';
 import {
   BottomSheet,
   ToolsHub,
@@ -154,9 +156,14 @@ export default function VariantA() {
   // Person detail drawer management
   const handlePersonClick = (person) => {
     setSelectedPerson(person);
-    setActiveDrawer(null); // Close right drawer when person detail opens
-    setOrganizeGalleryOpen(false); // Close organize gallery when person detail opens
-    setFilterReservationsOpen(false); // Close filter reservations when person detail opens
+
+    if (isMobile) {
+      mobile.openPersonDrawer();
+    } else {
+      setActiveDrawer(null); // Close right drawer when person detail opens
+      setOrganizeGalleryOpen(false); // Close organize gallery when person detail opens
+      setFilterReservationsOpen(false); // Close filter reservations when person detail opens
+    }
   };
 
   const handleClosePersonDrawer = () => {
@@ -165,17 +172,38 @@ export default function VariantA() {
 
   // Organize Gallery drawer management
   const handleOrganizeGalleryClick = () => {
-    setOrganizeGalleryOpen(!organizeGalleryOpen);
-    // Close right drawer, person detail, and filter reservations when organize gallery opens
-    if (!organizeGalleryOpen) {
-      setActiveDrawer(null);
-      setSelectedPerson(null);
-      setFilterReservationsOpen(false);
+    if (isMobile) {
+      setOrganizeGalleryOpen(true);
+      mobile.openOrganizeGallery();
+    } else {
+      setOrganizeGalleryOpen(!organizeGalleryOpen);
+      // Close right drawer, person detail, and filter reservations when organize gallery opens
+      if (!organizeGalleryOpen) {
+        setActiveDrawer(null);
+        setSelectedPerson(null);
+        setFilterReservationsOpen(false);
+      }
     }
   };
 
   const handleCloseOrganizeGallery = () => {
     setOrganizeGalleryOpen(false);
+  };
+
+  // Gallery Tools management (mobile only)
+  const handleGalleryToolsClick = () => {
+    mobile.openGalleryTools();
+  };
+
+  // Gallery Search management (mobile only)
+  const handleGallerySearchClick = () => {
+    mobile.openGallerySearch();
+  };
+
+  // Add Memories management
+  const handleAddMemoriesClick = () => {
+    // UI-only placeholder
+    console.log('Add Memories clicked');
   };
 
   // Filter Reservations drawer management
@@ -378,7 +406,16 @@ export default function VariantA() {
     } else if (currentPage === 'Family Tree') {
       return <FamilyTreePage onPersonClick={handlePersonClick} mobileMode={isMobile} />;
     } else if (currentPage === 'Gallery') {
-      return <GalleryPage onOrganizeGalleryClick={handleOrganizeGalleryClick} organizeGalleryOpen={organizeGalleryOpen} />;
+      return (
+        <GalleryPage
+          onOrganizeGalleryClick={handleOrganizeGalleryClick}
+          organizeGalleryOpen={organizeGalleryOpen}
+          mobileMode={isMobile}
+          onGalleryToolsClick={handleGalleryToolsClick}
+          onGallerySearchClick={handleGallerySearchClick}
+          onAddMemoriesClick={handleAddMemoriesClick}
+        />
+      );
     } else if (currentPage === 'My Reservations') {
       return <MyReservationsPage onFilterClick={handleFilterReservationsClick} />;
     } else {
@@ -489,6 +526,95 @@ export default function VariantA() {
                 onBack={mobile.backToToolsHub}
               >
                 {renderMobileToolContent()}
+              </BottomSheet>
+            )}
+
+            {/* Person Detail Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_PERSON) && selectedPerson && (
+              <BottomSheet
+                isOpen={true}
+                onClose={() => {
+                  setSelectedPerson(null);
+                  mobile.closeBottomSheet();
+                }}
+                customHeader={
+                  <>
+                    {/* Profile Photo */}
+                    <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                      {selectedPerson.photo ? (
+                        <img src={selectedPerson.photo} alt={selectedPerson.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <svg className="w-full h-full text-gray-400 p-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                    {/* Person Info */}
+                    <div className="min-w-0">
+                      <h2 className="font-semibold text-lg text-gray-900 truncate">{selectedPerson.name}</h2>
+                      <p className="text-sm text-gray-600">{selectedPerson.id}</p>
+                    </div>
+                  </>
+                }
+              >
+                <PersonDetailDrawer
+                  person={selectedPerson}
+                  isOpen={true}
+                  onClose={() => {
+                    setSelectedPerson(null);
+                    mobile.closeBottomSheet();
+                  }}
+                  isSplit={false}
+                  hideHeader={true}
+                />
+              </BottomSheet>
+            )}
+
+            {/* Organize Gallery Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_ORGANIZE_GALLERY) && organizeGalleryOpen && (
+              <BottomSheet
+                isOpen={true}
+                onClose={() => {
+                  setOrganizeGalleryOpen(false);
+                  mobile.closeBottomSheet();
+                }}
+                title="Organize Gallery"
+              >
+                <OrganizeGalleryDrawer
+                  isOpen={true}
+                  onClose={() => {
+                    setOrganizeGalleryOpen(false);
+                    mobile.closeBottomSheet();
+                  }}
+                  hideHeader={true}
+                />
+              </BottomSheet>
+            )}
+
+            {/* Gallery Tools Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_GALLERY_TOOLS) && (
+              <BottomSheet
+                isOpen={true}
+                onClose={mobile.closeBottomSheet}
+                title="Gallery tools"
+              >
+                <GalleryToolsContent
+                  onOrganizeGalleryClick={() => {
+                    mobile.closeBottomSheet();
+                    handleOrganizeGalleryClick();
+                  }}
+                />
+              </BottomSheet>
+            )}
+
+            {/* Gallery Search Bottom Sheet */}
+            {mobile.isActive(mobile.SURFACES.BOTTOM_SHEET_GALLERY_SEARCH) && (
+              <BottomSheet
+                isOpen={true}
+                onClose={mobile.closeBottomSheet}
+                title="Search memories"
+              >
+                <GallerySearchContent />
               </BottomSheet>
             )}
 

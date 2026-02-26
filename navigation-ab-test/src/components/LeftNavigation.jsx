@@ -15,8 +15,6 @@ export default function LeftNavigation({
   const [expandedSubItems, setExpandedSubItems] = useState({});
   const [pressedItem, setPressedItem] = useState(null); // For mobile tap feedback
 
-  if (!user) return null;
-
   const isLDS = user?.churchMembership === 'LDS';
 
   const toggleSection = (section) => {
@@ -33,6 +31,8 @@ export default function LeftNavigation({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mobileMode, currentPage]);
+
+  if (!user) return null;
 
   const handleNavigate = (pageName) => {
     if (mobileMode) {

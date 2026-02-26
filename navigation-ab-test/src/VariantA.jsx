@@ -579,6 +579,10 @@ export default function VariantA() {
                   mobile.closeBottomSheet();
                 }}
                 title="Organize Gallery"
+                showBack={true}
+                onBack={() => {
+                  mobile.openGalleryTools();
+                }}
               >
                 <OrganizeGalleryDrawer
                   isOpen={true}

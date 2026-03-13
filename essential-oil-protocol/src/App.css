@@ -1,0 +1,389 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  background: #2c3e50;
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+nav h1 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+nav a:hover {
+  opacity: 0.8;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+button.primary {
+  background: #3498db;
+  color: white;
+}
+
+button.primary:hover {
+  background: #2980b9;
+}
+
+button.danger {
+  background: #e74c3c;
+  color: white;
+}
+
+button.danger:hover {
+  background: #c0392b;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input, select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+/* Pick Oils */
+.pick-oils {
+  display: grid;
+  gap: 2rem;
+}
+
+.profile-section {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.profile-section label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selection-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.selected-oils {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.selected-oil {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 4px;
+}
+
+.selected-oil .order {
+  font-weight: bold;
+  min-width: 2rem;
+}
+
+.selected-oil .name {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.save-set {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.oil-picker {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.search {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.oil-list {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+}
+
+.oil-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.oil-item:hover {
+  background: #f8f9fa;
+}
+
+.oil-item.selected {
+  background: #e3f2fd;
+}
+
+/* Protocol Output */
+.protocol-output {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.back-button {
+  align-self: flex-start;
+}
+
+.section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.section h3 {
+  margin-top: 0;
+}
+
+.warnings {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.warnings ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.5rem;
+}
+
+.mix-composition {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.mix-component {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mix-component .label {
+  font-weight: bold;
+  min-width: 80px;
+}
+
+.topical-area {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.topical-area:last-child {
+  border-bottom: none;
+}
+
+.application {
+  padding: 0.75rem;
+  background: white;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.rotation .info {
+  font-style: italic;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* Saved Sets */
+.sets-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.set-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.set-card h3 {
+  margin-top: 0;
+}
+
+.set-card .date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.set-card .oils-preview {
+  margin: 1rem 0;
+  color: #555;
+}
+
+.set-card .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Overrides */
+.overrides {
+  max-width: 800px;
+}
+
+.info {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.oil-selector {
+  margin-bottom: 2rem;
+}
+
+.oil-selector select {
+  width: 100%;
+  max-width: 400px;
+}
+
+.override-form {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-field input[type="text"] {
+  width: 100%;
+}
+
+.placements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.placement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 4px;
+}
+
+button.small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Backup */
+.backup {
+  max-width: 800px;
+}
+
+.backup .section {
+  margin-bottom: 2rem;
+}
+
+.file-input {
+  cursor: pointer;
+}
+
+.file-input input[type="file"] {
+  display: none;
+}
+
+.file-input .button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #3498db;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-input .button:hover {
+  background: #2980b9;
+}
+
+.note {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fff3cd;
+  border-radius: 4px;
+}

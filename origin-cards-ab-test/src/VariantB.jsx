@@ -85,7 +85,7 @@ export default function VariantB() {
               Where are your relatives from?
             </h1>
             <p className="text-base text-gray-700 mb-8 max-w-xl">
-              Select a country to explore its resources, and remember to check back often for updates. The chips listed below represent the most common origin countries based on your current location.
+              Select a country to explore its resources. Discover experiences, records, and research from around the world.
             </p>
             
             <CountryChips

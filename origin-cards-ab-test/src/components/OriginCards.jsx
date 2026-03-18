@@ -1,4 +1,5 @@
 import { originCardsContent } from '../data.jsx';
+import AustraliaStateSelector from './AustraliaStateSelector';
 
 export default function OriginCards({ country, skipAncestorSearch = false }) {
   const baseUrl = import.meta.env.BASE_URL;
@@ -62,6 +63,11 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
 
   // First card - full width horizontal layout
   const FullWidthCard = ({ card, country }) => {
+    // Check for custom component
+    if (card.customComponent === 'AustraliaStateSelector') {
+      return <AustraliaStateSelector />;
+    }
+
     const hasImage = card.image && card.image !== 'None' && card.image !== '';
     const hasLink = card.link && (!card.buttons || card.buttons.length === 0) && !card.hasForm;
     const isMultiFieldForm = card.hasForm && card.formFields && card.formFields.length > 1;
@@ -244,6 +250,11 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
 
   // Multi-column cards - vertical layout
   const VerticalCard = ({ card, isFullWidth, country }) => {
+    // Check for custom component
+    if (card.customComponent === 'AustraliaStateSelector') {
+      return <AustraliaStateSelector />;
+    }
+
     const hasImage = card.image && card.image !== 'None' && card.image !== '';
     const hasLink = card.link && (!card.buttons || card.buttons.length === 0) && !card.hasForm;
     

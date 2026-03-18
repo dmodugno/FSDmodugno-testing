@@ -17,11 +17,7 @@ export const overlayCountries = ['Australia','Brazil','Cambodia','Canada','China
 export const originCardsContent = {
   Australia: [
     {
-      header: "Click your state for facts, history, and records",
-      subheader: "Ever wonder what makes your state special? Click your home on the map to discover its unique history. Search historical records and unearth stories waiting to be shared.",
-      hasForm: false,
-      buttons: [],
-      image: "Placeholder"
+      customComponent: "AustraliaStateSelector"
     },
     {
       header: "Your birth year was extraordinary!",

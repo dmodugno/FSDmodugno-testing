@@ -108,7 +108,7 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
               </button>
             </div>
             <p className="text-gray-600 text-sm mb-8">
-              Note that the options below only represent the countries we have experience with. Check back regularly for updates to discover new resources.
+              Discover experiences, records, and research from around the world.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-16 gap-y-6 text-teal-700 mb-6">
               {availableCountries().map(country => (
@@ -125,11 +125,11 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
               ))}
             </div>
             <p className="text-gray-600 text-sm text-center">
-              Is the country you are looking for missing? {moreCountriesLink?.internal ? (
-                <Link to={moreCountriesLink.url} target="_blank" className="text-teal-700 hover:underline">Click here</Link>
+              {moreCountriesLink?.internal ? (
+                <Link to={moreCountriesLink.url} target="_blank" className="text-teal-700 hover:underline">Explore all countries, records, and research tools</Link>
               ) : (
-                <a href={moreCountriesLink?.url || 'https://www.familysearch.org/en/search/location/list'} target="_blank" rel="noopener noreferrer" className="text-teal-700 hover:underline">Click here</a>
-              )} to discover more.
+                <a href={moreCountriesLink?.url || 'https://www.familysearch.org/en/search/location/list'} target="_blank" rel="noopener noreferrer" className="text-teal-700 hover:underline">Explore all countries, records, and research tools</a>
+              )}
             </p>
           </div>
         </div>,

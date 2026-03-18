@@ -34,7 +34,7 @@ export const originCardsContent = {
           'New South Wales'
         ],
         urlPattern: "australia/state",
-        mapImage: "assets/australia-map.webp",
+        mapImage: "australia-map.webp",
         selectPlaceholder: "Select State",
         mapPosition: "right"
       }
@@ -258,7 +258,7 @@ export const originCardsContent = {
       hasForm: false,
       buttons: [{ text: "Watch video", emphasis: "high" }],
       videoUrl: "https://youtu.be/cSfNA86DIUM?si=cXbSPbsw5opMuqw5",
-      image: "assets/your-story-worth-remembering.png",
+      image: "your-story-worth-remembering.png",
       fullWidth: true
     }
   ],
@@ -311,7 +311,7 @@ export const originCardsContent = {
           'Southland'
         ],
         urlPattern: "newzealand/region",
-        mapImage: "assets/newzealand-map.svg",
+        mapImage: "newzealand-map.svg",
         selectPlaceholder: "Select Region",
         mapPosition: "top"
       }

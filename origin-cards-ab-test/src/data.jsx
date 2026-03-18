@@ -7,7 +7,9 @@ export const countryChipsConfig = {
   'Brasil': ['Brazil', 'Portugal', 'Italy', 'Spain', 'Germany'],
   'Egypt': ['Egypt', 'England'],
   'China': ['China', 'Taiwan', 'United States', 'England'],
-  'South Africa': ['South Africa', 'England', 'Germany', 'United States', 'Norway']
+  'South Africa': ['South Africa', 'England', 'Germany', 'United States', 'Norway'],
+  'New Zealand': ['New Zealand', 'Australia', 'England', 'United States'],
+  'Japan': ['Japan', 'Korea', 'China', 'United States']
 };
 
 // All countries available in the overlay
@@ -17,7 +19,25 @@ export const overlayCountries = ['Australia','Brazil','Cambodia','Canada','China
 export const originCardsContent = {
   Australia: [
     {
-      customComponent: "AustraliaStateSelector"
+      customComponent: "LocationSelector",
+      config: {
+        heading: "Discover Records by State",
+        subheading: "Find historical records and common surnames, and unearth stories waiting to be shared.",
+        locations: [
+          'Tasmania',
+          'Western Australia',
+          'Victoria',
+          'Queensland',
+          'Northern Territory',
+          'South Australia',
+          'Australian Capital Territory',
+          'New South Wales'
+        ],
+        urlPattern: "australia/state",
+        mapImage: "assets/australia-map.webp",
+        selectPlaceholder: "Select State",
+        mapPosition: "right"
+      }
     },
     {
       header: "Your birth year was extraordinary!",
@@ -267,12 +287,33 @@ export const originCardsContent = {
       image: "Placeholder"
     },
     {
-      header: "Discover more about your favorite regions of New Zealand.",
-      subheader: "Explore regions and histories across Aotearoa by interacting with the map.",
-      hasForm: false,
-      buttons: [],
-      image: "Placeholder",
-      link: ""
+      customComponent: "LocationSelector",
+      config: {
+        heading: "Discover Records by Region",
+        subheading: "Find historical records and common surnames, and unearth stories waiting to be shared.",
+        locations: [
+          'Northland',
+          'Auckland',
+          'Waikato',
+          'Bay of Plenty',
+          'Gisborne',
+          'Hawkes Bay',
+          'Taranaki',
+          'Manawatu-Wanganui',
+          'Wellington',
+          'Tasman',
+          'Nelson',
+          'Marlborough',
+          'Canterbury',
+          'West Coast',
+          'Otago',
+          'Southland'
+        ],
+        urlPattern: "newzealand/region",
+        mapImage: "assets/newzealand-map.svg",
+        selectPlaceholder: "Select Region",
+        mapPosition: "top"
+      }
     },
     {
       header: "Your birth year was extraordinary.",

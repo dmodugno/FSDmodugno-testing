@@ -44,6 +44,8 @@ export default function Header({ testCountry, onTestCountryChange, showTestBanne
               <option>Egypt</option>
               <option>China</option>
               <option>South Africa</option>
+              <option>New Zealand</option>
+              <option>Japan</option>
             </select>
           </div>
           <div className="flex items-center gap-2 ml-auto">

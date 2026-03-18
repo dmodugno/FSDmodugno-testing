@@ -232,31 +232,24 @@ export const originCardsContent = {
       }
     },
     {
-      header: "Create your family tree keepsake!",
-      subheader: "Printable family keepsakes are a fun way to display and share your family tree.",
+      header: "Get Your Koseki",
+      subheader: "Learn what documents you need and how to request your koseki.",
       hasForm: false,
-      buttons: [],
-      image: "Section"
-    },
-    {
-      header: "Keepsake 1",
-      subheader: "",
-      hasForm: false,
-      buttons: [{ text: "PDF Download", link: "https://cms-z-assets.familysearch.org/6f/53/a62defc146caa1b4fcbb1768e236/keepsake-2.pdf", emphasis: "high" }],
+      buttons: [{ text: "Learn More", link: "https://www.familysearch.org/en/japan/koseki", emphasis: "high" }],
       image: "Placeholder"
     },
     {
-      header: "Keepsake 2",
-      subheader: "",
+      header: "Search Ancestors",
+      subheader: "Discover ancestors in historical records and more.",
       hasForm: false,
-      buttons: [{ text: "PDF Download", link: "https://cms-z-assets.familysearch.org/6f/53/a62defc146caa1b4fcbb1768e236/keepsake-2.pdf", emphasis: "high" }],
+      buttons: [{ text: "Search", link: "https://www.familysearch.org/en/search/discovery/", emphasis: "high" }],
       image: "Placeholder"
     },
     {
-      header: "Keepsake 3",
-      subheader: "",
+      header: "Discover Books",
+      subheader: "Explore digitized books, directories, and more.",
       hasForm: false,
-      buttons: [{ text: "PDF Download", link: "https://cms-z-assets.familysearch.org/6f/53/a62defc146caa1b4fcbb1768e236/keepsake-2.pdf", emphasis: "high" }],
+      buttons: [{ text: "Explore", link: "https://www.familysearch.org/en/library/books/records/?search=&sort=_score&perpage=10&page=1&fulltext=1&&refine%5BAccessLevel%5D%5B%5D=Full+Permission&r&&refine%5BAccessLevel%5D%5B%5D=Public&r&&refine%5BAccessLevel%5D%5B%5D=Limited+Permission&r&&refine%5BLanguage%5D%5B%5D=Japanese&r&&refine%5BLanguage%5D%5B%5D=jap&r&&refine%5BLanguage%5D%5B%5D=ja&r&&perpage=50#title", emphasis: "high" }],
       image: "Placeholder"
     },
     {

@@ -1,5 +1,6 @@
 import { originCardsContent } from '../data.jsx';
 import LocationSelector from './LocationSelector';
+import SurnameSearchCard from './SurnameSearchCard';
 
 export default function OriginCards({ country, skipAncestorSearch = false }) {
   const baseUrl = import.meta.env.BASE_URL;
@@ -66,6 +67,9 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
     // Check for custom component
     if (card.customComponent === 'LocationSelector') {
       return <LocationSelector config={card.config} />;
+    }
+    if (card.customComponent === 'SurnameSearchCard') {
+      return <SurnameSearchCard config={card.config} />;
     }
 
     const hasImage = card.image && card.image !== 'None' && card.image !== '';
@@ -253,6 +257,9 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
     // Check for custom component
     if (card.customComponent === 'LocationSelector') {
       return <LocationSelector config={card.config} />;
+    }
+    if (card.customComponent === 'SurnameSearchCard') {
+      return <SurnameSearchCard config={card.config} />;
     }
 
     const hasImage = card.image && card.image !== 'None' && card.image !== '';

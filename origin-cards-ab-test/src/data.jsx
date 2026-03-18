@@ -208,21 +208,28 @@ export const originCardsContent = {
   ],
   Germany: [
     {
-      header: "Search your Last Name",
-      subheader: "",
-      hasForm: true,
-      formFields: [{ name: "lastName", label: "Last Name" }],
-      buttons: [{ text: "Search", link: "#", emphasis: "high" }],
-      image: "Placeholder"
+      customComponent: "SurnameSearchCard",
+      config: {
+        heading: "Search your Last Name",
+        subheading: "",
+        urlPattern: "surname?surname=",
+        buttonText: "Search",
+        placeholder: "Last Name",
+        image: "Placeholder"
+      }
     }
   ],
   Japan: [
     {
-      header: "About the Find a Grave Project",
-      subheader: "We've teamed up with Find a Grave to bring you more cemetery records.",
-      hasForm: false,
-      buttons: [{ text: "Learn more", link: "#", emphasis: "high" }],
-      image: "Placeholder"
+      customComponent: "SurnameSearchCard",
+      config: {
+        heading: "Search your Last Name",
+        subheading: "",
+        urlPattern: "japan/surname/",
+        buttonText: "Search",
+        placeholder: "Last Name",
+        image: "Placeholder"
+      }
     },
     {
       header: "Create your family tree keepsake!",

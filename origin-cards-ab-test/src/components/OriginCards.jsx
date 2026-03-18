@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { originCardsContent } from '../data.jsx';
 import LocationSelector from './LocationSelector';
 import SurnameSearchCard from './SurnameSearchCard';
+import VideoModal from './VideoModal';
 
 export default function OriginCards({ country, skipAncestorSearch = false }) {
+  const [videoModalUrl, setVideoModalUrl] = useState(null);
   const baseUrl = import.meta.env.BASE_URL;
   let cards = originCardsContent[country] || [];
   
@@ -29,6 +32,33 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
     } else {
       return 'text-teal-700 hover:underline';
     };
+  };
+
+  // Render button or link based on whether card has videoUrl
+  const renderButton = (button, card, idx) => {
+    if (card.videoUrl) {
+      return (
+        <button
+          key={idx}
+          onClick={() => setVideoModalUrl(card.videoUrl)}
+          className={`rounded px-4 py-2 font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
+        >
+          {button.text}
+        </button>
+      );
+    }
+
+    return (
+      <a
+        key={idx}
+        href={button.link}
+        className={`rounded px-4 py-2 font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
+        target={button.link?.startsWith('http') ? '_blank' : '_self'}
+        rel={button.link?.startsWith('http') ? 'noopener noreferrer' : ''}
+      >
+        {button.text}
+      </a>
+    );
   };
 
   // Section header - just text, no card wrapper
@@ -201,17 +231,7 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
 
           {!card.hasForm && card.buttons && card.buttons.length > 0 && (
             <div className="flex flex-wrap gap-3">
-              {card.buttons.map((button, idx) => (
-                <a
-                  key={idx}
-                  href={button.link}
-                  className={`rounded px-4 py-2 font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
-                  target={button.link.startsWith('http') ? '_blank' : '_self'}
-                  rel={button.link.startsWith('http') ? 'noopener noreferrer' : ''}
-                >
-                  {button.text}
-                </a>
-              ))}
+              {card.buttons.map((button, idx) => renderButton(button, card, idx))}
             </div>
           )}
         </div>
@@ -309,17 +329,7 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
 
             {!card.hasForm && card.buttons && card.buttons.length > 0 && (
               <div className="flex flex-wrap gap-3">
-                {card.buttons.map((button, idx) => (
-                  <a
-                    key={idx}
-                    href={button.link}
-                    className={`rounded px-4 py-2 font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
-                    target={button.link.startsWith('http') ? '_blank' : '_self'}
-                    rel={button.link.startsWith('http') ? 'noopener noreferrer' : ''}
-                  >
-                    {button.text}
-                  </a>
-                ))}
+                {card.buttons.map((button, idx) => renderButton(button, card, idx))}
               </div>
             )}
           </div>
@@ -506,17 +516,27 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
 
           {!card.hasForm && card.buttons && card.buttons.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-auto">
-              {card.buttons.map((button, idx) => (
-                <a
-                  key={idx}
-                  href={button.link}
-                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
-                  target={button.link.startsWith('http') ? '_blank' : '_self'}
-                  rel={button.link.startsWith('http') ? 'noopener noreferrer' : ''}
-                >
-                  {button.text}
-                </a>
-              ))}
+              {card.buttons.map((button, idx) =>
+                card.videoUrl ? (
+                  <button
+                    key={idx}
+                    onClick={() => setVideoModalUrl(card.videoUrl)}
+                    className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
+                  >
+                    {button.text}
+                  </button>
+                ) : (
+                  <a
+                    key={idx}
+                    href={button.link}
+                    className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${getButtonStyle(button.emphasis)}`}
+                    target={button.link?.startsWith('http') ? '_blank' : '_self'}
+                    rel={button.link?.startsWith('http') ? 'noopener noreferrer' : ''}
+                  >
+                    {button.text}
+                  </a>
+                )
+              )}
             </div>
           )}
         </div>
@@ -597,6 +617,14 @@ export default function OriginCards({ country, skipAncestorSearch = false }) {
         
         return null; // Already rendered in grid above
       })}
+
+      {/* Video Modal */}
+      {videoModalUrl && (
+        <VideoModal
+          videoUrl={videoModalUrl}
+          onClose={() => setVideoModalUrl(null)}
+        />
+      )}
     </section>
   );
 }

@@ -256,8 +256,9 @@ export const originCardsContent = {
       header: "Your story is worth remembering",
       subheader: "Watch as 5 ordinary people learn about the indelible mark they've left on others.",
       hasForm: false,
-      buttons: [{ text: "Watch video", link: "#", emphasis: "high" }],
-      image: "Placeholder",
+      buttons: [{ text: "Watch video", emphasis: "high" }],
+      videoUrl: "https://youtu.be/cSfNA86DIUM?si=cXbSPbsw5opMuqw5",
+      image: "assets/your-story-worth-remembering.png",
       fullWidth: true
     }
   ],

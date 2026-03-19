@@ -5,7 +5,7 @@ export const countryChipsConfig = {
   'Philippines': ['Philippines', 'China', 'Spain', 'United States'],
   'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland', 'United States'],
   'Brasil': ['Brazil', 'Portugal', 'Italy', 'Spain', 'Germany'],
-  'Canada': ['Canada', 'England', 'Scotland', 'Ireland', 'Germany', 'Italy', 'China', 'Philippines', 'United States'],
+  'Canada': ['Canada', 'England', 'Scotland', 'Ireland', 'Germany'],
   'Egypt': ['Egypt', 'England'],
   'China': ['China', 'Taiwan', 'United States', 'England'],
   'South Africa': ['South Africa', 'England', 'Germany', 'United States', 'Norway'],

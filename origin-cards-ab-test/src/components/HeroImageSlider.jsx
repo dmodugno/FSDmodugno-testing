@@ -32,7 +32,7 @@ export default function HeroImageSlider({ useAlternateFrames = false }) {
             key={index}
             src={image}
             alt={`Animation frame ${index + 1}`}
-            className="absolute right-0 top-0 h-full w-auto object-contain"
+            className="absolute inset-0 w-full h-full object-cover md:object-contain pointer-events-none transition-opacity duration-1000"
             style={{
               animation: `heroFadeInOut ${totalDuration}s infinite`,
               animationDelay: `${index * 5}s`,

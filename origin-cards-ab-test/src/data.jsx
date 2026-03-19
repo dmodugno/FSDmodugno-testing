@@ -528,6 +528,7 @@ export const countryCollections = {
   ],
   'China': [
     { title: 'China, Imperial Examinations and Related Papers (Han Yu-shan Collection), 1646-1904', desc: '455 records', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/2490249', icon: icons.historical },
+    { title: 'China, Cemetery Records, 1820-1983', desc: 'Browse Images', description: 'Cemetery and burial records', link: 'https://www.familysearch.org/en/search/collection/2128186', icon: icons.historical },
   ],
   'England': [
     { title: 'England and Wales, Birth Registration Index, 1837-2008', desc: '132,174,239 records', description: 'Birth registration records', link: 'https://www.familysearch.org/en/search/collection/2285338', icon: icons.civil },
@@ -559,6 +560,16 @@ export const countryCollections = {
   ],
   'Japan': [
     { title: 'Japan, Emigration Records, 1893-1941', desc: '49,794 records', description: 'Emigration records', link: 'https://www.familysearch.org/en/search/collection/1803988', icon: icons.immigration },
+    { title: 'Japan, Census Records, 1661-1875', desc: 'Browse Images', description: 'Population schedules and enumeration data', link: 'https://www.familysearch.org/en/search/collection/2313184', icon: icons.census },
+    { title: 'Japan, Genealogies, 850-2012', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/1919701', icon: icons.historical },
+    { title: 'Japan, Village Records, 709-1982', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/1398719', icon: icons.historical },
+  ],
+  'Korea': [
+    { title: 'Korea, Civil Service Examinations and Records of Officials and Employees, 1390-1900', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/2316009', icon: icons.historical },
+    { title: 'Korea, Collection of Genealogies, 1200-2014', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/1398522', icon: icons.historical },
+    { title: 'Korea, Encyclopedias and Dictionaries, 1500-2000', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/2556015', icon: icons.historical },
+    { title: 'Korea, Local History, 655-1935', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/2556017', icon: icons.historical },
+    { title: 'Korea, School Records, 1958', desc: 'Browse Images', description: 'Historical records and documents', link: 'https://www.familysearch.org/en/search/collection/2556024', icon: icons.historical },
   ],
   'Mexico': [
     { title: 'Mexico, Baptisms, 1560-1950', desc: '29,523,755 records', description: 'Church baptismal records', link: 'https://www.familysearch.org/en/search/collection/1473011', icon: icons.church },

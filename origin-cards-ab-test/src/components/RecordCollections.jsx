@@ -1,5 +1,45 @@
 import { useState, useEffect, useRef } from 'react';
 
+// Map countries to their regions for FamilySearch location URLs
+const countryToRegion = {
+  'Australia': 'Australia & New Zealand',
+  'Brazil': 'South America',
+  'Canada': 'Canada',
+  'China': 'Asia & Middle East',
+  'England': 'United Kingdom and Ireland',
+  'Germany': 'Continental Europe',
+  'Ireland': 'United Kingdom and Ireland',
+  'Italy': 'Continental Europe',
+  'Japan': 'Asia & Middle East',
+  'Korea': 'Asia & Middle East',
+  'Mexico': 'Mexico',
+  'New Zealand': 'Australia & New Zealand',
+  'Northern Ireland': 'United Kingdom and Ireland',
+  'Norway': 'Continental Europe',
+  'Philippines': 'Asia & Middle East',
+  'Portugal': 'Continental Europe',
+  'Scotland': 'United Kingdom and Ireland',
+  'South Africa': 'Africa',
+  'Spain': 'Continental Europe',
+  'United States': 'United States of America',
+  'Wales': 'United Kingdom and Ireland'
+};
+
+// Helper function to convert text to URL format
+const toUrlFormat = (text) => {
+  return text.toLowerCase().replace(/\s+/g, '-');
+};
+
+// Build FamilySearch location URL
+const buildLocationUrl = (country) => {
+  const region = countryToRegion[country];
+  if (!region) return null;
+
+  const regionSlug = toUrlFormat(region);
+  const countrySlug = toUrlFormat(country);
+  return `https://www.familysearch.org/en/search/location/${regionSlug}/${countrySlug}`;
+};
+
 export default function RecordCollections({ country, collections }) {
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -55,14 +95,14 @@ export default function RecordCollections({ country, collections }) {
       </div>
 
       <div className="relative">
-        <div 
+        <div
           ref={trackRef}
           className="flex flex-nowrap gap-6 lg:gap-8 xl:gap-10 overflow-x-auto scroll-smooth px-12 hide-scrollbar"
           onScroll={updateButtons}
           style={{ scrollPaddingLeft: '3rem', scrollPaddingRight: '3rem' }}
         >
           {collections.map((item, index) => (
-            <div 
+            <div
               key={index}
               className="min-w-[270px] max-w-[300px] flex-none bg-white rounded-xl border border-gray-200 p-4 flex flex-col"
               tabIndex={0}
@@ -73,6 +113,26 @@ export default function RecordCollections({ country, collections }) {
               <a href={item.link} target="_blank" rel="noopener noreferrer" className="card-link text-teal-700 mt-3 hover:underline">Explore &rarr;</a>
             </div>
           ))}
+
+          {/* View all collections card */}
+          {buildLocationUrl(country) && (
+            <div
+              className="min-w-[270px] max-w-[300px] flex-none bg-white rounded-xl border border-gray-200 p-4 flex flex-col justify-center items-center"
+              tabIndex={0}
+            >
+              <div className="text-center">
+                <div className="font-semibold text-gray-900 mb-3">View all record collections for {country}</div>
+                <a
+                  href={buildLocationUrl(country)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-800 transition-colors"
+                >
+                  Browse all &rarr;
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         {showArrows && (

@@ -41,6 +41,7 @@ export default function Header({ testCountry, onTestCountryChange, showTestBanne
               <option>Philippines</option>
               <option>United Kingdom</option>
               <option>Brasil</option>
+              <option>Canada</option>
               <option>Egypt</option>
               <option>China</option>
               <option>South Africa</option>

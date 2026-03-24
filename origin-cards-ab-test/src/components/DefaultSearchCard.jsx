@@ -270,7 +270,7 @@ export default function DefaultSearchCard({ selectedCountry = 'United States' })
             Search your ancestors in {selectedCountry}
           </h2>
           <p className="text-lg text-gray-700">
-            Search billions of ancestor profiles, photographs, and historical documents at once—absolutely FREE.
+            Search billions of ancestor profiles, photographs, and historical documents at once—<strong>absolutely FREE.</strong>
           </p>
         </div>
         

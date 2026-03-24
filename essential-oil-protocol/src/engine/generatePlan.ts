@@ -13,7 +13,7 @@ function hasBodyPlacements(
   oilData: EffectiveRules['oils'][string] | undefined
 ): boolean {
   if (!oilData?.placements) return false;
-  return oilData.placements.some((area) => area !== 'Topical');
+  return oilData.placements.length > 0;
 }
 
 /**

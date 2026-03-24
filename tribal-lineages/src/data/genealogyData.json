@@ -1,0 +1,141 @@
+{
+  "persons": [
+    {
+      "id": "P3",
+      "arabicName": "أوس",
+      "latinName": "Aws",
+      "fatherId": null,
+      "motherId": null,
+      "spouseIds": [],
+      "groupMembershipIds": ["G2"]
+    },
+    {
+      "id": "P2",
+      "arabicName": "مالك بن أوس",
+      "latinName": "Malik ibn Aws",
+      "fatherId": "P3",
+      "motherId": null,
+      "spouseIds": [],
+      "groupMembershipIds": ["G2"]
+    },
+    {
+      "id": "P1",
+      "arabicName": "مرة بن مالك",
+      "latinName": "Murrah ibn Malik",
+      "fatherId": "P2",
+      "motherId": null,
+      "spouseIds": [],
+      "groupMembershipIds": ["G1"]
+    },
+    {
+      "id": "P4",
+      "arabicName": "علي بن مرة",
+      "latinName": "Ali ibn Murrah",
+      "fatherId": "P1",
+      "motherId": null,
+      "spouseIds": [],
+      "groupMembershipIds": ["G5"]
+    }
+  ],
+  "groups": [
+    {
+      "id": "G3",
+      "arabicName": "القحطانية",
+      "latinName": "Al-Qahtaniyah",
+      "classification": "شعب",
+      "parentGroupId": null,
+      "childGroupIds": ["G2"],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G2",
+      "arabicName": "الأوس",
+      "latinName": "Al-Aws",
+      "classification": "قبيلة",
+      "parentGroupId": "G3",
+      "childGroupIds": ["G1"],
+      "memberPersonIds": ["P3", "P2"]
+    },
+    {
+      "id": "G1",
+      "arabicName": "آل مرة",
+      "latinName": "Al Murrah",
+      "classification": "قبيلة",
+      "parentGroupId": "G2",
+      "childGroupIds": ["G4", "G5", "G6", "G7", "G8", "G9", "G10", "G11"],
+      "memberPersonIds": ["P1"]
+    },
+    {
+      "id": "G4",
+      "arabicName": "بشر",
+      "latinName": "Bishr",
+      "classification": "فخذ",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G5",
+      "arabicName": "علي بن مرة",
+      "latinName": "Ali branch",
+      "classification": "فخذ",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": ["P4"]
+    },
+    {
+      "id": "G6",
+      "arabicName": "جابر",
+      "latinName": "Jaber",
+      "classification": "فخذ",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G7",
+      "arabicName": "الحنزاب",
+      "latinName": "Al-Hinzab",
+      "classification": "عائلة",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G8",
+      "arabicName": "الدمنان",
+      "latinName": "Al-Damnan",
+      "classification": "عائلة",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G9",
+      "arabicName": "الزقيمة",
+      "latinName": "Al-Zuqaymah",
+      "classification": "عائلة",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G10",
+      "arabicName": "الشبيب",
+      "latinName": "Al-Shubayb",
+      "classification": "عائلة",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    },
+    {
+      "id": "G11",
+      "arabicName": "الشاجع",
+      "latinName": "Al-Shaji",
+      "classification": "عائلة",
+      "parentGroupId": "G1",
+      "childGroupIds": [],
+      "memberPersonIds": []
+    }
+  ]
+}

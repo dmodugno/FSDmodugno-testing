@@ -1,0 +1,541 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #fafafa;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+/* Top Navigation */
+.top-nav {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #2196f3;
+}
+
+/* Page Container */
+.page-container {
+  min-height: calc(100vh - 60px);
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  background: #fafafa;
+}
+
+/* Fade-in Animation */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Error State */
+.error {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #d32f2f;
+  padding: 3rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  padding: 3rem;
+}
+
+/* ==================== HOME PAGE ==================== */
+.home-page {
+  text-align: center;
+  padding: 6rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-page h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.home-subtitle {
+  font-size: 1.125rem;
+  color: #666;
+  margin-bottom: 4rem;
+}
+
+.home-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.home-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #1a1a1a;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.home-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  border-color: #2196f3;
+}
+
+.action-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.home-action-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+}
+
+.home-action-card p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+/* ==================== TREE VIEWS ==================== */
+.individual-tree,
+.group-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 2rem 0;
+}
+
+.tree-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.level-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+  position: relative;
+}
+
+.person-node,
+.group-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tree-connector {
+  width: 2px;
+  height: 60px;
+  background: #d0d0d0;
+  margin: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connector-chevron {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #d0d0d0;
+  color: #666;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.connector-chevron:hover {
+  background: #f5f5f5;
+  border-color: #2196f3;
+  color: #2196f3;
+}
+
+/* ==================== GROUP TREE STRUCTURE ==================== */
+.group-tree-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.group-tree-node {
+  position: relative;
+  width: 100%;
+}
+
+.group-children {
+  margin-top: 0.5rem;
+  padding-left: 0;
+  position: relative;
+}
+
+/* ==================== PERSON CARD ==================== */
+.person-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.person-card.highlighted {
+  border-color: #2196f3;
+  border-width: 2px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.person-card.muted {
+  opacity: 0.5;
+  border-color: #d0d0d0;
+}
+
+.person-avatar {
+  margin-bottom: 1rem;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.person-names {
+  margin-bottom: 0.75rem;
+}
+
+.person-name-arabic {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.person-name-latin {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 400;
+}
+
+.person-meta {
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.person-id {
+  text-transform: uppercase;
+}
+
+.person-group-info {
+  font-size: 0.8125rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: #f9f9f9;
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
+.person-group-info.founder {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.group-label {
+  font-weight: 500;
+}
+
+.group-link {
+  color: #2196f3;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.group-link:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+/* ==================== GROUP CARD ==================== */
+.group-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: fit-content;
+  min-width: 220px;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.group-card.highlighted {
+  border-color: #9c27b0;
+  border-width: 2px;
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+}
+
+.group-chevron {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+
+.group-chevron:hover {
+  background: #f0f0f0;
+}
+
+.chevron-icon {
+  font-size: 0.75rem;
+  color: #666;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.chevron-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.group-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.badge-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(245, 87, 108, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.group-classification-badge {
+  display: inline-block;
+  background: #e1bee7;
+  color: #6a1b9a;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.group-names {
+  margin-bottom: 0.75rem;
+}
+
+.group-name-arabic {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.group-name-latin {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 400;
+}
+
+.group-members-link {
+  margin-top: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: #2196f3;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.group-members-link:hover {
+  background: #1976d2;
+}
+
+/* ==================== GROUP MEMBERS LIST ==================== */
+.group-members-list {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.group-meta {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 400;
+}
+
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+
+  .home-page h1 {
+    font-size: 1.75rem;
+  }
+
+  .links-grid,
+  .members-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .person-card,
+  .group-card {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .cards-row {
+    gap: 2rem;
+  }
+}

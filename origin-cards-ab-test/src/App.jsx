@@ -62,7 +62,7 @@ function App() {
         <section className="my-8 bg-white rounded-xl p-6" aria-label="Where are your relatives from?">
           <div className="text-xl font-semibold text-teal-700 mb-2">Where are your relatives from?</div>
           <p className="text-gray-600 text-sm mb-4">
-            Choose an available country to discover its resources, and check back regularly for updates.
+            Select a country to explore its resources. Discover experiences, records, and research from around the world.
           </p>
           
           <CountryChips

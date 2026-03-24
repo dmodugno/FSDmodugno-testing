@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
       }
     }
   ],
-  base: mode === 'production' ? '/navigation-ab-test/' : '/',
+  base: mode === 'production' ? '/FSDmodugno-testing/navigation-ab-test/' : '/',
   build: {
     outDir: 'dist'
   }

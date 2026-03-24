@@ -10,6 +10,20 @@ function GetStarted() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* It really is free */}
+        <div className="flex flex-col">
+          <div className="w-12 h-12 mb-4">
+            <img src={`${baseUrl}Icon/Volunteer.svg`} alt="" className="w-full h-full" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">It really is free</h3>
+          <p className="text-sm text-gray-600 mb-3 flex-grow">
+            We're an international, not-for-profit organisation dedicated to helping all people discover their family story.
+          </p>
+          <a href="#" className="text-sm text-teal-700 font-semibold hover:underline">
+            Why is FamilySearch free? ›
+          </a>
+        </div>
+
         {/* Create a family tree */}
         <div className="flex flex-col">
           <div className="w-12 h-12 mb-4">
@@ -46,20 +60,6 @@ function GetStarted() {
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Find ancestors in historical documents</h3>
           <p className="text-sm text-gray-600 mb-3 flex-grow">
             Know which ancestor you are looking for? Get started with a targeted record search.
-          </p>
-          <a href="#" className="text-sm text-teal-700 font-semibold hover:underline">
-            Learn more ›
-          </a>
-        </div>
-
-        {/* Volunteer to make records searchable */}
-        <div className="flex flex-col">
-          <div className="w-12 h-12 mb-4">
-            <img src={`${baseUrl}Icon/Volunteer.svg`} alt="" className="w-full h-full" />
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Volunteer to make records searchable</h3>
-          <p className="text-sm text-gray-600 mb-3 flex-grow">
-            Help make more historical records public to search.
           </p>
           <a href="#" className="text-sm text-teal-700 font-semibold hover:underline">
             Learn more ›

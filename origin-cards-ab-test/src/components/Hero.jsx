@@ -1,24 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// Country-specific placeholders for "Place Lived" field
-const placeLivedPlaceholders = {
-  'United States': 'State, county or city',
-  'England': 'County, parish or town',
-  'Scotland': 'County, parish or town',
-  'Wales': 'County, parish or town',
-  'Ireland': 'County, parish or town',
-  'Northern Ireland': 'County, parish or town',
-  'Germany': 'State, district or city',
-  'Italy': 'Region, province or city',
-  'Poland': 'Voivodeship, powiat or city',
-  'Mexico': 'State, municipality or city',
-  'Brazil': 'State, municipality or city',
-  'Brasil': 'State, municipality or city',
-  'Canada': 'Province, county or city',
-  'Australia': 'State, county or city',
-  'default': 'Region, district or city'
-};
-
 // Country-specific place suggestions
 const placeSuggestions = {
   'United States': {
@@ -163,8 +144,6 @@ export default function Hero({ testCountry }) {
     setCalculatorYear('');
   };
 
-  const placeLivedPlaceholder = placeLivedPlaceholders[testCountry] || placeLivedPlaceholders.default;
-
   return (
     <section className="relative bg-[#EEEFC9]" aria-label="Welcome section">
       {/* Mobile: Image first, stacked vertically */}
@@ -207,34 +186,46 @@ export default function Hero({ testCountry }) {
                 <h6 className="text-base font-semibold text-teal-700 m-0 mb-2 mt-4">Start by searching one of your relatives</h6>
               )}
 
-              <input
-                name="firstName"
-                type="text"
-                placeholder="First Names"
-                aria-label="First Names"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <input
-                name="lastName"
-                type="text"
-                placeholder="Last Names*"
-                aria-label="Last Names"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              <div>
+                <label htmlFor="firstName-mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                  First Names
+                </label>
+                <input
+                  id="firstName-mobile"
+                  name="firstName"
+                  type="text"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="lastName-mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Names*
+                </label>
+                <input
+                  id="lastName-mobile"
+                  name="lastName"
+                  type="text"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
 
               {isExpanded && (
                 <>
                   <div className="relative">
+                    <label htmlFor="placeLived-mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                      Place
+                    </label>
                     <input
+                      id="placeLived-mobile"
                       name="placeLived"
                       type="text"
-                      placeholder={placeLivedPlaceholder}
-                      aria-label="Place Lived"
+                      placeholder="Place"
                       value={formData.placeLived}
                       onChange={handleChange}
                       onFocus={() => {
@@ -281,22 +272,26 @@ export default function Hero({ testCountry }) {
                     )}
                   </div>
 
-                  <div className="relative">
-                    <input
-                      name="birthYear"
-                      type="text"
-                      placeholder="Use calculator for help"
-                      aria-label="Approximate Birth Year"
-                      value={formData.birthYear}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 pr-10 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowCalculator(true)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-teal-700 hover:text-teal-900 transition-colors"
-                      aria-label="Open birth year calculator"
-                    >
+                  <div>
+                    <label htmlFor="birthYear-mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                      Approximate Birth Year
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="birthYear-mobile"
+                        name="birthYear"
+                        type="text"
+                        placeholder="Use calculator for help"
+                        value={formData.birthYear}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCalculator(true)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-teal-700 hover:text-teal-900 transition-colors"
+                        aria-label="Open birth year calculator"
+                      >
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="4" y="2" width="16" height="20" rx="2"/>
                         <line x1="8" y1="6" x2="16" y2="6"/>
@@ -311,6 +306,7 @@ export default function Hero({ testCountry }) {
                         <line x1="8" y1="18" x2="8" y2="18"/>
                       </svg>
                     </button>
+                    </div>
                   </div>
                 </>
               )}
@@ -361,37 +357,49 @@ export default function Hero({ testCountry }) {
                 )}
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3" role="search" aria-label="Search for ancestors">
                   <div className="grid grid-cols-2 gap-3">
-                    <input
-                      name="firstName"
-                      type="text"
-                      placeholder="First Names"
-                      aria-label="First Names"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      className="px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
-                    <input
-                      name="lastName"
-                      type="text"
-                      placeholder="Last Names*"
-                      aria-label="Last Names"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      required
-                      className="px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
+                    <div>
+                      <label htmlFor="firstName-desktop" className="block text-sm font-medium text-gray-700 mb-1">
+                        First Names
+                      </label>
+                      <input
+                        id="firstName-desktop"
+                        name="firstName"
+                        type="text"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lastName-desktop" className="block text-sm font-medium text-gray-700 mb-1">
+                        Last Names*
+                      </label>
+                      <input
+                        id="lastName-desktop"
+                        name="lastName"
+                        type="text"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      />
+                    </div>
                   </div>
 
                   {isExpanded && (
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="relative">
-                        <input
-                          name="placeLived"
-                          type="text"
-                          placeholder={placeLivedPlaceholder}
-                          aria-label="Place Lived"
-                          value={formData.placeLived}
-                          onChange={handleChange}
+                      <div>
+                        <label htmlFor="placeLived-desktop" className="block text-sm font-medium text-gray-700 mb-1">
+                          Place
+                        </label>
+                        <div className="relative">
+                          <input
+                            id="placeLived-desktop"
+                            name="placeLived"
+                            type="text"
+                            placeholder="Place"
+                            value={formData.placeLived}
+                            onChange={handleChange}
                           onFocus={() => {
                             if (formData.placeLived.trim().length > 0) {
                               const suggestions = placeSuggestions[testCountry] || placeSuggestions.default;
@@ -434,24 +442,29 @@ export default function Hero({ testCountry }) {
                             ))}
                           </div>
                         )}
+                        </div>
                       </div>
 
-                      <div className="relative">
-                        <input
-                          name="birthYear"
-                          type="text"
-                          placeholder="Use calculator for help"
-                          aria-label="Approximate Birth Year"
-                          value={formData.birthYear}
-                          onChange={handleChange}
-                          className="w-full px-4 py-2 pr-10 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowCalculator(true)}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-teal-700 hover:text-teal-900 transition-colors"
-                          aria-label="Open birth year calculator"
-                        >
+                      <div>
+                        <label htmlFor="birthYear-desktop" className="block text-sm font-medium text-gray-700 mb-1">
+                          Approximate Birth Year
+                        </label>
+                        <div className="relative">
+                          <input
+                            id="birthYear-desktop"
+                            name="birthYear"
+                            type="text"
+                            placeholder="Use calculator for help"
+                            value={formData.birthYear}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowCalculator(true)}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-teal-700 hover:text-teal-900 transition-colors"
+                            aria-label="Open birth year calculator"
+                          >
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="4" y="2" width="16" height="20" rx="2"/>
                             <line x1="8" y1="6" x2="16" y2="6"/>
@@ -466,6 +479,7 @@ export default function Hero({ testCountry }) {
                             <line x1="8" y1="18" x2="8" y2="18"/>
                           </svg>
                         </button>
+                        </div>
                       </div>
                     </div>
                   )}

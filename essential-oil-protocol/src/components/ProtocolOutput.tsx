@@ -36,49 +36,26 @@ export default function ProtocolOutput({ effectiveRules }: Props) {
     effectiveRules
   );
 
+  // Collect ALL rotation oils from schedule (not just current day)
+  const allRotationOils: string[] = [];
+  if (plan.rotation) {
+    const uniqueOils = new Set<string>();
+    plan.rotation.schedule.forEach((daySchedule) => {
+      daySchedule.oils.forEach((oil) => uniqueOils.add(oil));
+    });
+    allRotationOils.push(...Array.from(uniqueOils));
+  }
+
+  // Build complete topical display (excluding rotation oils temporarily)
+  const topicalAreasExcludingRotation = { ...plan.topicalByArea };
+  delete topicalAreasExcludingRotation['Topical'];
+
   return (
     <div className="protocol-output">
-      <h2>Protocol Output</h2>
+      <h2>Essential Oil Protocol</h2>
       <button onClick={() => navigate('/')} className="back-button">
         ← Back to Pick Oils
       </button>
-
-      {/* DEBUG PANEL */}
-      <div className="section debug-panel">
-        <h3>🔍 Debug Info (Dev Only)</h3>
-        <table style={{ width: '100%', fontSize: '0.85rem', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #ddd' }}>
-              <th style={{ textAlign: 'left', padding: '0.5rem' }}>Input Name</th>
-              <th style={{ textAlign: 'left', padding: '0.5rem' }}>Canonical Key</th>
-              <th style={{ textAlign: 'left', padding: '0.5rem' }}>noteRole</th>
-              <th style={{ textAlign: 'center', padding: '0.5rem' }}>mixEligible</th>
-              <th style={{ textAlign: 'center', padding: '0.5rem' }}>placements.length</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.selection.map((inputName, idx) => {
-              const canonical = resolveOilName(inputName, effectiveRules);
-              const oilData = canonical ? effectiveRules.oils[canonical] : null;
-              return (
-                <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '0.5rem' }}>{inputName}</td>
-                  <td style={{ padding: '0.5rem', color: canonical ? '#2c3e50' : '#e74c3c' }}>
-                    {canonical || 'UNRESOLVED'}
-                  </td>
-                  <td style={{ padding: '0.5rem' }}>{oilData?.noteRole || '-'}</td>
-                  <td style={{ textAlign: 'center', padding: '0.5rem' }}>
-                    {oilData?.mixEligible ? '✓' : '✗'}
-                  </td>
-                  <td style={{ textAlign: 'center', padding: '0.5rem' }}>
-                    {oilData?.placements.length ?? '-'}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
 
       {plan.warnings.length > 0 && (
         <div className="warnings">
@@ -94,8 +71,6 @@ export default function ProtocolOutput({ effectiveRules }: Props) {
       {plan.mix && (
         <div className="section mix">
           <h3>Mix</h3>
-          <p><strong>Apply to:</strong> {plan.mix.applyAreas.join(', ')}</p>
-          <p><strong>Frequency:</strong> {plan.mix.frequencyPerDay} times per day</p>
           <div className="mix-composition">
             {plan.mix.base && (
               <div className="mix-component">
@@ -116,17 +91,56 @@ export default function ProtocolOutput({ effectiveRules }: Props) {
               </div>
             )}
           </div>
+          <p style={{ marginTop: '1rem' }}>
+            <strong>Apply to:</strong> {plan.mix.applyAreas.join(', ')}
+          </p>
+          <p><strong>Frequency:</strong> {plan.mix.frequencyPerDay} times per day</p>
         </div>
       )}
 
-      {Object.keys(plan.topicalByArea).length > 0 && (
+      {(Object.keys(topicalAreasExcludingRotation).length > 0 || allRotationOils.length > 0) && (
         <div className="section topical">
           <h3>Topical Application</h3>
-          {Object.entries(plan.topicalByArea).map(([area, oils]) => (
-            <div key={area} className="topical-area">
+
+          {Object.entries(topicalAreasExcludingRotation).map(([area, oils]) => (
+            <div key={area} className="topical-area" style={{ marginBottom: '0.75rem' }}>
               <strong>{area}:</strong> {oils.join(', ')}
             </div>
           ))}
+
+          {allRotationOils.length > 0 && (
+            <div className="topical-area" style={{ marginBottom: '0.75rem' }}>
+              <strong>Topical (where it hurts):</strong> {allRotationOils.join(', ')}
+              <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem', marginLeft: '0' }}>
+                See rotation schedule below for day-by-day application
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {plan.rotation && plan.rotation.schedule.length > 0 && (
+        <div className="section rotation">
+          <h3>Rotation Plan</h3>
+          <p style={{ fontSize: '0.95rem', color: '#555', marginBottom: '1rem' }}>
+            Apply these oils topically in sequence. After day {plan.rotation.stopsAfterDay}, rotation stops (no cycling).
+          </p>
+          <div>
+            {plan.rotation.schedule.map((daySchedule) => (
+              <div
+                key={daySchedule.day}
+                style={{
+                  padding: '0.75rem',
+                  marginBottom: '0.5rem',
+                  backgroundColor: '#f9f9f9',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                }}
+              >
+                <strong>Day {daySchedule.day}:</strong> {daySchedule.oils.join(', ')}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -156,33 +170,50 @@ export default function ProtocolOutput({ effectiveRules }: Props) {
         </div>
       )}
 
-      {plan.rotation && plan.rotation.schedule.length > 0 && (
-        <div className="section rotation">
-          <h3>Rotation Schedule</h3>
-          <p><strong>Stops After Day:</strong> {plan.rotation.stopsAfterDay}</p>
-          <p className="info">Sequential finite rotation - no cycling. Applied to "Topical" area.</p>
-          <div style={{ marginTop: '1rem' }}>
-            {plan.rotation.schedule.map((daySchedule) => (
-              <div key={daySchedule.day} style={{
-                padding: '0.5rem',
-                marginBottom: '0.5rem',
-                backgroundColor: daySchedule.day === state.dayIndex ? '#e8f4f8' : '#f9f9f9',
-                border: daySchedule.day === state.dayIndex ? '2px solid #3498db' : '1px solid #ddd',
-                borderRadius: '4px'
-              }}>
-                <strong>Day {daySchedule.day}:</strong> {daySchedule.oils.join(', ')}
-                {daySchedule.day === state.dayIndex && ' ← Current Day'}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {!plan.mix && Object.keys(plan.topicalByArea).length === 0 && plan.mouth.length === 0 && (
         <div className="section">
           <p>No protocol generated. Check warnings above.</p>
         </div>
       )}
+
+      {/* DEBUG PANEL */}
+      <div className="section debug-panel" style={{ marginTop: '2rem', opacity: 0.7 }}>
+        <details>
+          <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>🔍 Debug Info (Dev Only)</summary>
+          <table style={{ width: '100%', fontSize: '0.85rem', borderCollapse: 'collapse', marginTop: '1rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ddd' }}>
+                <th style={{ textAlign: 'left', padding: '0.5rem' }}>Input Name</th>
+                <th style={{ textAlign: 'left', padding: '0.5rem' }}>Canonical Key</th>
+                <th style={{ textAlign: 'left', padding: '0.5rem' }}>noteRole</th>
+                <th style={{ textAlign: 'center', padding: '0.5rem' }}>mixEligible</th>
+                <th style={{ textAlign: 'center', padding: '0.5rem' }}>placements.length</th>
+              </tr>
+            </thead>
+            <tbody>
+              {state.selection.map((inputName, idx) => {
+                const canonical = resolveOilName(inputName, effectiveRules);
+                const oilData = canonical ? effectiveRules.oils[canonical] : null;
+                return (
+                  <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '0.5rem' }}>{inputName}</td>
+                    <td style={{ padding: '0.5rem', color: canonical ? '#2c3e50' : '#e74c3c' }}>
+                      {canonical || 'UNRESOLVED'}
+                    </td>
+                    <td style={{ padding: '0.5rem' }}>{oilData?.noteRole || '-'}</td>
+                    <td style={{ textAlign: 'center', padding: '0.5rem' }}>
+                      {oilData?.mixEligible ? '✓' : '✗'}
+                    </td>
+                    <td style={{ textAlign: 'center', padding: '0.5rem' }}>
+                      {oilData?.placements.length ?? '-'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </details>
+      </div>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export default defineConfig({
       }
     }
   ],
-  base: '/FSDmodugno-testing/',
+  base: '/FSDmodugno-testing/origin-cards-ab-test/',
   publicDir: 'assets',
   build: {
     outDir: 'dist'

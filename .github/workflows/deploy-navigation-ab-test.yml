@@ -1,4 +1,4 @@
-name: Deploy Navigation AB Test to GitHub Pages
+name: Deploy All Projects to GitHub Pages
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'navigation-ab-test/**'
+      - 'origin-cards-ab-test/**'
+      - '.github/workflows/deploy-navigation-ab-test.yml'
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -32,47 +34,142 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: navigation-ab-test/package-lock.json
 
-      - name: Install dependencies
+      - name: Build Navigation AB Test
         working-directory: ./navigation-ab-test
-        run: npm ci
+        run: |
+          npm ci
+          npm run build
+        env:
+          NODE_ENV: production
 
-      - name: Build
-        working-directory: ./navigation-ab-test
-        run: npm run build
+      - name: Build Origin Cards AB Test
+        working-directory: ./origin-cards-ab-test
+        run: |
+          npm ci
+          npm run build
         env:
           NODE_ENV: production
 
       - name: Prepare deployment structure
         run: |
           mkdir -p _site/navigation-ab-test
+          mkdir -p _site/origin-cards-ab-test
           cp -r navigation-ab-test/dist/* _site/navigation-ab-test/
+          cp -r origin-cards-ab-test/dist/* _site/origin-cards-ab-test/
 
       - name: Create root index
         run: |
           cat > _site/index.html << 'EOF'
           <!DOCTYPE html>
-          <html>
+          <html lang="en">
           <head>
-            <title>FSDmodugno Testing</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>UX Hackathon Projects</title>
             <style>
-              body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
-              h1 { color: #0f766e; }
-              ul { list-style: none; padding: 0; }
-              li { margin: 15px 0; }
-              a { color: #0f766e; text-decoration: none; font-size: 18px; display: block; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; transition: all 0.2s; }
-              a:hover { background: #f0fdfa; border-color: #0f766e; }
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+              }
+              .container {
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 600px;
+                width: 100%;
+                padding: 40px;
+              }
+              h1 {
+                color: #1a202c;
+                font-size: 32px;
+                margin-bottom: 12px;
+                font-weight: 700;
+              }
+              .subtitle {
+                color: #718096;
+                font-size: 16px;
+                margin-bottom: 32px;
+              }
+              .projects {
+                list-style: none;
+              }
+              .project-item {
+                margin-bottom: 16px;
+              }
+              .project-link {
+                display: block;
+                padding: 20px;
+                background: #f7fafc;
+                border: 2px solid #e2e8f0;
+                border-radius: 12px;
+                text-decoration: none;
+                color: #2d3748;
+                font-size: 18px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                position: relative;
+                overflow: hidden;
+              }
+              .project-link:hover {
+                background: #edf2f7;
+                border-color: #667eea;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+              }
+              .project-link::after {
+                content: '→';
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 24px;
+                color: #667eea;
+                opacity: 0;
+                transition: all 0.2s ease;
+              }
+              .project-link:hover::after {
+                opacity: 1;
+                right: 24px;
+              }
+              .badge {
+                display: inline-block;
+                background: #667eea;
+                color: white;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 4px 8px;
+                border-radius: 4px;
+                margin-left: 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
             </style>
           </head>
           <body>
-            <h1>UX Hackathon Projects</h1>
-            <ul>
-              <li><a href="/navigation-ab-test/">Navigation AB Test →</a></li>
-            </ul>
+            <div class="container">
+              <h1>🎨 UX Hackathon Projects</h1>
+              <p class="subtitle">Select a project to view</p>
+              <ul class="projects">
+                <li class="project-item">
+                  <a href="/FSDmodugno-testing/origin-cards-ab-test/" class="project-link">
+                    Origin Cards AB Test
+                  </a>
+                </li>
+                <li class="project-item">
+                  <a href="/FSDmodugno-testing/navigation-ab-test/" class="project-link">
+                    Navigation AB Test
+                    <span class="badge">Protected</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </body>
           </html>
           EOF

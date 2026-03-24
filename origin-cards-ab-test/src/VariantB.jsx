@@ -29,6 +29,12 @@ export default function VariantB() {
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const { hasOriginCards, hasRecordCollections, isAvailable } = useCountryContent(selectedCountry);
 
+  // Build search-by-place URL with preserved query params
+  const getSearchByPlaceUrl = () => {
+    const country = searchParams.get('country');
+    return country ? `/search-by-place?from=explore&country=${country}` : '/search-by-place?from=explore';
+  };
+
   // Check if country has the ancestor search card (4 fields with specific header)
   const hasAncestorSearchCard = () => {
     const cards = originCardsContent[selectedCountry] || [];
@@ -90,7 +96,7 @@ export default function VariantB() {
               testCountry={testCountry}
               selectedCountry={selectedCountry}
               onCountrySelect={setSelectedCountry}
-              moreCountriesLink={{ url: '/search-by-place', internal: true }}
+              moreCountriesLink={{ url: getSearchByPlaceUrl(), internal: true }}
             />
           </div>
         </div>
@@ -111,7 +117,7 @@ export default function VariantB() {
                 testCountry={testCountry}
                 selectedCountry={selectedCountry}
                 onCountrySelect={setSelectedCountry}
-                moreCountriesLink={{ url: '/search-by-place', internal: true }}
+                moreCountriesLink={{ url: getSearchByPlaceUrl(), internal: true }}
               />
             </div>
 

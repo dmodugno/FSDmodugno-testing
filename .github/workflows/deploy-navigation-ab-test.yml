@@ -35,21 +35,17 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build Navigation AB Test
+      - name: Install and Build Navigation AB Test
         working-directory: ./navigation-ab-test
         run: |
           npm ci
-          npm run build
-        env:
-          NODE_ENV: production
+          NODE_ENV=production npm run build
 
-      - name: Build Origin Cards AB Test
+      - name: Install and Build Origin Cards AB Test
         working-directory: ./origin-cards-ab-test
         run: |
           npm ci
-          npm run build
-        env:
-          NODE_ENV: production
+          NODE_ENV=production npm run build
 
       - name: Prepare deployment structure
         run: |

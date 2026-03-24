@@ -90,13 +90,13 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
 
       {showOverlay && createPortal(
         <div
-          className="fixed inset-0 bg-black/50 flex items-start justify-center z-[60] pt-16"
+          className="fixed inset-0 bg-black/50 flex items-start md:items-center justify-center z-[60] md:pt-16 overflow-y-auto"
           aria-modal="true"
           role="dialog"
           aria-labelledby="countryOverlayTitle"
           onClick={(e) => e.target === e.currentTarget && setShowOverlay(false)}
         >
-          <div className="bg-gray-50 rounded-xl shadow-lg w-[min(1100px,calc(100%-2rem))] p-6">
+          <div className="bg-gray-50 md:rounded-xl shadow-lg w-full md:w-[min(1100px,calc(100%-2rem))] min-h-screen md:min-h-0 md:max-h-[calc(100vh-8rem)] overflow-y-auto p-6">
             <div className="flex items-center justify-between">
               <h2 id="countryOverlayTitle" className="text-2xl font-semibold text-gray-900">Select a country to explore its resources</h2>
               <button
@@ -126,9 +126,9 @@ export default function CountryChips({ testCountry, selectedCountry, onCountrySe
             </div>
             <p className="text-gray-600 text-sm text-center">
               {moreCountriesLink?.internal ? (
-                <Link to={moreCountriesLink.url} target="_blank" className="text-teal-700 hover:underline">Explore all countries, records, and research tools</Link>
+                <Link to={moreCountriesLink.url} target="_blank" className="text-teal-700 hover:underline font-bold">Explore all countries, records, and research tools</Link>
               ) : (
-                <a href={moreCountriesLink?.url || 'https://www.familysearch.org/en/search/location/list'} target="_blank" rel="noopener noreferrer" className="text-teal-700 hover:underline">Explore all countries, records, and research tools</a>
+                <a href={moreCountriesLink?.url || 'https://www.familysearch.org/en/search/location/list'} target="_blank" rel="noopener noreferrer" className="text-teal-700 hover:underline font-bold">Explore all countries, records, and research tools</a>
               )}
             </p>
           </div>

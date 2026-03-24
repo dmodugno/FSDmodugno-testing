@@ -45,13 +45,45 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Prepare deployment structure
+        run: |
+          mkdir -p _site/navigation-ab-test
+          cp -r navigation-ab-test/dist/* _site/navigation-ab-test/
+
+      - name: Create root index
+        run: |
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>FSDmodugno Testing</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+              h1 { color: #0f766e; }
+              ul { list-style: none; padding: 0; }
+              li { margin: 15px 0; }
+              a { color: #0f766e; text-decoration: none; font-size: 18px; display: block; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; transition: all 0.2s; }
+              a:hover { background: #f0fdfa; border-color: #0f766e; }
+            </style>
+          </head>
+          <body>
+            <h1>UX Hackathon Projects</h1>
+            <ul>
+              <li><a href="/navigation-ab-test/">Navigation AB Test →</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./navigation-ab-test/dist
+          path: ./_site
 
   deploy:
     environment:

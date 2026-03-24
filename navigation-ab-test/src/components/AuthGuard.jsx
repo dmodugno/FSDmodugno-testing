@@ -67,6 +67,13 @@ export default function AuthGuard({ children }) {
 
   useEffect(() => {
     async function authenticate() {
+      // Skip authentication in development mode
+      if (import.meta.env.DEV) {
+        setAuthenticated(true);
+        setLoading(false);
+        return;
+      }
+
       // Check if there's a valid session first
       if (isSessionValid()) {
         setAuthenticated(true);

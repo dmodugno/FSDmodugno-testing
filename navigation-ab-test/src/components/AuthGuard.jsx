@@ -50,10 +50,11 @@ function isSessionValid() {
   }
 }
 
-function setSession(tokenHash) {
+function setSession(tokenHash, token) {
   sessionStorage.setItem(SESSION_KEY, JSON.stringify({
     timestamp: Date.now(),
-    tokenHash
+    tokenHash,
+    token // Store original token for shareable URLs
   }));
 }
 
@@ -89,7 +90,7 @@ export default function AuthGuard({ children }) {
           const tokenHash = await hashToken(token);
 
           if (VALID_TOKENS.includes(tokenHash)) {
-            setSession(tokenHash);
+            setSession(tokenHash, token);
             setAuthenticated(true);
 
             // Clean URL (remove token from address bar for security)

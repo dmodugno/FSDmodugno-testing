@@ -57,6 +57,20 @@ export function UserProvider({ children }) {
     if (!user) return '';
 
     const params = new URLSearchParams();
+
+    // Include access token if authenticated (production only)
+    const session = sessionStorage.getItem('access_session');
+    if (session) {
+      try {
+        const { token } = JSON.parse(session);
+        if (token) {
+          params.set('access', token);
+        }
+      } catch (e) {
+        // Session parsing failed, skip token
+      }
+    }
+
     params.set('membership', user.churchMembership);
     params.set('experience', user.experienceLevel);
     params.set('treeSize', user.treeSize);

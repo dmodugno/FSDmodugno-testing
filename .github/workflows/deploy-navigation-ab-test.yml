@@ -54,6 +54,51 @@ jobs:
           cp -r navigation-ab-test/dist/* _site/navigation-ab-test/
           cp -r origin-cards-ab-test/dist/* _site/origin-cards-ab-test/
 
+      - name: Create root 404 handler
+        run: |
+          cat > _site/404.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Redirecting...</title>
+              <script type="text/javascript">
+                // Root-level 404 handler for multi-project GitHub Pages
+                // Detects which project the 404 is for and redirects appropriately
+                var path = window.location.pathname;
+
+                // Check if path starts with /FSDmodugno-testing/navigation-ab-test/
+                if (path.indexOf('/FSDmodugno-testing/navigation-ab-test/') === 0) {
+                  // Extract the route after /navigation-ab-test/
+                  var route = path.replace('/FSDmodugno-testing/navigation-ab-test/', '');
+                  // Redirect to navigation-ab-test index with encoded route
+                  var redirect = '/FSDmodugno-testing/navigation-ab-test/?/' + route.replace(/&/g, '~and~');
+                  if (window.location.search) {
+                    redirect += '&' + window.location.search.slice(1).replace(/&/g, '~and~');
+                  }
+                  window.location.replace(redirect + window.location.hash);
+                }
+                // Check if path starts with /FSDmodugno-testing/origin-cards-ab-test/
+                else if (path.indexOf('/FSDmodugno-testing/origin-cards-ab-test/') === 0) {
+                  var route = path.replace('/FSDmodugno-testing/origin-cards-ab-test/', '');
+                  var redirect = '/FSDmodugno-testing/origin-cards-ab-test/?/' + route.replace(/&/g, '~and~');
+                  if (window.location.search) {
+                    redirect += '&' + window.location.search.slice(1).replace(/&/g, '~and~');
+                  }
+                  window.location.replace(redirect + window.location.hash);
+                }
+                // Default: redirect to root
+                else {
+                  window.location.replace('/FSDmodugno-testing/');
+                }
+              </script>
+            </head>
+            <body>
+              <p>Redirecting...</p>
+            </body>
+          </html>
+          EOF
+
       - name: Create root index
         run: |
           cat > _site/index.html << 'EOF'

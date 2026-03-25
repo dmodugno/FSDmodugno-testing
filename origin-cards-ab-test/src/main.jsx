@@ -8,7 +8,7 @@ import './index.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/FSDmodugno-testing">
+    <BrowserRouter basename="/FSDmodugno-testing/origin-cards-ab-test">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/explore" element={<VariantB />} />

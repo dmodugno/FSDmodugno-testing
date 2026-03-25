@@ -65,6 +65,8 @@ function clearSession() {
 export default function AuthGuard({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [manualKey, setManualKey] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function authenticate() {
@@ -116,6 +118,29 @@ export default function AuthGuard({ children }) {
     authenticate();
   }, []);
 
+  const handleManualKeySubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const tokenHash = await hashToken(manualKey);
+
+      if (VALID_TOKENS.includes(tokenHash)) {
+        setSession(tokenHash, manualKey);
+        setAuthenticated(true);
+      } else {
+        setError('Invalid access key. Please check and try again.');
+        setManualKey('');
+      }
+    } catch (err) {
+      console.error('Authentication error:', err);
+      setError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -150,16 +175,42 @@ export default function AuthGuard({ children }) {
                 Access Required
               </h1>
               <p className="text-gray-600 mb-4">
-                This application requires a valid access link.
+                Enter your access key to continue
               </p>
-              <div className="text-sm text-gray-500">
-                Please use the secure link that was shared with you.
-              </div>
             </div>
 
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <form onSubmit={handleManualKeySubmit} className="mb-6">
+              <label htmlFor="accessKey" className="block text-sm font-medium text-gray-700 mb-2">
+                Access Key
+              </label>
+              <input
+                type="text"
+                id="accessKey"
+                value={manualKey}
+                onChange={(e) => setManualKey(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent font-mono text-sm"
+                placeholder="Enter 64-character access key"
+                autoFocus
+                required
+                disabled={loading}
+              />
+              {error && (
+                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600">{error}</p>
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={loading || !manualKey}
+                className="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Verifying...' : 'Continue'}
+              </button>
+            </form>
+
+            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
               <p className="text-xs text-gray-600 text-center">
-                If you believe you should have access, please contact the administrator for a valid access link.
+                If you have a secure link with an access key, you can use that instead. Contact the administrator if you need access.
               </p>
             </div>
           </div>

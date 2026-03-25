@@ -201,6 +201,13 @@ The project uses a **shared components pattern** to maximize code reuse between 
 - Variant A: Dark grey theme, flex container, integrates with split-view
 - Variant B: White theme, fixed overlay, independent positioning
 
+**AuthGuard.jsx** (Route protection wrapper)
+- **Purpose**: Wraps entire routing tree to enforce token-based authentication in production
+- **Location**: main.jsx, wraps `<Routes>` inside UserProvider
+- **Behavior**: Bypasses authentication in development mode, validates tokens in production
+- **Integration**: Works with SPA routing system to preserve tokens during navigation
+- **See**: `AUTH_README.md` for authentication details and token generation
+
 ### When to Create Shared Components
 
 Create a shared component when:
@@ -717,6 +724,16 @@ npm run dev
 2. **Variant B**: `http://localhost:5173/navigation-ab-test/variant-b`
 3. **With User Types**: Add `?membership=LDS&experience=casual`
 4. **Toggle Test Banner**: `Cmd+Shift+T` (Mac) or `Ctrl+Shift+T` (Windows)
+
+### Routing and Authentication Setup
+
+**SPA Routing:** This project uses a multi-layered routing system for GitHub Pages deployment. See root `DEPLOYMENT.md` for complete routing architecture and configuration.
+
+**Authentication:** Token-based authentication protects production routes. See `AUTH_README.md` for token generation and authentication setup.
+
+**Quick Reference:**
+- **Development:** No authentication required, base path is `/`
+- **Production:** Token required via `?access=TOKEN`, base path is `/FSDmodugno-testing/navigation-ab-test/`
 
 ### Making Changes
 

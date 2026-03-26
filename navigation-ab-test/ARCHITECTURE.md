@@ -279,25 +279,28 @@ See [IMPLEMENTATION.md](./IMPLEMENTATION.md) for complete implementation details
 
 ## Desktop Toolbar Visibility
 
-The desktop toolbar remains part of the existing navigation / tool surface hierarchy. Hiding it does not create a new surface.
+The desktop toolbar remains part of the existing navigation / tool surface hierarchy. Hiding it does not create a new surface. Toolbar visibility is independent from drawer visibility.
 
 ### Behavioral Rule
 
 On desktop, the toolbar may be hidden by the user and later restored.
+- Only the toolbar / icon bar is dismissible.
+- An already-open drawer remains visible when the toolbar is hidden and continues to follow its existing close rules.
 
 This behavior exists to reduce persistent chrome when the user does not need toolbar access, while preserving a clear affordance to bring it back.
 
 ### Variant A
 
 - The toolbar may be collapsed using a chevron affordance at the bottom of the toolbar.
-- When collapsed, the toolbar slides out of view.
-- A single recall affordance remains visible at the bottom-right of the screen.
+- When collapsed, only the toolbar / icon bar slides out of view.
+- A single recall affordance remains visible at the bottom-right of the screen to restore the toolbar only.
 - Activating that affordance restores the toolbar.
 
 ### Variant B
 
 - The toolbar may be shown or hidden using a control in the top bar.
 - Activating that control toggles toolbar visibility.
+- Toggling the toolbar does not close an already-open drawer.
 
 ### Invariants
 
@@ -306,6 +309,8 @@ This behavior exists to reduce persistent chrome when the user does not need too
 - Hiding the toolbar does not change AI lifecycle rules.
 - Hiding the toolbar does not change drawer exclusivity rules.
 - The toolbar remains the same desktop tool surface whether visible or hidden.
+- Toolbar visibility and drawer visibility are independent states.
+- Hiding the toolbar does not close or hide an already-open drawer.
 - Mobile behavior is unchanged.
 
 ## What Does Not Belong in Navigation

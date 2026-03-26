@@ -1,14 +1,9 @@
-import { useState } from 'react';
-import Toast from './Toast';
 import RightDrawerContent from './RightDrawerContent';
 import { useUser } from '../contexts/UserContext';
 
-export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false, aiChatOpen = false, onHideToolbar = null }) {
+export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false, aiChatOpen = false, onHideToolbar = null, selectedEnvironment = 'familysearch-tree', onEnvironmentChange }) {
   const { user } = useUser();
   const baseUrl = import.meta.env.BASE_URL;
-  const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
 
   // Extract last name from user for dynamic tree naming
   const lastName = user?.name ? user.name.split(' ').slice(-1)[0] : 'Family';
@@ -40,19 +35,6 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
 
   const currentEnv = environments[selectedEnvironment];
 
-  const handleEnvironmentChange = (envId, newEnv) => {
-    setSelectedEnvironment(envId);
-    onDrawerToggle(null); // Close the drawer
-
-    // Show toast notification
-    setToastMessage(`Environment changed to ${newEnv.name}`);
-    setShowToast(true);
-  };
-
-  const handleToastClose = () => {
-    setShowToast(false);
-  };
-
   const drawerItems = [
     {
       icon: currentEnv.icon || null,
@@ -74,9 +56,7 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
   // If icon bar only mode, just render the icon bar
   if (iconBarOnly) {
     return (
-      <>
-        <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} />
-        <aside className="w-16 bg-white h-full flex flex-col items-center py-4">
+      <aside className="w-16 bg-white h-full flex flex-col items-center py-4">
           <div className="flex flex-col items-center space-y-2 w-full">
             {drawerItems.map((item, index) => (
               <button
@@ -134,16 +114,12 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
             </div>
           )}
         </aside>
-      </>
     );
   }
 
   // Normal mode - render both panel and icon bar
   return (
-    <>
-      <Toast message={toastMessage} isVisible={showToast} onClose={handleToastClose} />
-
-      <div className="flex h-full">
+    <div className="flex h-full">
         {/* Sliding Drawer Panel */}
         <div
           className={`bg-white h-full overflow-y-auto transition-all duration-300 ease-in-out ${
@@ -175,7 +151,7 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
                 activeDrawer={activeDrawer}
                 drawerItems={drawerItems}
                 showEnvironmentSwitcher={true}
-                onEnvironmentChange={handleEnvironmentChange}
+                onEnvironmentChange={onEnvironmentChange}
               />
             </div>
           )}
@@ -241,6 +217,5 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
           )}
         </aside>
       </div>
-    </>
   );
 }

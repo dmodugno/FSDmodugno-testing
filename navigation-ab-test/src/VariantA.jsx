@@ -753,6 +753,8 @@ export default function VariantA() {
               iconBarOnly={true}
               aiChatOpen={chat && !chat.isMinimized}
               onHideToolbar={() => setRightToolbarVisible(false)}
+              selectedEnvironment={selectedEnvironment}
+              onEnvironmentChange={handleEnvironmentChange}
             />
           )}
         </div>

@@ -38,6 +38,7 @@ This document captures architectural decisions, design rationale, and guiding pr
 - [Drawer Interaction Rules](#drawer-interaction-rules)
 - [AI Assistant (Chat) Placement](#ai-assistant-chat-placement)
 - [AI Split-View Pattern (Variant A)](#ai-split-view-pattern-variant-a)
+- [Desktop Toolbar Visibility](#desktop-toolbar-visibility)
 - [What Does Not Belong in Navigation](#what-does-not-belong-in-navigation)
 - [Mobile Navigation & AI State Machine](#mobile-navigation--ai-state-machine)
 - [Mobile Acceptance Criteria](#mobile-acceptance-criteria)
@@ -275,6 +276,37 @@ See [IMPLEMENTATION.md](./IMPLEMENTATION.md) for complete implementation details
 5. **Single Component**: AIChatOverlay serves both variants via mode detection
 
 ---
+
+## Desktop Toolbar Visibility
+
+The desktop toolbar remains part of the existing navigation / tool surface hierarchy. Hiding it does not create a new surface.
+
+### Behavioral Rule
+
+On desktop, the toolbar may be hidden by the user and later restored.
+
+This behavior exists to reduce persistent chrome when the user does not need toolbar access, while preserving a clear affordance to bring it back.
+
+### Variant A
+
+- The toolbar may be collapsed using a chevron affordance at the bottom of the toolbar.
+- When collapsed, the toolbar slides out of view.
+- A single recall affordance remains visible at the bottom-right of the screen.
+- Activating that affordance restores the toolbar.
+
+### Variant B
+
+- The toolbar may be shown or hidden using a control in the top bar.
+- Activating that control toggles toolbar visibility.
+
+### Invariants
+
+- This change applies to desktop only.
+- Hiding the toolbar does not create a new surface.
+- Hiding the toolbar does not change AI lifecycle rules.
+- Hiding the toolbar does not change drawer exclusivity rules.
+- The toolbar remains the same desktop tool surface whether visible or hidden.
+- Mobile behavior is unchanged.
 
 ## What Does Not Belong in Navigation
 

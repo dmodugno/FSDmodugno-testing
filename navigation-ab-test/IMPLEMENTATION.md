@@ -362,6 +362,103 @@ const toggleSection = (section) => {
 - `opacity-100` / `opacity-0` for fade effect
 - `transition-all duration-300 ease-in-out` for smooth animation
 
+### Desktop Right Toolbar Visibility Pattern
+
+**Purpose**: Allow users to hide/show the right toolbar on desktop to maximize content viewing area.
+
+**Important Constraints:**
+- Desktop only (no mobile behavior changes)
+- Applies to right toolbar/drawer, not left navigation
+- No new surface types introduced
+- No AI lifecycle changes
+- No drawer exclusivity changes
+- This is a visibility change to existing tool surface
+
+**State Management:**
+```jsx
+const [rightToolbarVisible, setRightToolbarVisible] = useState(true); // Desktop right toolbar visibility
+```
+
+**Variant A Pattern (Bottom chevron + floating recall button):**
+```jsx
+// In desktop layout - wrap right toolbar container
+{rightToolbarVisible && (
+  <div className="flex h-full">
+    {/* Content column and icon bar */}
+    <RightDrawer
+      onHideToolbar={() => setRightToolbarVisible(false)}
+      // ... other props
+    />
+  </div>
+)}
+
+// Floating recall button when hidden
+{!rightToolbarVisible && (
+  <button
+    onClick={() => setRightToolbarVisible(true)}
+    className="fixed right-4 bottom-4 z-20 bg-white hover:bg-gray-50 border-2 border-gray-300 p-3 rounded-lg shadow-lg"
+    title="Show toolbar"
+  >
+    {/* Left-pointing chevron SVG */}
+  </button>
+)}
+```
+
+**In RightDrawer.jsx:**
+```jsx
+// Accept onHideToolbar prop
+export default function RightDrawer({ onHideToolbar = null, ... }) {
+  // Add chevron button at bottom of icon bar (both iconBarOnly and normal modes)
+  {onHideToolbar && (
+    <div className="mt-auto">
+      <button
+        onClick={onHideToolbar}
+        className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg"
+        title="Hide toolbar"
+      >
+        {/* Right-pointing chevron SVG */}
+      </button>
+    </div>
+  )}
+}
+```
+
+**Variant B Pattern (Top bar toggle icon):**
+```jsx
+// Pass to TopNavigationB
+<TopNavigationB
+  rightToolbarVisible={rightToolbarVisible}
+  onToggleRightToolbar={() => setRightToolbarVisible(!rightToolbarVisible)}
+  // ... other props
+/>
+
+// In desktop layout - conditionally render toolbar
+{rightToolbarVisible && (
+  <RightDrawerB ... />
+)}
+```
+
+**In TopNavigationB.jsx:**
+```jsx
+// Accept toolbar visibility props
+export default function TopNavigationB({ rightToolbarVisible, onToggleRightToolbar, ... }) {
+  // Add toggle button in right section (after notifications)
+  {onToggleRightToolbar && (
+    <button onClick={onToggleRightToolbar} className="p-2 hover:bg-gray-100 rounded-lg">
+      {/* Double chevron SVG - pointing right when hidden, left when visible */}
+    </button>
+  )}
+}
+```
+
+**Key Rules:**
+- Only render in desktop layout (`!isMobile` check or outside mobile conditional)
+- Toolbar visibility is separate from collapse/expand state
+- Variant A: Chevron at bottom of icon bar + floating recall button at `right-4 bottom-4`
+- Variant B: Toggle icon in top bar (double chevron)
+- When hidden, entire right toolbar container is not rendered (clean unmount)
+- No boolean state for mobile surfaces (this is desktop-only feature)
+
 ### Active State Highlighting
 
 **Navigation Items with Green Highlight:**

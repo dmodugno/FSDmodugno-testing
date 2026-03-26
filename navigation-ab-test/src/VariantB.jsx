@@ -35,6 +35,7 @@ export default function VariantB() {
   const [organizeGalleryOpen, setOrganizeGalleryOpen] = useState(false);
   const [filterReservationsOpen, setFilterReservationsOpen] = useState(false);
   const [chat, setChat] = useState(null);
+  const [rightToolbarVisible, setRightToolbarVisible] = useState(true); // Desktop right toolbar visibility
 
   // Mobile navigation state machine
   const mobile = useMobileNavigation();
@@ -536,7 +537,7 @@ export default function VariantB() {
     );
   }
 
-  // DESKTOP LAYOUT (unchanged)
+  // DESKTOP LAYOUT
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
       <Header hideMainHeader={true} />
@@ -546,6 +547,8 @@ export default function VariantB() {
         onOpenChat={handleOpenNewChat}
         isCollapsed={sidebarCollapsed}
         onDrawerToggle={handleDrawerToggle}
+        rightToolbarVisible={rightToolbarVisible}
+        onToggleRightToolbar={() => setRightToolbarVisible(!rightToolbarVisible)}
       />
       <div className="flex flex-1 min-h-0">
         <LeftSidebarB
@@ -559,7 +562,7 @@ export default function VariantB() {
         </main>
 
         {/* Right side container with split view support */}
-        {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
+        {rightToolbarVisible && ((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
           <div className="w-80 flex-shrink-0 flex flex-col">
             {/* Top section - Drawer area */}
             {(activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
@@ -618,7 +621,9 @@ export default function VariantB() {
           </div>
         )}
 
-        <RightDrawerB activeDrawer={activeDrawer} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} />
+        {rightToolbarVisible && (
+          <RightDrawerB activeDrawer={activeDrawer} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} />
+        )}
 
         {/* Collapsed/Minimized AI bar (fixed overlay) - matching AI chat header */}
         {(chat && chat.isMinimized) && (

@@ -1,6 +1,6 @@
 import EnvironmentSwitcher from './EnvironmentSwitcher';
 
-export default function TopNavigationB({ onToggleSidebar, onOpenChat, isCollapsed, onDrawerToggle }) {
+export default function TopNavigationB({ onToggleSidebar, onOpenChat, isCollapsed, onDrawerToggle, rightToolbarVisible, onToggleRightToolbar }) {
   const baseUrl = import.meta.env.BASE_URL;
 
   return (
@@ -87,6 +87,29 @@ export default function TopNavigationB({ onToggleSidebar, onOpenChat, isCollapse
             className="w-6 h-6"
           />
         </button>
+
+        {/* Right Toolbar Visibility Toggle */}
+        {onToggleRightToolbar && (
+          <button
+            onClick={onToggleRightToolbar}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title={rightToolbarVisible ? 'Hide toolbar' : 'Show toolbar'}
+            aria-label={rightToolbarVisible ? 'Hide toolbar' : 'Show toolbar'}
+          >
+            <svg
+              className="w-6 h-6 text-gray-700"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {rightToolbarVisible ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              )}
+            </svg>
+          </button>
+        )}
 
         {/* Assistant Button */}
         <button

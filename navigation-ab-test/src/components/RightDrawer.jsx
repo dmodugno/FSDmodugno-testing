@@ -3,7 +3,7 @@ import Toast from './Toast';
 import RightDrawerContent from './RightDrawerContent';
 import { useUser } from '../contexts/UserContext';
 
-export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false, aiChatOpen = false }) {
+export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly = false, aiChatOpen = false, onHideToolbar = null }) {
   const { user } = useUser();
   const baseUrl = import.meta.env.BASE_URL;
   const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
@@ -112,6 +112,27 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
               </button>
             ))}
           </div>
+
+          {/* Hide toolbar button at bottom */}
+          {onHideToolbar && (
+            <div className="mt-auto">
+              <button
+                onClick={onHideToolbar}
+                className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
+                title="Hide toolbar"
+                aria-label="Hide toolbar"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
         </aside>
       </>
     );
@@ -197,6 +218,27 @@ export default function RightDrawer({ activeDrawer, onDrawerToggle, iconBarOnly 
               </button>
             ))}
           </div>
+
+          {/* Hide toolbar button at bottom */}
+          {onHideToolbar && (
+            <div className="mt-auto">
+              <button
+                onClick={onHideToolbar}
+                className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
+                title="Hide toolbar"
+                aria-label="Hide toolbar"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
         </aside>
       </div>
     </>

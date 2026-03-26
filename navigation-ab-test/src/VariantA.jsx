@@ -40,6 +40,7 @@ export default function VariantA() {
   const [selectedEnvironment, setSelectedEnvironment] = useState('familysearch-tree');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [rightToolbarVisible, setRightToolbarVisible] = useState(true); // Desktop right toolbar visibility
 
   // Mobile navigation state machine
   const mobile = useMobileNavigation();
@@ -660,9 +661,10 @@ export default function VariantA() {
         </main>
 
         {/* Right side container with split view support */}
-        <div className="flex h-full">
-          {/* Content column (320px) - only when AI is open OR drawer is open */}
-          {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
+        {rightToolbarVisible && (
+          <div className="flex h-full">
+            {/* Content column (320px) - only when AI is open OR drawer is open */}
+            {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
             <div className="flex flex-col w-80 border-l-2 border-gray-200">
               {/* Top section - Drawer area */}
               {(activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
@@ -744,9 +746,30 @@ export default function VariantA() {
             </div>
           )}
 
-          {/* Icon bar (64px) */}
-          <RightDrawer activeDrawer={activeDrawer} onDrawerToggle={handleDrawerToggle} iconBarOnly={true} aiChatOpen={chat && !chat.isMinimized} />
-        </div>
+            {/* Icon bar (64px) */}
+            <RightDrawer
+              activeDrawer={activeDrawer}
+              onDrawerToggle={handleDrawerToggle}
+              iconBarOnly={true}
+              aiChatOpen={chat && !chat.isMinimized}
+              onHideToolbar={() => setRightToolbarVisible(false)}
+            />
+          </div>
+        )}
+
+        {/* Floating recall button when toolbar is hidden */}
+        {!rightToolbarVisible && (
+          <button
+            onClick={() => setRightToolbarVisible(true)}
+            className="fixed right-4 bottom-4 z-20 bg-white hover:bg-gray-50 border-2 border-gray-300 p-3 rounded-lg shadow-lg transition-all"
+            title="Show toolbar"
+            aria-label="Show toolbar"
+          >
+            <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
 
         {/* Collapsed/Minimized AI bar (fixed overlay) - matching AI chat header */}
         {(chat && chat.isMinimized) && (

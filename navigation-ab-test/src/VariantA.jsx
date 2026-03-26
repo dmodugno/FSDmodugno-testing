@@ -661,10 +661,9 @@ export default function VariantA() {
         </main>
 
         {/* Right side container with split view support */}
-        {rightToolbarVisible && (
-          <div className="flex h-full">
-            {/* Content column (320px) - only when AI is open OR drawer is open */}
-            {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
+        <div className="flex h-full">
+          {/* Content column (320px) - only when AI is open OR drawer is open */}
+          {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
             <div className="flex flex-col w-80 border-l-2 border-gray-200">
               {/* Top section - Drawer area */}
               {(activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
@@ -746,7 +745,8 @@ export default function VariantA() {
             </div>
           )}
 
-            {/* Icon bar (64px) */}
+          {/* Icon bar (64px) - conditionally rendered based on toolbar visibility */}
+          {rightToolbarVisible && (
             <RightDrawer
               activeDrawer={activeDrawer}
               onDrawerToggle={handleDrawerToggle}
@@ -754,8 +754,8 @@ export default function VariantA() {
               aiChatOpen={chat && !chat.isMinimized}
               onHideToolbar={() => setRightToolbarVisible(false)}
             />
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Floating recall button when toolbar is hidden */}
         {!rightToolbarVisible && (

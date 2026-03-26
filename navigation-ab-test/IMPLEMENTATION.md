@@ -364,35 +364,49 @@ const toggleSection = (section) => {
 
 ### Desktop Right Toolbar Visibility Pattern
 
-**Purpose**: Allow users to hide/show the right toolbar on desktop to maximize content viewing area.
+**Purpose**: Allow users to hide/show the right toolbar (icon bar) on desktop to maximize content viewing area.
+
+**Critical Behavior:**
+- **Only the icon bar (64px toolbar) is hideable**
+- **Drawer content remains independent** - if a drawer is open, it stays open when toolbar is hidden
+- **Toolbar visibility does NOT affect drawer state** - hiding toolbar does not close drawers
+- **Restoring toolbar only restores the icon bar** - does not change drawer open/close state
 
 **Important Constraints:**
 - Desktop only (no mobile behavior changes)
-- Applies to right toolbar/drawer, not left navigation
+- Applies to right icon bar only, not drawer content
 - No new surface types introduced
 - No AI lifecycle changes
 - No drawer exclusivity changes
-- This is a visibility change to existing tool surface
+- Drawer open/close behavior unchanged
 
 **State Management:**
 ```jsx
-const [rightToolbarVisible, setRightToolbarVisible] = useState(true); // Desktop right toolbar visibility
+const [rightToolbarVisible, setRightToolbarVisible] = useState(true); // Desktop right icon bar visibility
 ```
 
 **Variant A Pattern (Bottom chevron + floating recall button):**
 ```jsx
-// In desktop layout - wrap right toolbar container
-{rightToolbarVisible && (
-  <div className="flex h-full">
-    {/* Content column and icon bar */}
+// In desktop layout - content column is always rendered when needed
+<div className="flex h-full">
+  {/* Content column (320px) - ALWAYS rendered when AI/drawer is open */}
+  {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || ...) && (
+    <div className="flex flex-col w-80 border-l-2 border-gray-200">
+      {/* Drawer content, AI chat */}
+    </div>
+  )}
+
+  {/* Icon bar (64px) - CONDITIONALLY rendered based on toolbar visibility */}
+  {rightToolbarVisible && (
     <RightDrawer
+      iconBarOnly={true}
       onHideToolbar={() => setRightToolbarVisible(false)}
       // ... other props
     />
-  </div>
-)}
+  )}
+</div>
 
-// Floating recall button when hidden
+// Floating recall button when toolbar is hidden
 {!rightToolbarVisible && (
   <button
     onClick={() => setRightToolbarVisible(true)}
@@ -432,9 +446,16 @@ export default function RightDrawer({ onHideToolbar = null, ... }) {
   // ... other props
 />
 
-// In desktop layout - conditionally render toolbar
+// In desktop layout - content column is always rendered when needed
+{((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || ...) && (
+  <div className="w-80 flex-shrink-0 flex flex-col">
+    {/* Drawer content, AI chat */}
+  </div>
+)}
+
+// Icon bar - CONDITIONALLY rendered based on toolbar visibility
 {rightToolbarVisible && (
-  <RightDrawerB ... />
+  <RightDrawerB iconBarOnly={true} ... />
 )}
 ```
 
@@ -453,11 +474,14 @@ export default function TopNavigationB({ rightToolbarVisible, onToggleRightToolb
 
 **Key Rules:**
 - Only render in desktop layout (`!isMobile` check or outside mobile conditional)
-- Toolbar visibility is separate from collapse/expand state
+- **Icon bar visibility is independent from drawer state** - hiding toolbar does NOT close drawers
+- **Content column always renders** when there is content (drawer open, AI open, etc.)
+- **Only the 64px icon bar is hidden/shown**, not the 320px content column
 - Variant A: Chevron at bottom of icon bar + floating recall button at `right-4 bottom-4`
 - Variant B: Toggle icon in top bar (double chevron)
-- When hidden, entire right toolbar container is not rendered (clean unmount)
+- When hidden, only icon bar unmounts (content column continues rendering if needed)
 - No boolean state for mobile surfaces (this is desktop-only feature)
+- If a drawer is open and user hides toolbar, drawer remains open and accessible
 
 ### Active State Highlighting
 

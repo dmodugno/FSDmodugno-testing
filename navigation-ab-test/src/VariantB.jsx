@@ -562,7 +562,7 @@ export default function VariantB() {
         </main>
 
         {/* Right side container with split view support */}
-        {rightToolbarVisible && ((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
+        {((chat && !chat.isMinimized) || activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (
           <div className="w-80 flex-shrink-0 flex flex-col">
             {/* Top section - Drawer area */}
             {(activeDrawer !== null || selectedPerson || organizeGalleryOpen || filterReservationsOpen) && (

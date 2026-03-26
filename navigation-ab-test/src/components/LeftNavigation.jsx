@@ -35,6 +35,17 @@ export default function LeftNavigation({
   if (!user) return null;
 
   const handleNavigate = (pageName) => {
+    // Handle Sign Out specially
+    if (pageName === 'Sign Out') {
+      if (window.confirm('Are you sure you want to sign out?')) {
+        // Clear authentication session
+        sessionStorage.removeItem('access_session');
+        // Reload to return to access screen
+        window.location.reload();
+      }
+      return;
+    }
+
     if (mobileMode) {
       // Mobile: Add pressed feedback (120ms) before navigating
       setPressedItem(pageName);

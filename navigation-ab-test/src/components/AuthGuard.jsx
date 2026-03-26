@@ -219,21 +219,5 @@ export default function AuthGuard({ children }) {
     );
   }
 
-  return (
-    <>
-      {children}
-      <button
-        onClick={() => {
-          if (window.confirm('Are you sure you want to sign out?')) {
-            clearSession();
-            window.location.reload();
-          }
-        }}
-        className="fixed bottom-4 left-4 px-3 py-1 text-xs text-gray-500 hover:text-gray-700 bg-white border border-gray-300 rounded shadow-sm z-50"
-        title="Sign out"
-      >
-        Sign Out
-      </button>
-    </>
-  );
+  return <>{children}</>;
 }

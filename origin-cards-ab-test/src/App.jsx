@@ -26,6 +26,12 @@ function App() {
   // Show test banner if no params (internal testing mode)
   const [showTestBanner, setShowTestBanner] = useState(!searchParams.has('country'));
 
+  // Build search-by-place URL with preserved query params
+  const getSearchByPlaceUrl = () => {
+    const country = searchParams.get('country');
+    return country ? `/search-by-place?country=${country}` : '/search-by-place';
+  };
+
   const handleTestCountryChange = (country) => {
     setTestCountry(country);
     setSearchParams({ country });
@@ -69,7 +75,7 @@ function App() {
             testCountry={testCountry}
             selectedCountry={selectedCountry}
             onCountrySelect={setSelectedCountry}
-            moreCountriesLink={{ url: 'https://www.familysearch.org/en/search/location/list', internal: false }}
+            moreCountriesLink={{ url: getSearchByPlaceUrl(), internal: true }}
           />
           
           <div className="mt-6">

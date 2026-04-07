@@ -85,6 +85,7 @@ export default function VariantB() {
             <HeroImageSlider useAlternateFrames={true} />
           </div>
           <div className="px-4 py-6">
+            <p className="text-sm text-gray-800 font-medium mb-2">Welcome to FamilySearch</p>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
               Where are your relatives from?
             </h1>
@@ -106,6 +107,7 @@ export default function VariantB() {
           <div className="flex items-center mx-auto px-4 max-w-[1200px] xl:max-w-[1280px] 2xl:max-w-[1440px] min-h-[500px] relative">
             {/* Text Content */}
             <div className="flex flex-col gap-3 z-10 max-w-[600px] py-16">
+              <p className="text-sm text-gray-800 font-medium">Welcome to FamilySearch</p>
               <h1 className="text-5xl font-bold text-gray-900">
                 Where are your relatives from?
               </h1>

@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import MiniNavigation from './components/MiniNavigation';
 import CountryChips from './components/CountryChips';
 import OriginCards from './components/OriginCards';
 import RecordCollections from './components/RecordCollections';
-import GetStarted from './components/GetStarted';
+import WhyFamilySearch from './components/GetStarted';
 import FreeHelp from './components/FreeHelp';
 import { countryCollections, countryChipsConfig } from './data.jsx';
 
@@ -57,15 +58,17 @@ function App() {
 
   return (
     <div className="m-0 bg-gray-100 text-gray-900 font-['Noto_Sans',Segoe_UI,Arial,sans-serif]">
-      <Header 
-        testCountry={testCountry} 
-        onTestCountryChange={handleTestCountryChange} 
+      <Header
+        testCountry={testCountry}
+        onTestCountryChange={handleTestCountryChange}
         showTestBanner={showTestBanner}
+        sticky={false}
       />
       <Hero testCountry={testCountry} />
-      
+      <MiniNavigation />
+
       <main className="mx-auto px-4 py-8 max-w-[1200px] xl:max-w-[1280px] 2xl:max-w-[1440px]">
-        <section className="my-8 bg-white rounded-xl p-6" aria-label="Where are your relatives from?">
+        <section id="explore" className="my-8 bg-white rounded-xl p-6" aria-label="Where are your relatives from?">
           <div className="text-xl font-semibold text-teal-700 mb-2">Where are your relatives from?</div>
           <p className="text-gray-600 text-sm mb-4">
             Select a country to explore its resources. Discover experiences, records, and research from around the world.
@@ -83,17 +86,23 @@ function App() {
           </div>
           
           {showCollections && (
-            <RecordCollections 
-              country={selectedCountry}
-              collections={currentCollections}
-            />
+            <div id="featured-records">
+              <RecordCollections
+                country={selectedCountry}
+                collections={currentCollections}
+              />
+            </div>
           )}
         </section>
 
-        <GetStarted />
+        <div id="get-started">
+          <WhyFamilySearch />
+        </div>
       </main>
-      
-      <FreeHelp />
+
+      <div id="help">
+        <FreeHelp />
+      </div>
     </div>
   );
 }

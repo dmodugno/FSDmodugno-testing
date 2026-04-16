@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
-export default function Header({ testCountry, onTestCountryChange, showTestBanner = true }) {
+export default function Header({ testCountry, onTestCountryChange, showTestBanner = true, sticky = true }) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,7 +37,7 @@ export default function Header({ testCountry, onTestCountryChange, showTestBanne
   };
 
   return (
-    <div className="sticky top-0 z-50">
+    <div className={sticky ? "sticky top-0 z-50" : ""}>
       {showTestBanner && (
         <div className="bg-[#9EA1A1] border-b border-[#eee6c9] px-4 py-1.5 flex items-center gap-4 text-sm" role="region" aria-label="Test country selection">
           <div className="flex items-center gap-2">

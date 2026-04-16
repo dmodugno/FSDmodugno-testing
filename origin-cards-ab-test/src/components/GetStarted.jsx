@@ -1,12 +1,12 @@
-function GetStarted() {
+function WhyFamilySearch() {
   const baseUrl = import.meta.env.BASE_URL;
   return (
-    <section className="my-8 bg-white rounded-xl p-8" aria-label="How do you want to get started?">
+    <section className="my-8 bg-white rounded-xl p-8" aria-label="Why FamilySearch?">
       <h2 className="text-2xl font-semibold text-gray-900 text-center mb-2">
-        How do you want to get started?
+        Why FamilySearch?
       </h2>
       <p className="text-center text-gray-600 mb-8">
-        Your journey is unique. Choose how you want to start connecting with your family story.
+        We help people discover their family's history through our website, mobile apps, and in person at over 5,000 local FamilySearch centers.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -118,4 +118,4 @@ function GetStarted() {
   );
 }
 
-export default GetStarted;
+export default WhyFamilySearch;

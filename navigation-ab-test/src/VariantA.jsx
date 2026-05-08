@@ -419,6 +419,83 @@ export default function VariantA() {
       );
     } else if (currentPage === 'My Reservations') {
       return <MyReservationsPage onFilterClick={handleFilterReservationsClick} />;
+    } else if (currentPage === 'Historical Records') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Search Historical Records
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Records create a paper trail for your ancestors and can lead you to important details about their life. Enter a name, and we'll look for it in birth certificates, marriage registrations, census records, and other official documents.
+          </p>
+        </div>
+      );
+    } else if (currentPage === 'People in Family Tree') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Search people in Family tree
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Search the largest shared family tree in the world. Discover ancestors, and see where you connect.
+          </p>
+        </div>
+      );
+    } else if (currentPage === 'Unindexed Records') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Search unindexed records
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Search almost 2 billion historical records that haven't been organized and or cataloged yet. We use AI to read and interpret text directly from document images helping you uncover names, dates, and details that standard searches can't find.
+          </p>
+        </div>
+      );
+    } else if (currentPage === 'Historical Images') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Explore Historical Images
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Browse images of records that haven't been made searchable through indexing (transcription) yet. Indexed (or transcribed) data is used to search for specific information in historical records.
+          </p>
+        </div>
+      );
+    } else if (currentPage === 'Catalog') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Search FamilySearch's Catalog
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Find books, records, images, and other important resources offered through the FamilySearch website, the FamilySearch Library, and select FamilySearch Centers around the world.
+          </p>
+        </div>
+      );
+    } else if (currentPage === 'Books') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Search FamilySearch's books
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Search over 500,000 genealogy books, family histories, maps, yearbooks, and more that FamilySearch aquired over the years.
+          </p>
+        </div>
+      );
+    } else if (currentPage === 'Newspapers') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full px-8 max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Search historical newspaper archives for your ancestors
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Embark on a journey through time. Historical newspapers offer insights, context, and a wealth of details to fuel your family history search.
+          </p>
+        </div>
+      );
     } else {
       return (
         <div className="flex items-center justify-center h-full">

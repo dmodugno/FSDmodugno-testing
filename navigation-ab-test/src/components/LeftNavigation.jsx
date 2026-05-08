@@ -137,7 +137,7 @@ export default function LeftNavigation({
       subItems: [
         { label: 'Your Impact', link: '#' },
         {
-          label: 'Index Records',
+          label: 'Opportunities',
           expandable: true,
           subItems: [
             { label: 'Quick Name Review', link: '#' },

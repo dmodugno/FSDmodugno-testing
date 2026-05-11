@@ -10,14 +10,26 @@ export function UserProvider({ children }) {
   useEffect(() => {
     // Get user type from URL parameters
     const params = new URLSearchParams(window.location.search);
-    const membership = params.get('membership') || 'non-LDS';
-    const experience = params.get('experience') || 'new';
+    const membership = params.get('membership') || 'LDS';
+    const experience = params.get('experience') || 'casual';
 
     // Check if we're in URL mode (has membership or experience params)
     const hasUrlParams = params.has('membership') || params.has('experience');
     setIsUrlMode(hasUrlParams);
 
     const userProfile = getUserProfile(membership, experience);
+
+    // Apply FS Default preset values if no URL parameters present
+    const fsDefaultOverrides = !hasUrlParams ? {
+      treeSize: 500,
+      hintsCount: 0,
+      duplicatesCount: 0,
+      ordinancesReadyCount: 0,
+      lastMode: null,
+      entryContext: null,
+      lastAction: null,
+      isHelper: false
+    } : {};
 
     // Override with URL parameters if present
     const overrides = {};
@@ -30,7 +42,7 @@ export function UserProvider({ children }) {
     if (params.has('lastAction')) overrides.lastAction = params.get('lastAction') === 'null' ? null : params.get('lastAction');
     if (params.has('isHelper')) overrides.isHelper = params.get('isHelper') === 'true';
 
-    setUser({ ...userProfile, ...overrides });
+    setUser({ ...userProfile, ...fsDefaultOverrides, ...overrides });
   }, []);
 
   const updateUser = (membership, experience) => {

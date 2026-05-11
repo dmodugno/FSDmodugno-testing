@@ -79,6 +79,16 @@ export default function FloatingTestPanel({ variant }) {
   // Preset configurations
   const applyPreset = (preset) => {
     switch (preset) {
+      case 'fs-default':
+        updateUserField('treeSize', 500);
+        updateUserField('hintsCount', 0);
+        updateUserField('duplicatesCount', 0);
+        updateUserField('ordinancesReadyCount', 0);
+        updateUserField('lastMode', null);
+        updateUserField('entryContext', null);
+        updateUserField('lastAction', null);
+        updateUserField('isHelper', false);
+        break;
       case 'new-empty':
         updateUserField('treeSize', 0);
         updateUserField('hintsCount', 0);
@@ -388,6 +398,12 @@ export default function FloatingTestPanel({ variant }) {
             <section className="border-t pt-4 pb-4">
               <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Quick Presets</h3>
               <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => applyPreset('fs-default')}
+                  className="px-3 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-900 rounded-md text-sm font-medium transition-colors col-span-2"
+                >
+                  FS Default
+                </button>
                 <button
                   onClick={() => applyPreset('new-empty')}
                   className="px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-900 rounded-md text-sm font-medium transition-colors"

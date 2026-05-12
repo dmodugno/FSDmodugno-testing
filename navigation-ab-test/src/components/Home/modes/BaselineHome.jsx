@@ -296,7 +296,7 @@ export default function BaselineHome({ state }) {
                   </div>
                 </div>
                 <button
-                  type="submit"
+                  type="button"
                   className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2.5 px-4 rounded transition-colors"
                 >
                   SEARCH

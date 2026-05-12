@@ -10,7 +10,7 @@ export function UserProvider({ children }) {
   useEffect(() => {
     // Get user type from URL parameters
     const params = new URLSearchParams(window.location.search);
-    const membership = params.get('membership') || 'LDS';
+    const membership = params.get('membership') || 'non-LDS';
     const experience = params.get('experience') || 'casual';
 
     // Check if we're in URL mode (has membership or experience params)

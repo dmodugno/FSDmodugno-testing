@@ -33,7 +33,7 @@ export default function BaselineHome({ state }) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6 py-12">
       {/* Left Column - 2/3 width */}
       <div className="lg:col-span-2 space-y-4">
         {/* AI Research Assistant */}
@@ -220,10 +220,10 @@ export default function BaselineHome({ state }) {
       {/* Right Column - 1/3 width */}
       <div className="space-y-4">
         {/* Search for an Ancestor */}
-        <div className="bg-white rounded-lg shadow border border-gray-200">
+        <div className="rounded-lg">
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-100 transition-colors rounded-lg"
           >
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,7 +241,7 @@ export default function BaselineHome({ state }) {
             </svg>
           </button>
           {searchOpen && (
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4">
               <form className="space-y-3">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
@@ -307,10 +307,10 @@ export default function BaselineHome({ state }) {
         </div>
 
         {/* FamilySearch Labs */}
-        <div className="bg-white rounded-lg shadow border border-gray-200">
+        <div className="rounded-lg">
           <button
             onClick={() => setLabsOpen(!labsOpen)}
-            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-100 transition-colors rounded-lg"
           >
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -328,7 +328,7 @@ export default function BaselineHome({ state }) {
             </svg>
           </button>
           {labsOpen && (
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4">
               <img
                 src="https://edge.fscdn.org/assets/static/media/LabsImage.60c7f3dd786ac07b2554.jpg"
                 alt="FamilySearch Labs"
@@ -345,10 +345,10 @@ export default function BaselineHome({ state }) {
         </div>
 
         {/* To-Do List */}
-        <div className="bg-white rounded-lg shadow border border-gray-200">
+        <div className="rounded-lg">
           <button
             onClick={() => setTodoOpen(!todoOpen)}
-            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-100 transition-colors rounded-lg"
           >
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -366,7 +366,7 @@ export default function BaselineHome({ state }) {
             </svg>
           </button>
           {todoOpen && (
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4">
               <form onSubmit={handleAddTodo} className="mb-4">
                 <input
                   type="text"

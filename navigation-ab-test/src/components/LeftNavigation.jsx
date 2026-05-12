@@ -282,7 +282,7 @@ export default function LeftNavigation({
         {/* Mobile Header with Close Button */}
         {mobileMode && onMobileClose && (
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+            <h2 className="text-base font-semibold text-gray-900">Menu</h2>
             <button
               onClick={onMobileClose}
               className="p-2 hover:bg-gray-100 rounded-lg"
@@ -334,7 +334,7 @@ export default function LeftNavigation({
               {item.isLink ? (
                 <button
                   onClick={() => handleNavigate(item.label)}
-                  className={`w-full flex items-center p-4 transition-colors ${
+                  className={`w-full flex items-center p-3 transition-colors ${
                     mobileMode && pressedItem === item.label
                       ? 'bg-green-100 border-l-4 border-green-600'
                       : currentPage === item.label
@@ -346,7 +346,7 @@ export default function LeftNavigation({
                   <img src={item.icon} alt={item.label} className={`w-6 h-6 ${!isCollapsed && 'mr-3'}`} />
                   {!isCollapsed && (
                     <div className="flex-1 text-left">
-                      <div className={`font-medium ${currentPage === item.label ? 'text-green-700' : 'text-gray-900'}`}>
+                      <div className={`text-sm font-medium ${currentPage === item.label ? 'text-green-700' : 'text-gray-900'}`}>
                         {item.label}
                       </div>
                       {item.description && (
@@ -369,7 +369,7 @@ export default function LeftNavigation({
                         toggleSection(item.id);
                       }
                     }}
-                    className={`w-full flex items-center p-4 transition-colors ${
+                    className={`w-full flex items-center p-3 transition-colors ${
                       isSectionActive(item.subItems) && (isCollapsed || expandedSection !== item.id) ? 'bg-green-50 border-l-4 border-green-600' : 'hover:bg-gray-50'
                     }`}
                     title={isCollapsed ? item.label : ''}
@@ -378,7 +378,7 @@ export default function LeftNavigation({
                     {!isCollapsed && (
                       <>
                         <div className="flex-1 text-left">
-                          <div className="font-medium text-gray-900">{item.label}</div>
+                          <div className="text-sm font-medium text-gray-900">{item.label}</div>
                           {item.description && (
                             <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
                           )}
@@ -422,7 +422,7 @@ export default function LeftNavigation({
               {item.isLink ? (
                 <button
                   onClick={() => handleNavigate(item.label)}
-                  className={`w-full flex items-center p-4 transition-colors ${
+                  className={`w-full flex items-center p-3 transition-colors ${
                     mobileMode && pressedItem === item.label
                       ? 'bg-green-100 border-l-4 border-green-600'
                       : currentPage === item.label
@@ -434,7 +434,7 @@ export default function LeftNavigation({
                   <img src={item.icon} alt={item.label} className={`w-6 h-6 ${!isCollapsed && 'mr-3'}`} />
                   {!isCollapsed && (
                     <div className="flex-1 text-left">
-                      <div className={`font-medium ${currentPage === item.label ? 'text-green-700' : 'text-gray-900'}`}>
+                      <div className={`text-sm font-medium ${currentPage === item.label ? 'text-green-700' : 'text-gray-900'}`}>
                         {item.label}
                       </div>
                       {item.description && (
@@ -457,7 +457,7 @@ export default function LeftNavigation({
                         toggleSection(item.id);
                       }
                     }}
-                    className={`w-full flex items-center p-4 transition-colors ${
+                    className={`w-full flex items-center p-3 transition-colors ${
                       isSectionActive(item.subItems) && (isCollapsed || expandedSection !== item.id) ? 'bg-green-50 border-l-4 border-green-600' : 'hover:bg-gray-50'
                     }`}
                     title={isCollapsed ? item.label : ''}
@@ -466,7 +466,7 @@ export default function LeftNavigation({
                     {!isCollapsed && (
                       <>
                         <div className="flex-1 text-left">
-                          <div className="font-medium text-gray-900">{item.label}</div>
+                          <div className="text-sm font-medium text-gray-900">{item.label}</div>
                           {item.description && (
                             <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
                           )}

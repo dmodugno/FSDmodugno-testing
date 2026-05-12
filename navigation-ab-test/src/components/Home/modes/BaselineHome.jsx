@@ -33,9 +33,9 @@ export default function BaselineHome({ state }) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6 py-12">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
       {/* Left Column - 2/3 width */}
-      <div className="lg:col-span-2 space-y-4">
+      <div className="md:col-span-2 space-y-3 md:space-y-4">
         {/* AI Research Assistant */}
         <div className="bg-white rounded-lg shadow border border-gray-200">
           <button
@@ -218,7 +218,7 @@ export default function BaselineHome({ state }) {
       </div>
 
       {/* Right Column - 1/3 width */}
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {/* Search for an Ancestor */}
         <div className="rounded-lg">
           <button
@@ -337,7 +337,7 @@ export default function BaselineHome({ state }) {
               <p className="text-sm text-gray-700 mb-3">
                 Try out some potential new features and tell us what you think.
               </p>
-              <button className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-4 rounded transition-colors">
+              <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded transition-colors">
                 VIEW EXPERIMENTS
               </button>
             </div>

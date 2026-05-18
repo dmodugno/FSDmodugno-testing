@@ -311,7 +311,7 @@ export default function VariantA() {
       icon: `${baseUrl}icons/TreePedigree.svg`,
       subItems: [
         { label: 'Family Tree' },
-        { label: 'Person List' },
+        { label: 'Living People (private)' },
         { label: 'Manage Trees' }
       ]
     },
@@ -406,6 +406,20 @@ export default function VariantA() {
       return <HomePage />;
     } else if (currentPage === 'Family Tree') {
       return <FamilyTreePage onPersonClick={handlePersonClick} mobileMode={isMobile} />;
+    } else if (currentPage === 'Living People (private)') {
+      return (
+        <div className="flex flex-col items-start justify-start h-full px-8 py-8 max-w-5xl mx-auto">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+            Living Family Members
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed mb-8">
+            These are living people you've added to your family. They remain private to you and won't appear in the shared FamilySearch Family Tree until they're marked as deceased.
+          </p>
+          <div className="text-gray-500 text-sm">
+            [List of people appears here]
+          </div>
+        </div>
+      );
     } else if (currentPage === 'Gallery') {
       return (
         <GalleryPage

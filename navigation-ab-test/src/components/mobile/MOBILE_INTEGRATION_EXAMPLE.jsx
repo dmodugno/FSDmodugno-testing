@@ -166,7 +166,7 @@ export default function MobileIntegrationExample() {
       icon: `${baseUrl}icons/TreePedigree.svg`,
       subItems: [
         { label: 'Family Tree' },
-        { label: 'Person List' }
+        { label: 'Living People (private)' }
       ]
     }
   ];

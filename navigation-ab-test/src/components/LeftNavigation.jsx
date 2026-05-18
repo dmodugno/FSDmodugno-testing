@@ -114,7 +114,7 @@ export default function LeftNavigation({
       description: 'Create and improve your family tree',
       subItems: [
         { label: 'Family Tree', link: '#' },
-        { label: 'Person List', link: '#' },
+        { label: 'Living People (private)', link: '#' },
         { label: 'Manage Trees', link: '#' }
       ]
     },

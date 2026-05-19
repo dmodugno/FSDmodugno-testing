@@ -42,7 +42,19 @@ export default function FloatingTestPanel({ variant }) {
   };
 
   const handleTreeSizeChange = (e) => {
-    updateUserField('treeSize', parseInt(e.target.value) || 0);
+    const value = e.target.value;
+    let treeSize;
+    if (value === 'empty') treeSize = 0;
+    else if (value === 'sparse') treeSize = 50;
+    else if (value === 'full') treeSize = 500;
+    updateUserField('treeSize', treeSize);
+  };
+
+  // Helper to get tree size label
+  const getTreeSizeLabel = (size) => {
+    if (size < 2) return 'empty';
+    if (size < 100) return 'sparse';
+    return 'full';
   };
 
   const handleHintsChange = (e) => {
@@ -257,22 +269,43 @@ export default function FloatingTestPanel({ variant }) {
               <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Tree State</h3>
               <div className="space-y-3">
                 <div>
-                  <label htmlFor="treeSize" className="block text-sm font-medium text-gray-700 mb-1">
-                    Tree Size: <span className="text-green-600 font-semibold">{user.treeSize}</span>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tree Size
                   </label>
-                  <input
-                    id="treeSize"
-                    type="range"
-                    min="0"
-                    max="5000"
-                    step="10"
-                    value={user.treeSize}
-                    onChange={handleTreeSizeChange}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>0</span>
-                    <span>5000</span>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="treeSize"
+                        value="empty"
+                        checked={getTreeSizeLabel(user.treeSize) === 'empty'}
+                        onChange={handleTreeSizeChange}
+                        className="text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm">Empty (only current person)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="treeSize"
+                        value="sparse"
+                        checked={getTreeSizeLabel(user.treeSize) === 'sparse'}
+                        onChange={handleTreeSizeChange}
+                        className="text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm">Sparse (2-3 generations)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="treeSize"
+                        value="full"
+                        checked={getTreeSizeLabel(user.treeSize) === 'full'}
+                        onChange={handleTreeSizeChange}
+                        className="text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm">Full (4+ generations)</span>
+                    </label>
                   </div>
                 </div>
 

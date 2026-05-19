@@ -21,7 +21,7 @@ export function UserProvider({ children }) {
 
     // Apply FS Default preset values if no URL parameters present
     const fsDefaultOverrides = !hasUrlParams ? {
-      treeSize: 500,
+      treeSize: 0,
       hintsCount: 0,
       duplicatesCount: 0,
       ordinancesReadyCount: 0,

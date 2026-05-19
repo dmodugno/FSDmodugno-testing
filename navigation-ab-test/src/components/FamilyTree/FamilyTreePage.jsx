@@ -1,10 +1,45 @@
 import { useState } from 'react';
 import CoupleCard from './CoupleCard';
+import AddPersonCard from './AddPersonCard';
+import AddParentsCard from './AddParentsCard';
 import { familyTreeData } from './mockFamilyData';
+import { useUser } from '../../contexts/UserContext';
+
+// Helper function to filter tree data based on user's tree size
+function getTreeDataBySize(treeSize) {
+  if (treeSize < 2) {
+    // Empty: only current person (just husband, no spouse)
+    return {
+      currentPerson: {
+        husband: familyTreeData.currentPerson.husband,
+        wife: null,
+        marriage: null
+      },
+      showAddParents: true,
+      showAddChild: true
+    };
+  } else if (treeSize < 100) {
+    // Sparse: current person + some parents (2-3 generations)
+    return {
+      currentPerson: familyTreeData.currentPerson,
+      children: familyTreeData.children,
+      husbandParents: familyTreeData.husbandParents,
+      wifeParents: null, // Missing wife's parents for sparse tree
+      showAddParents: true
+    };
+  } else {
+    // Full: everything (4+ generations)
+    return familyTreeData;
+  }
+}
 
 export default function FamilyTreePage({ onPersonClick, mobileMode = false }) {
+  const { user } = useUser();
   const [viewMode, setViewMode] = useState('landscape');
   const baseUrl = import.meta.env.BASE_URL;
+
+  // Get filtered tree data based on user's tree size
+  const treeData = getTreeDataBySize(user.treeSize);
 
   return (
     <div className="h-full flex flex-col bg-gray-200 relative">
@@ -114,115 +149,144 @@ export default function FamilyTreePage({ onPersonClick, mobileMode = false }) {
       )}
 
       {/* Tree Canvas - Scrollable */}
-      <div className="flex-1 overflow-auto p-4 md:p-16">
+      <div className="flex-1 overflow-auto p-4 md:p-16 flex items-center">
         <div className="flex items-center min-w-max">
+          {/* Column 0: Add Child (for empty trees) */}
+          {treeData.showAddChild && (
+            <>
+              <div className="flex flex-col relative">
+                <AddPersonCard type="child" onClick={() => console.log('Add child clicked')} />
+              </div>
+              {/* Connection line from child to current person */}
+              <div className="relative self-stretch" style={{ width: '128px' }}>
+                <div className="absolute bg-gray-400" style={{ width: '128px', height: '2px', left: '0', top: '50%', transform: 'translateY(-1px)' }}></div>
+              </div>
+            </>
+          )}
+
           {/* Column 1: Current Person */}
           <div className="flex flex-col relative">
             <CoupleCard
-              husband={familyTreeData.currentPerson.husband}
-              wife={familyTreeData.currentPerson.wife}
-              marriage={familyTreeData.currentPerson.marriage}
+              husband={treeData.currentPerson.husband}
+              wife={treeData.currentPerson.wife}
+              marriage={treeData.currentPerson.marriage}
               hasChildren={false}
               showNavigation={false}
               onPersonClick={onPersonClick}
             />
           </div>
 
-          {/* Connection from Current Person to Parents */}
-          <div className="relative self-stretch" style={{ width: '128px' }}>
-            {/* Horizontal line from current person left edge to junction */}
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '0', top: '50%', transform: 'translateY(-1px)' }}></div>
-            {/* Vertical junction line connecting to both parents */}
-            <div className="absolute bg-gray-400" style={{ width: '2px', left: '64px', top: '25%', height: '50%' }}></div>
-            {/* Horizontal lines from junction to each parent */}
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '25%', transform: 'translateY(-1px)' }}></div>
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '75%', transform: 'translateY(-1px)' }}></div>
-          </div>
+          {/* Connection from Current Person to Parents - Show if any parents exist OR if we should show add parents */}
+          {(treeData.husbandParents || treeData.wifeParents || treeData.showAddParents) && (
+            <>
+              <div className="relative self-stretch" style={{ width: '128px' }}>
+                {/* Horizontal line from current person left edge to junction */}
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '0', top: '50%', transform: 'translateY(-1px)' }}></div>
+                {/* Vertical junction line connecting to both parents */}
+                <div className="absolute bg-gray-400" style={{ width: '2px', left: '64px', top: '25%', height: '50%' }}></div>
+                {/* Horizontal lines from junction to each parent */}
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '25%', transform: 'translateY(-1px)' }}></div>
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '75%', transform: 'translateY(-1px)' }}></div>
+              </div>
 
-          {/* Column 2: Parents */}
-          <div className="flex flex-col gap-80 relative">
-            <CoupleCard
-              husband={familyTreeData.husbandParents.husband}
-              wife={familyTreeData.husbandParents.wife}
-              marriage={familyTreeData.husbandParents.marriage}
-              hasChildren={false}
-              showNavigation={false}
-              onPersonClick={onPersonClick}
-            />
-            <CoupleCard
-              husband={familyTreeData.wifeParents.husband}
-              wife={familyTreeData.wifeParents.wife}
-              marriage={familyTreeData.wifeParents.marriage}
-              hasChildren={false}
-              showNavigation={false}
-              onPersonClick={onPersonClick}
-            />
-          </div>
+              {/* Column 2: Parents */}
+              <div className="flex flex-col gap-32 relative">
+                {treeData.husbandParents ? (
+                  <CoupleCard
+                    husband={treeData.husbandParents.husband}
+                    wife={treeData.husbandParents.wife}
+                    marriage={treeData.husbandParents.marriage}
+                    hasChildren={false}
+                    showNavigation={false}
+                    onPersonClick={onPersonClick}
+                  />
+                ) : (
+                  <AddParentsCard onClick={() => console.log('Add husband parents clicked')} />
+                )}
+                {treeData.wifeParents ? (
+                  <CoupleCard
+                    husband={treeData.wifeParents.husband}
+                    wife={treeData.wifeParents.wife}
+                    marriage={treeData.wifeParents.marriage}
+                    hasChildren={false}
+                    showNavigation={false}
+                    onPersonClick={onPersonClick}
+                  />
+                ) : (
+                  <AddParentsCard onClick={() => console.log('Add wife parents clicked')} />
+                )}
+              </div>
+            </>
+          )}
 
-          {/* Connection from Parents to Grandparents */}
-          <div className="relative self-stretch" style={{ width: '128px' }}>
-            {/* Lines from husband's parents (top parent) to their parents */}
-            {/* Horizontal line from parent to junction */}
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '0', top: '25%', transform: 'translateY(-1px)' }}></div>
-            {/* Vertical junction line for husband's parent */}
-            <div className="absolute bg-gray-400" style={{ width: '2px', left: '64px', top: '12.5%', height: '25%' }}></div>
-            {/* Horizontal lines to husband's grandparents */}
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '12.5%', transform: 'translateY(-1px)' }}></div>
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '37.5%', transform: 'translateY(-1px)' }}></div>
+          {/* Connection from Parents to Grandparents - Only show if grandparents exist */}
+          {treeData.husbandPaternalGrandparents && (
+            <>
+              <div className="relative self-stretch" style={{ width: '128px' }}>
+                {/* Lines from husband's parents (top parent) to their parents */}
+                {/* Horizontal line from parent to junction */}
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '0', top: '25%', transform: 'translateY(-1px)' }}></div>
+                {/* Vertical junction line for husband's parent */}
+                <div className="absolute bg-gray-400" style={{ width: '2px', left: '64px', top: '12.5%', height: '25%' }}></div>
+                {/* Horizontal lines to husband's grandparents */}
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '12.5%', transform: 'translateY(-1px)' }}></div>
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '37.5%', transform: 'translateY(-1px)' }}></div>
 
-            {/* Lines from wife's parents (bottom parent) to their parents */}
-            {/* Horizontal line from parent to junction */}
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '0', top: '75%', transform: 'translateY(-1px)' }}></div>
-            {/* Vertical junction line for wife's parent */}
-            <div className="absolute bg-gray-400" style={{ width: '2px', left: '64px', top: '62.5%', height: '25%' }}></div>
-            {/* Horizontal lines to wife's grandparents */}
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '62.5%', transform: 'translateY(-1px)' }}></div>
-            <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '87.5%', transform: 'translateY(-1px)' }}></div>
-          </div>
+                {/* Lines from wife's parents (bottom parent) to their parents */}
+                {/* Horizontal line from parent to junction */}
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '0', top: '75%', transform: 'translateY(-1px)' }}></div>
+                {/* Vertical junction line for wife's parent */}
+                <div className="absolute bg-gray-400" style={{ width: '2px', left: '64px', top: '62.5%', height: '25%' }}></div>
+                {/* Horizontal lines to wife's grandparents */}
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '62.5%', transform: 'translateY(-1px)' }}></div>
+                <div className="absolute bg-gray-400" style={{ width: '64px', height: '2px', left: '64px', top: '87.5%', transform: 'translateY(-1px)' }}></div>
+              </div>
 
-          {/* Column 3: Grandparents */}
-          <div className="flex flex-col relative" style={{ gap: '0' }}>
-            <div style={{ marginBottom: '48px' }}>
-              <CoupleCard
-                husband={familyTreeData.husbandPaternalGrandparents.husband}
-                wife={familyTreeData.husbandPaternalGrandparents.wife}
-                marriage={familyTreeData.husbandPaternalGrandparents.marriage}
-                hasChildren={false}
-                showNavigation={true}
-                onPersonClick={onPersonClick}
-              />
-            </div>
-            <div style={{ marginBottom: '96px' }}>
-              <CoupleCard
-                husband={familyTreeData.husbandMaternalGrandparents.husband}
-                wife={familyTreeData.husbandMaternalGrandparents.wife}
-                marriage={familyTreeData.husbandMaternalGrandparents.marriage}
-                hasChildren={false}
-                showNavigation={true}
-                onPersonClick={onPersonClick}
-              />
-            </div>
-            <div style={{ marginBottom: '48px' }}>
-              <CoupleCard
-                husband={familyTreeData.wifePaternalGrandparents.husband}
-                wife={familyTreeData.wifePaternalGrandparents.wife}
-                marriage={familyTreeData.wifePaternalGrandparents.marriage}
-                hasChildren={false}
-                showNavigation={true}
-                onPersonClick={onPersonClick}
-              />
+              {/* Column 3: Grandparents */}
+              <div className="flex flex-col relative" style={{ gap: '0' }}>
+                <div style={{ marginBottom: '48px' }}>
+                  <CoupleCard
+                    husband={treeData.husbandPaternalGrandparents.husband}
+                    wife={treeData.husbandPaternalGrandparents.wife}
+                    marriage={treeData.husbandPaternalGrandparents.marriage}
+                    hasChildren={false}
+                    showNavigation={true}
+                    onPersonClick={onPersonClick}
+                  />
+                </div>
+                <div style={{ marginBottom: '96px' }}>
+                  <CoupleCard
+                    husband={treeData.husbandMaternalGrandparents.husband}
+                    wife={treeData.husbandMaternalGrandparents.wife}
+                    marriage={treeData.husbandMaternalGrandparents.marriage}
+                    hasChildren={false}
+                    showNavigation={true}
+                    onPersonClick={onPersonClick}
+                  />
+                </div>
+                <div style={{ marginBottom: '48px' }}>
+                  <CoupleCard
+                    husband={treeData.wifePaternalGrandparents.husband}
+                    wife={treeData.wifePaternalGrandparents.wife}
+                    marriage={treeData.wifePaternalGrandparents.marriage}
+                    hasChildren={false}
+                    showNavigation={true}
+                    onPersonClick={onPersonClick}
+                  />
             </div>
             <div>
               <CoupleCard
-                husband={familyTreeData.wifeMaternalGrandparents.husband}
-                wife={familyTreeData.wifeMaternalGrandparents.wife}
-                marriage={familyTreeData.wifeMaternalGrandparents.marriage}
+                husband={treeData.wifeMaternalGrandparents.husband}
+                wife={treeData.wifeMaternalGrandparents.wife}
+                marriage={treeData.wifeMaternalGrandparents.marriage}
                 hasChildren={false}
                 showNavigation={true}
                 onPersonClick={onPersonClick}
               />
             </div>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -245,21 +245,24 @@ describe('Golden Test Cases', () => {
       effectiveRules
     );
 
-    // Finocchio has Belly placement → must NOT appear in mix
-    // Manuka has Topical placement → must NOT appear in mix
+    // NEW RULES:
+    // Finocchio has Belly placement (specific body placement) → excluded from mix
+    // Manuka has only Topical placement (weak-topical) → eligible for mix
     expect(plan.mix).not.toBeNull();
     expect(plan.mix!.oils).not.toContain('Finocchio');
-    expect(plan.mix!.oils).not.toContain('Manuka');
+    expect(plan.mix!.oils).toContain('Manuka'); // NEW: Manuka is now eligible for mix
 
     // Mix composition
     expect(plan.mix!.base).toBe('Timo zygis');
     expect(plan.mix!.head).toBe('Arancia Amara');
     expect(plan.mix!.hearts).toContain('Salvia');
+    expect(plan.mix!.hearts).toContain('Manuka'); // NEW: Manuka is in hearts
     expect(plan.mix!.applyAreas).toEqual(['Face', 'Arms']);
 
     // Topical areas
     expect(plan.topicalByArea['Belly']).toContain('Finocchio');
     expect(plan.topicalByArea['Legs']).toContain('Cipresso');
+    // NEW: Manuka appears in BOTH mix and topicalByArea['Topical']
     expect(plan.topicalByArea['Topical']).toContain('Manuka');
 
     // No rotation (Cipresso has mixEligible=false, so not a rotation candidate)
@@ -424,7 +427,7 @@ describe('Golden Test Cases', () => {
     ).toBe(true);
   });
 
-  it('Should warn on topical precedence exclusion', () => {
+  it('Should warn on mix-eligible oil with specific body placements', () => {
     const plan = generatePlan(
       {
         selection: ['Finocchio'],
@@ -434,8 +437,56 @@ describe('Golden Test Cases', () => {
       effectiveRules
     );
 
+    // Finocchio is mixEligible but has specific body placement (Belly)
     expect(
-      plan.warnings.some((w) => w.includes('Topical precedence'))
+      plan.warnings.some((w) => w.includes('excluded from mix (has specific body placements)'))
+    ).toBe(true);
+  });
+
+  it('TEST 8 - Incomplete mix returns null with warning', () => {
+    // Only Hearts, no Base or Head
+    const plan1 = generatePlan(
+      {
+        selection: ['Salvia'], // Heart only
+        profile: { type: 'adult' },
+        dayIndex: 1,
+      },
+      effectiveRules
+    );
+
+    expect(plan1.mix).toBeNull();
+    expect(
+      plan1.warnings.some((w) => w.includes('Mix incomplete: missing Base and Head'))
+    ).toBe(true);
+
+    // Only Base, no Head
+    const plan2 = generatePlan(
+      {
+        selection: ['Timo z'], // Base only
+        profile: { type: 'adult' },
+        dayIndex: 1,
+      },
+      effectiveRules
+    );
+
+    expect(plan2.mix).toBeNull();
+    expect(
+      plan2.warnings.some((w) => w.includes('Mix incomplete: missing Head'))
+    ).toBe(true);
+
+    // Only Head, no Base
+    const plan3 = generatePlan(
+      {
+        selection: ['Arancio amaro'], // Head only
+        profile: { type: 'adult' },
+        dayIndex: 1,
+      },
+      effectiveRules
+    );
+
+    expect(plan3.mix).toBeNull();
+    expect(
+      plan3.warnings.some((w) => w.includes('Mix incomplete: missing Base'))
     ).toBe(true);
   });
 });

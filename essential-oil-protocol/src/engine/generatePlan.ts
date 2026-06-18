@@ -51,17 +51,32 @@ export function generatePlan(
   // Step 3: Separate oils by topical usage
   const topicalOils: string[] = [];
   const mixCandidates: string[] = [];
+  const excludedFromMix: string[] = [];
 
   for (const oil of canonicalSelection) {
     const oilData = effectiveRules.oils[oil];
     if (!oilData) continue;
 
-    // STRICT TOPICAL PRECEDENCE:
-    // If oil has ANY body placements, it MUST NOT appear in mix
-    if (hasBodyPlacements(oilData)) {
+    // NEW RULE: Oils with specific body placements (not "Topical") are excluded from mix
+    const hasSpecificBodyPlacements =
+      oilData.placements.length > 0 &&
+      oilData.placements.some(p => p !== 'Topical');
+
+    if (hasSpecificBodyPlacements) {
+      // Oils with specific body placements go to topical only
       topicalOils.push(oil);
-    } else if (oilData.mixEligible) {
-      mixCandidates.push(oil);
+      if (oilData.mixEligible) {
+        excludedFromMix.push(oil);
+      }
+    } else {
+      // Oils with only "Topical" placement (or no placements)
+      if (oilData.mixEligible) {
+        mixCandidates.push(oil);
+      }
+      // Also add to topicalOils if it has "Topical" placement
+      if (oilData.placements.includes('Topical')) {
+        topicalOils.push(oil);
+      }
     }
   }
 
@@ -72,7 +87,8 @@ export function generatePlan(
   );
 
   // Step 5: Build mix
-  const mix = buildMix(mixCandidates, effectiveRules, frequencyPerDay);
+  const { mix, mixWarnings } = buildMix(mixCandidates, effectiveRules, frequencyPerDay);
+  warnings.push(...mixWarnings);
 
   // Step 6: Build rotation (overflow mix-only oils)
   const rotation = buildRotation(
@@ -107,14 +123,11 @@ export function generatePlan(
     warnings
   );
 
-  // Add warnings for topical precedence
-  for (const oil of topicalOils) {
-    const oilData = effectiveRules.oils[oil];
-    if (oilData && oilData.mixEligible) {
-      warnings.push(
-        `Topical precedence: "${oil}" excluded from mix (has placements)`
-      );
-    }
+  // Add warnings for excluded oils
+  for (const oil of excludedFromMix) {
+    warnings.push(
+      `"${oil}" excluded from mix (has specific body placements)`
+    );
   }
 
   return {
@@ -192,32 +205,58 @@ function buildTopicalByArea(
 
 /**
  * Build mix from eligible candidates
- * Selection order determines priority
+ * NEW RULES:
+ * 1. Build mix using non-topical oils first, then weak-topical oils
+ * 2. If mix cannot be completed (missing Base or Head), return null
+ * 3. Add warning about incomplete mix
+ * 4. Do NOT auto-fill using excluded oils
  */
 function buildMix(
   mixCandidates: string[],
   rules: EffectiveRules,
   frequencyPerDay: number
-): MixOutput | null {
+): { mix: MixOutput | null; mixWarnings: string[] } {
+  const mixWarnings: string[] = [];
+
   if (mixCandidates.length === 0) {
-    return null;
+    return { mix: null, mixWarnings };
   }
 
   const maxHearts = rules.globalRules.mix.maxHearts;
   const applyAreas = rules.globalRules.mix.applyAreas;
 
-  let base: string | undefined;
-  let head: string | undefined;
-  const hearts: string[] = [];
+  // Separate candidates by topical status
+  const nonTopicalOils: string[] = [];
+  const weakTopicalOils: string[] = [];
 
   for (const oil of mixCandidates) {
     const oilData = rules.oils[oil];
     if (!oilData) continue;
 
+    const hasOnlyTopical =
+      oilData.placements.length > 0 &&
+      oilData.placements.every(p => p === 'Topical');
+
+    if (hasOnlyTopical) {
+      weakTopicalOils.push(oil);
+    } else {
+      nonTopicalOils.push(oil);
+    }
+  }
+
+  // Build mix: prioritize non-topical oils, then weak-topical oils
+  const orderedCandidates = [...nonTopicalOils, ...weakTopicalOils];
+
+  let base: string | undefined;
+  let head: string | undefined;
+  const hearts: string[] = [];
+
+  for (const oil of orderedCandidates) {
+    const oilData = rules.oils[oil];
+    if (!oilData) continue;
+
     const role = oilData.noteRole.toLowerCase();
 
-    // STRICT: Only use explicit noteRole values (Base/Head/Heart)
-    // Do NOT infer or fallback for "Unknown" or other values
     if (role === 'base' && !base) {
       base = oil;
     } else if (role === 'head' && !head) {
@@ -225,7 +264,18 @@ function buildMix(
     } else if (role === 'heart' && hearts.length < maxHearts) {
       hearts.push(oil);
     }
-    // If role is "unknown" or anything else, the oil is NOT added to mix
+  }
+
+  // Check if mix is complete
+  const missing: string[] = [];
+  if (!base) missing.push('Base');
+  if (!head) missing.push('Head');
+
+  if (missing.length > 0) {
+    mixWarnings.push(
+      `Mix incomplete: missing ${missing.join(' and ')}. Consider adding another oil.`
+    );
+    return { mix: null, mixWarnings };
   }
 
   const oils: string[] = [];
@@ -234,12 +284,15 @@ function buildMix(
   oils.push(...hearts);
 
   return {
-    oils,
-    base,
-    head,
-    hearts,
-    applyAreas,
-    frequencyPerDay,
+    mix: {
+      oils,
+      base,
+      head,
+      hearts,
+      applyAreas,
+      frequencyPerDay,
+    },
+    mixWarnings,
   };
 }
 

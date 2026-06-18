@@ -1,0 +1,469 @@
+import { useMemo, useState } from 'react';
+import { useSessions } from '../contexts/SessionsContext';
+import { useSettings } from '../hooks/useSettings';
+import {
+  calculatePeriodBalance,
+  formatFlexBalance,
+  formatHoursMinutes,
+  formatDaysHoursMinutes,
+  formatFlexBalanceDays,
+  getFlexBalanceColor,
+  getISOWeeksForMonth,
+  formatDateRange,
+  getWeeklyDailyBreakdown
+} from '../utils/flexBalance';
+
+// Helper to get local date in YYYY-MM-DD format (no timezone conversion)
+const getLocalDateString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+export function ReportsTab() {
+  const { sessions, hasFile } = useSessions();
+  const { dailyTarget, endOfWorkDay } = useSettings();
+  const [currentMonthOffset, setCurrentMonthOffset] = useState(0); // 0 = current month, -1 = last month, etc.
+  const [selectedWeek, setSelectedWeek] = useState(null); // For weekly detail modal
+
+  // Check if current time is after end of work day
+  const isAfterWorkDay = useMemo(() => {
+    const now = new Date();
+    const [hours, minutes] = endOfWorkDay.split(':').map(Number);
+    const endTime = new Date(now);
+    endTime.setHours(hours, minutes, 0, 0);
+    return now >= endTime;
+  }, [endOfWorkDay]);
+
+  // Calculate date ranges
+  const ranges = useMemo(() => {
+    const now = new Date();
+    const today = getLocalDateString(now);
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = getLocalDateString(yesterday);
+
+    // Start of this week (Monday)
+    const startOfWeek = new Date(now);
+    const day = startOfWeek.getDay();
+    const diff = day === 0 ? -6 : 1 - day; // Adjust if Sunday (0) or find Monday
+    startOfWeek.setDate(startOfWeek.getDate() + diff);
+    const weekStart = getLocalDateString(startOfWeek);
+
+    // Start of this month
+    const monthStart = getLocalDateString(new Date(now.getFullYear(), now.getMonth(), 1));
+
+    // Start of this year - use first session date if available, otherwise Jan 1
+    let yearStart = getLocalDateString(new Date(now.getFullYear(), 0, 1));
+    if (sessions.length > 0) {
+      // Find the earliest session date
+      const earliestDate = sessions.reduce((earliest, session) => {
+        return session.date < earliest ? session.date : earliest;
+      }, sessions[0].date);
+
+      // Use earliest date as year start (but don't go before Jan 1 of current year)
+      const janFirst = getLocalDateString(new Date(now.getFullYear(), 0, 1));
+      yearStart = earliestDate > janFirst ? earliestDate : janFirst;
+    }
+
+    // For Week/Month/Year: exclude today if before end of work day
+    const periodEndDate = isAfterWorkDay ? today : yesterdayStr;
+
+    return {
+      today: { start: today, end: today },
+      week: { start: weekStart, end: periodEndDate },
+      month: { start: monthStart, end: periodEndDate },
+      year: { start: yearStart, end: periodEndDate }
+    };
+  }, [isAfterWorkDay, sessions]);
+
+  // Calculate totals and balances for each period
+  const periodStats = useMemo(() => {
+    return {
+      today: calculatePeriodBalance(sessions, ranges.today.start, ranges.today.end, dailyTarget),
+      week: calculatePeriodBalance(sessions, ranges.week.start, ranges.week.end, dailyTarget),
+      month: calculatePeriodBalance(sessions, ranges.month.start, ranges.month.end, dailyTarget),
+      year: calculatePeriodBalance(sessions, ranges.year.start, ranges.year.end, dailyTarget)
+    };
+  }, [sessions, ranges, dailyTarget]);
+
+  // Monthly summary data
+  const monthlySummary = useMemo(() => {
+    const now = new Date();
+    const targetMonth = new Date(now.getFullYear(), now.getMonth() + currentMonthOffset, 1);
+    const year = targetMonth.getFullYear();
+    const month = targetMonth.getMonth();
+
+    const weeks = getISOWeeksForMonth(year, month);
+
+    // Find earliest session date to avoid penalizing pre-tracking days
+    let earliestSessionDate = null;
+    if (sessions.length > 0) {
+      earliestSessionDate = sessions.reduce((earliest, session) => {
+        return session.date < earliest ? session.date : earliest;
+      }, sessions[0].date);
+    }
+
+    // Get current date cutoff (today or yesterday based on end of work day)
+    const today = getLocalDateString(now);
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = getLocalDateString(yesterday);
+    const currentDateCutoff = isAfterWorkDay ? today : yesterdayStr;
+
+    // Calculate actual calendar month range (first to last day of the month)
+    const monthFirstDay = getLocalDateString(new Date(year, month, 1));
+    const monthLastDay = getLocalDateString(new Date(year, month + 1, 0)); // Day 0 = last day of previous month
+
+    // Adjust month range based on earliest session and current date
+    let adjustedMonthStart = monthFirstDay;
+    if (earliestSessionDate && monthFirstDay < earliestSessionDate) {
+      adjustedMonthStart = earliestSessionDate;
+    }
+
+    let adjustedMonthEnd = monthLastDay;
+    if (monthLastDay > currentDateCutoff) {
+      adjustedMonthEnd = currentDateCutoff;
+    }
+
+    // Calculate monthly total (only if valid range)
+    let monthTotal = { totalHours: 0, balance: 0 };
+    if (adjustedMonthStart <= adjustedMonthEnd) {
+      monthTotal = calculatePeriodBalance(sessions, adjustedMonthStart, adjustedMonthEnd, dailyTarget);
+    }
+
+    return {
+      monthName: targetMonth.toLocaleString('default', { month: 'long', year: 'numeric' }),
+      monthTotal,
+      weeks: weeks.map(week => {
+        // Adjust week start date to not go before earliest session
+        let adjustedStartDate = week.startDate;
+        if (earliestSessionDate && week.startDate < earliestSessionDate) {
+          adjustedStartDate = earliestSessionDate;
+        }
+
+        // Adjust week end date to not go beyond current date
+        let adjustedEndDate = week.endDate;
+        if (week.endDate > currentDateCutoff) {
+          adjustedEndDate = currentDateCutoff;
+        }
+
+        // If the adjusted start date is after the adjusted end date, skip this week
+        if (adjustedStartDate > adjustedEndDate) {
+          return {
+            ...week,
+            totalHours: 0,
+            balance: 0
+          };
+        }
+
+        const weekStats = calculatePeriodBalance(sessions, adjustedStartDate, adjustedEndDate, dailyTarget);
+        return {
+          ...week,
+          ...weekStats
+        };
+      })
+    };
+  }, [sessions, currentMonthOffset, dailyTarget, isAfterWorkDay]);
+
+  const StatCard = ({ title, totalHours, balance, period, color, showInProgress, useDaysFormat = false }) => (
+    <div className={`bg-white rounded-lg shadow-lg p-6 border-t-4 ${color}`}>
+      <h3 className="text-lg font-semibold text-gray-700 mb-4">{title}</h3>
+      <div className="space-y-3">
+        <div>
+          <p className="text-4xl font-bold text-gray-900">
+            {useDaysFormat ? formatDaysHoursMinutes(totalHours, dailyTarget) : formatHoursMinutes(totalHours)}
+          </p>
+          <p className="text-sm text-gray-500">hours worked</p>
+        </div>
+        <div className="pt-3 border-t border-gray-200">
+          {showInProgress ? (
+            <>
+              <p className="text-2xl font-semibold text-gray-600 italic">
+                In progress...
+              </p>
+              <p className="text-sm text-gray-500">balance pending</p>
+            </>
+          ) : (
+            <>
+              <p className={`text-2xl font-semibold ${getFlexBalanceColor(balance)}`}>
+                {useDaysFormat ? formatFlexBalanceDays(balance, dailyTarget) : formatFlexBalance(balance)}
+              </p>
+              <p className="text-sm text-gray-500">flex balance</p>
+            </>
+          )}
+        </div>
+      </div>
+      <p className="text-xs text-gray-400 mt-4">
+        {period}
+      </p>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">Reports</h2>
+        <div className="text-sm text-gray-600">
+          Daily target: <span className="font-semibold">{dailyTarget} hours</span>
+        </div>
+      </div>
+
+      {!hasFile ? (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center">
+          <p className="text-yellow-800">No file selected. Please open or create a CSV file from the app header.</p>
+        </div>
+      ) : sessions.length === 0 ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+          <p className="text-gray-600">No sessions recorded yet. Start tracking time to see reports.</p>
+        </div>
+      ) : (
+        <>
+          {/* Flex Time Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatCard
+              title="Today"
+              totalHours={periodStats.today.totalHours}
+              balance={periodStats.today.balance}
+              period={ranges.today.start}
+              color="border-blue-500"
+              showInProgress={!isAfterWorkDay}
+              useDaysFormat={false}
+            />
+            <StatCard
+              title="This Week"
+              totalHours={periodStats.week.totalHours}
+              balance={periodStats.week.balance}
+              period={`${ranges.week.start} to ${ranges.week.end}`}
+              color="border-green-500"
+              useDaysFormat={true}
+            />
+            <StatCard
+              title="This Month"
+              totalHours={periodStats.month.totalHours}
+              balance={periodStats.month.balance}
+              period={`${ranges.month.start} to ${ranges.month.end}`}
+              color="border-purple-500"
+              useDaysFormat={true}
+            />
+            <StatCard
+              title="This Year"
+              totalHours={periodStats.year.totalHours}
+              balance={periodStats.year.balance}
+              period={`${ranges.year.start} to ${ranges.year.end}`}
+              color="border-orange-500"
+              useDaysFormat={true}
+            />
+          </div>
+
+          {/* Monthly Summary */}
+          <div className="bg-white rounded-lg shadow p-6 mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Monthly Summary</h3>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setCurrentMonthOffset(prev => prev - 1)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  title="Previous month"
+                >
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <span className="text-sm font-medium text-gray-700 min-w-[150px] text-center">
+                  {monthlySummary.monthName}
+                </span>
+                <button
+                  onClick={() => setCurrentMonthOffset(prev => prev + 1)}
+                  disabled={currentMonthOffset >= 0}
+                  className={`p-2 rounded-lg transition-colors ${
+                    currentMonthOffset >= 0
+                      ? 'text-gray-300 cursor-not-allowed'
+                      : 'hover:bg-gray-100 text-gray-600'
+                  }`}
+                  title="Next month"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {monthlySummary.weeks.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                No data for this month
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Week
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Date Range
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Hours Worked
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Flex Balance
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {monthlySummary.weeks.map((week, index) => (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onClick={() => setSelectedWeek(week)}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          Week {week.weekNumber}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                          {formatDateRange(week.startDate, week.endDate)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+                          {formatDaysHoursMinutes(week.totalHours, dailyTarget)}
+                        </td>
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-right ${getFlexBalanceColor(week.balance)}`}>
+                          {formatFlexBalanceDays(week.balance, dailyTarget)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="bg-gray-100 border-t-2 border-gray-300">
+                    <tr>
+                      <td colSpan="2" className="px-6 py-4 text-sm font-bold text-gray-900 uppercase">
+                        {monthlySummary.monthName} Total
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">
+                        {formatDaysHoursMinutes(monthlySummary.monthTotal.totalHours, dailyTarget)}
+                      </td>
+                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold text-right ${getFlexBalanceColor(monthlySummary.monthTotal.balance)}`}>
+                        {formatFlexBalanceDays(monthlySummary.monthTotal.balance, dailyTarget)}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Weekly Detail Modal */}
+          {selectedWeek && (
+            <div
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.55)' }}
+            >
+              <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                {/* Modal Header */}
+                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Week {selectedWeek.weekNumber} Details
+                  </h3>
+                  <button
+                    onClick={() => setSelectedWeek(null)}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Modal Body */}
+                <div className="px-6 py-4">
+                  <p className="text-sm text-gray-600 mb-4">
+                    {formatDateRange(selectedWeek.startDate, selectedWeek.endDate)}
+                  </p>
+
+                  {/* Daily Breakdown Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Day
+                          </th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Worked
+                          </th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Target
+                          </th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Balance
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {getWeeklyDailyBreakdown(sessions, selectedWeek.startDate, selectedWeek.endDate, dailyTarget).map((day) => (
+                          <tr key={day.date} className={day.isWeekend ? 'bg-gray-50' : ''}>
+                            <td className="px-4 py-3 text-sm">
+                              <div className="font-medium text-gray-900">{day.dayName}</div>
+                              <div className="text-xs text-gray-500">{formatDateRange(day.date, day.date)}</div>
+                            </td>
+                            <td className="px-4 py-3 text-sm text-gray-900 text-right">
+                              {day.hasDayOff ? (
+                                <span className="text-gray-500 italic">Day off</span>
+                              ) : (
+                                formatHoursMinutes(day.totalHours)
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-sm text-gray-600 text-right">
+                              {day.hasDayOff ? (
+                                '—'
+                              ) : day.isWeekend ? (
+                                <span className="text-gray-400">Weekend</span>
+                              ) : (
+                                formatHoursMinutes(day.target)
+                              )}
+                            </td>
+                            <td className={`px-4 py-3 text-sm font-medium text-right ${day.isFuture ? 'text-gray-400' : getFlexBalanceColor(day.balance)}`}>
+                              {day.isFuture ? '—' : formatFlexBalance(day.balance)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot className="bg-gray-100 border-t-2 border-gray-300">
+                        <tr>
+                          <td className="px-4 py-3 text-sm font-bold text-gray-900 uppercase">
+                            Week Total
+                          </td>
+                          <td className="px-4 py-3 text-sm font-bold text-gray-900 text-right">
+                            {formatDaysHoursMinutes(selectedWeek.totalHours, dailyTarget)}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 text-right">
+                            —
+                          </td>
+                          <td className={`px-4 py-3 text-sm font-bold text-right ${getFlexBalanceColor(selectedWeek.balance)}`}>
+                            {formatFlexBalanceDays(selectedWeek.balance, dailyTarget)}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Modal Footer */}
+                <div className="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200">
+                  <button
+                    onClick={() => setSelectedWeek(null)}
+                    className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}

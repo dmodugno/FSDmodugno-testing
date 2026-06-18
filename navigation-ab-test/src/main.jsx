@@ -6,6 +6,7 @@ import { UserProvider } from './contexts/UserContext'
 import AuthGuard from './components/AuthGuard'
 import VariantA from './VariantA'
 import VariantB from './VariantB'
+import VariantC from './VariantC'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
           <Routes>
             <Route path="/" element={<VariantA />} />
             <Route path="/variant-b" element={<VariantB />} />
+            <Route path="/variant-c" element={<VariantC />} />
           </Routes>
         </AuthGuard>
       </UserProvider>

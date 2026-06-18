@@ -198,10 +198,10 @@ export default function FloatingTestPanel({ variant }) {
             {/* Variant Section */}
             <section>
               <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Variant</h3>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <a
                   href={`${import.meta.env.BASE_URL}`}
-                  className={`flex-1 px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
+                  className={`px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant A'
                       ? 'bg-green-100 border-green-600 text-green-900'
                       : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -211,13 +211,23 @@ export default function FloatingTestPanel({ variant }) {
                 </a>
                 <a
                   href={`${import.meta.env.BASE_URL}variant-b`}
-                  className={`flex-1 px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
+                  className={`px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant B'
                       ? 'bg-green-100 border-green-600 text-green-900'
                       : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   Variant B
+                </a>
+                <a
+                  href={`${import.meta.env.BASE_URL}variant-c`}
+                  className={`px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
+                    variant === 'Variant C'
+                      ? 'bg-green-100 border-green-600 text-green-900'
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Variant C
                 </a>
               </div>
             </section>

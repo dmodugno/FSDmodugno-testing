@@ -13,14 +13,15 @@ export function UserProvider({ children }) {
     const membership = params.get('membership') || 'non-LDS';
     const experience = params.get('experience') || 'casual';
 
-    // Check if we're in URL mode (has membership or experience params)
-    const hasUrlParams = params.has('membership') || params.has('experience');
-    setIsUrlMode(hasUrlParams);
+    // Check if we're in URL mode (has the 'access' token param for shared URLs)
+    // This prevents the test panel from disappearing when using test controls
+    const hasAccessToken = params.has('access');
+    setIsUrlMode(hasAccessToken);
 
     const userProfile = getUserProfile(membership, experience);
 
     // Apply FS Default preset values if no URL parameters present
-    const fsDefaultOverrides = !hasUrlParams ? {
+    const fsDefaultOverrides = !hasAccessToken ? {
       treeSize: 0,
       hintsCount: 0,
       duplicatesCount: 0,

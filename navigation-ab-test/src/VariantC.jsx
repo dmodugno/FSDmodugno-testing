@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from './components/Header';
 import MegaMenuNavigation from './components/MegaMenuNav';
@@ -30,6 +30,7 @@ import {
 export default function VariantC() {
   const { user } = useUser();
   const [searchParams] = useSearchParams();
+  const megaMenuNavRef = useRef(null);
   const [currentPage, setCurrentPage] = useState('Home');
   const [activeDrawer, setActiveDrawer] = useState(null);
   const [selectedPerson, setSelectedPerson] = useState(null);
@@ -81,6 +82,8 @@ export default function VariantC() {
 
   // Handle drawer toggle
   const handleDrawerToggle = (index) => {
+    megaMenuNavRef.current?.closeMenu();
+
     // Special handling for AI Assistant (index 1)
     if (index === 1) {
       if (!chat) {
@@ -665,6 +668,7 @@ export default function VariantC() {
 
       {/* Mega Menu Navigation */}
       <MegaMenuNavigation
+        ref={megaMenuNavRef}
         currentPage={currentPage}
         onPageChange={handlePageChange}
         onDrawerToggle={handleDrawerToggle}

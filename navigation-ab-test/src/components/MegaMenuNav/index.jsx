@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import MegaMenuTrees from './MegaMenuTrees';
 import MegaMenuMemories from './MegaMenuMemories';
@@ -7,12 +7,13 @@ import MegaMenuHelp from './MegaMenuHelp';
 import MegaMenuTemple from './MegaMenuTemple';
 import MegaMenuMore from './MegaMenuMore';
 
-export default function MegaMenuNavigation({ currentPage, onPageChange, onDrawerToggle, onOpenChat }) {
+const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage, onPageChange, onDrawerToggle, onOpenChat }, ref) {
   const { user } = useUser();
   const [openMenu, setOpenMenu] = useState(null);
   const [currentSection, setCurrentSection] = useState('home');
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
   const [hiddenItems, setHiddenItems] = useState([]);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   // Refs for menu items
   const homeRef = useRef(null);
@@ -26,6 +27,11 @@ export default function MegaMenuNavigation({ currentPage, onPageChange, onDrawer
   // Refs for click-outside detection
   const headerRef = useRef(null);
   const megaMenuRef = useRef(null);
+  const profileMenuRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    closeMenu: () => setOpenMenu(null)
+  }));
 
   const isLDS = user?.churchMembership === 'LDS';
   const baseUrl = import.meta.env.BASE_URL;
@@ -75,6 +81,19 @@ export default function MegaMenuNavigation({ currentPage, onPageChange, onDrawer
     }
   }, [openMenu]);
 
+  // Click-outside detection for profile dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    }
+    if (profileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [profileMenuOpen]);
+
   // Animated underline positioning
   useEffect(() => {
     let activeRef = null;
@@ -102,11 +121,23 @@ export default function MegaMenuNavigation({ currentPage, onPageChange, onDrawer
   }, [currentSection, hiddenItems]);
 
   const handleMenuClick = (menuName) => {
-    // Update section so underline moves immediately
+    setProfileMenuOpen(false);
     if (openMenu !== menuName) {
       setCurrentSection(menuName);
     }
     setOpenMenu(openMenu === menuName ? null : menuName);
+  };
+
+  const handleProfileItemClick = (page) => {
+    setProfileMenuOpen(false);
+    onPageChange(page);
+  };
+
+  const handleSignOut = () => {
+    setProfileMenuOpen(false);
+    if (window.confirm('Are you sure you want to sign out?')) {
+      onPageChange('Sign Out');
+    }
   };
 
   const handlePageNavigation = (pageName) => {
@@ -291,16 +322,53 @@ export default function MegaMenuNavigation({ currentPage, onPageChange, onDrawer
               <img src={`${baseUrl}icons/Notice.svg`} alt="Notifications" className="w-5 h-5" />
             </button>
 
-            {/* Avatar (placeholder) */}
-            <button className="p-2 hover:bg-[#f5f6f6] rounded-lg transition-colors flex-shrink-0">
-              <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-xs font-semibold text-gray-700">
-                {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
-              </div>
-            </button>
+            {/* Avatar with profile dropdown */}
+            <div className="relative flex-shrink-0" ref={profileMenuRef}>
+              <button
+                onClick={() => { setOpenMenu(null); setProfileMenuOpen(!profileMenuOpen); }}
+                className="p-2 hover:bg-[#f5f6f6] rounded-lg transition-colors"
+                title="Account"
+                aria-label="Account"
+              >
+                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-xs font-semibold text-gray-700">
+                  {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                </div>
+              </button>
+
+              {profileMenuOpen && (
+                <div className="absolute right-0 top-full mt-1 w-56 bg-white border border-[#cacdcd] rounded-lg shadow-lg z-50 py-1">
+                  <div className="px-4 py-3 border-b border-[#cacdcd]">
+                    <p className="text-sm font-semibold text-[#202121] truncate">{user?.name || 'Account'}</p>
+                  </div>
+                  {[
+                    'Profile Information',
+                    'Notifications',
+                    'Account and Security',
+                    'Permissions',
+                  ].map((label) => (
+                    <button
+                      key={label}
+                      onClick={() => handleProfileItemClick(label)}
+                      className="w-full text-left px-4 py-2.5 text-sm text-[#58595b] hover:bg-[#f5f6f6] transition-colors"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                  <div className="border-t border-[#cacdcd] mt-1">
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left px-4 py-2.5 text-sm text-[#58595b] hover:bg-[#f5f6f6] transition-colors"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* AI Assistant Button - Black background, white icon only */}
             <button
-              onClick={() => onOpenChat && onOpenChat()}
+              onClick={() => onDrawerToggle && onDrawerToggle(1)}
               className="p-2 bg-black hover:bg-gray-800 rounded-lg transition-colors flex-shrink-0"
               title="AI Assistant"
               aria-label="AI Assistant"
@@ -341,4 +409,6 @@ export default function MegaMenuNavigation({ currentPage, onPageChange, onDrawer
       )}
     </>
   );
-}
+});
+
+export default MegaMenuNavigation;

@@ -154,15 +154,14 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
   return (
     <>
       <header className="sticky top-0 z-[1000] bg-[#fefefe] border-b border-[#cacdcd] w-full">
-        <div className="max-w-[1308px] mx-auto px-12 h-16 flex items-center justify-between" ref={headerRef}>
-          {/* Logo */}
-          <div className="flex items-center">
+        <div className="px-12 h-16 flex items-center" ref={headerRef}>
+          {/* Logo + Nav grouped on the left */}
+          <div className="flex items-center gap-8">
             <img
               src={`${baseUrl}icons/FSLogo.svg`}
               alt="FamilySearch"
-              className="h-8"
+              className="h-8 flex-shrink-0"
             />
-          </div>
 
           {/* Menu Items */}
           <nav className="flex items-center gap-6 relative">
@@ -282,9 +281,10 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
               }}
             />
           </nav>
+          </div>{/* end Logo + Nav group */}
 
           {/* Utility Icons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
             {/* Search Icon (no action yet) */}
             <button className="p-2 hover:bg-[#f5f6f6] rounded-lg transition-colors flex-shrink-0" title="Search">
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

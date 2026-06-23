@@ -2,10 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from './components/Header';
 import MegaMenuNavigation from './components/MegaMenuNav';
-import HomePage from './components/Home';
-import FamilyTreePage from './components/FamilyTree/FamilyTreePage';
-import GalleryPage from './components/GalleryPage';
-import MyReservationsPage from './components/MyReservationsPage';
+import PageContent from './components/PageContent';
 import { PersonDetailDrawer } from './components/FamilyTree';
 import OrganizeGalleryDrawer from './components/OrganizeGalleryDrawer';
 import FilterReservationsDrawer from './components/FilterReservationsDrawer';
@@ -380,111 +377,16 @@ export default function VariantC() {
     }
   };
 
-  // Render page content (same as VariantA - keeping full implementation)
-  const renderPageContent = () => {
-    if (currentPage === 'Home') {
-      return <HomePage />;
-    } else if (currentPage === 'Family Tree') {
-      return <FamilyTreePage onPersonClick={handlePersonClick} mobileMode={isMobile} />;
-    } else if (currentPage === 'Living People (private)') {
-      return (
-        <div className="flex flex-col items-start justify-start h-full px-8 py-8 max-w-5xl mx-auto">
-          <h1 className="text-4xl font-semibold text-gray-900 mb-4">
-            Living Family Members
-          </h1>
-          <p className="text-lg text-gray-600 leading-relaxed mb-8">
-            These are living people you've added to your family. They remain private to you and won't appear in the shared FamilySearch Family Tree until they're marked as deceased.
-          </p>
-          <div className="text-gray-500 text-sm">
-            [List of people appears here]
-          </div>
-        </div>
-      );
-    } else if (currentPage === 'Gallery') {
-      return (
-        <GalleryPage
-          onOrganizeGalleryClick={handleOrganizeGalleryClick}
-          organizeGalleryOpen={organizeGalleryOpen}
-          mobileMode={isMobile}
-          onGalleryToolsClick={handleGalleryToolsClick}
-          onGallerySearchClick={handleGallerySearchClick}
-          onAddMemoriesClick={handleAddMemoriesClick}
-        />
-      );
-    } else if (currentPage === 'My Reservations') {
-      return <MyReservationsPage onFilterClick={handleFilterReservationsClick} />;
-    } else if (currentPage === 'Family Feed') {
-      return (
-        <div className="flex gap-16 h-full px-12 py-8 max-w-7xl mx-auto">
-          <div className="flex-[2]">
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-4 mb-6 flex items-center gap-4">
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl font-semibold text-gray-700">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
-              <textarea
-                placeholder="What will you share?"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                rows="1"
-              />
-              <button className="w-12 h-12 bg-teal-600 hover:bg-teal-700 rounded-lg flex items-center justify-center text-white transition-colors">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                </svg>
-              </button>
-            </div>
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                Start writing your first post!
-              </h2>
-              <p className="text-gray-600">
-                Here are some ideas to get you started. Happy posting!
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                "What memories do you have of your hometown?",
-                "Where did you go on your most recent vacation?",
-                "Did your kids do anything crazy, or sweet, this week?",
-                "How did you meet your spouse?",
-                "What memories do you have of your oldest relatives?",
-                "Have your own idea? Click to get started."
-              ].map((prompt, i) => (
-                <div key={i} className="bg-white rounded-lg border border-gray-300 p-6 hover:shadow-md transition-shadow cursor-pointer">
-                  <p className="text-gray-900">{prompt}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex-1 space-y-8">
-            <div>
-              <button className="w-full flex items-center justify-between py-2 hover:bg-gray-50 transition-colors rounded">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  <h3 className="font-semibold text-gray-900">Friends</h3>
-                </div>
-              </button>
-              <div className="py-6 text-center">
-                <h4 className="font-semibold text-gray-900 mb-2">Invite family and friends</h4>
-                <p className="text-sm text-gray-600 mb-4">Start sharing your posts.</p>
-                <button className="w-full border-2 border-teal-600 text-teal-600 hover:bg-teal-50 font-semibold py-2.5 px-4 rounded transition-colors">
-                  SHARE LINK
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex items-center justify-center h-full">
-          <h1 className="text-3xl font-semibold text-gray-700">
-            This is the {currentPage} page
-          </h1>
-        </div>
-      );
-    }
+  const pageContentProps = {
+    currentPage,
+    isMobile,
+    onPersonClick: handlePersonClick,
+    onOrganizeGalleryClick: handleOrganizeGalleryClick,
+    organizeGalleryOpen,
+    onGalleryToolsClick: handleGalleryToolsClick,
+    onGallerySearchClick: handleGallerySearchClick,
+    onAddMemoriesClick: handleAddMemoriesClick,
+    onFilterClick: handleFilterReservationsClick
   };
 
   // MOBILE LAYOUT (unchanged from VariantA - uses hamburger menu)
@@ -514,7 +416,7 @@ export default function VariantC() {
             />
 
             <main className="flex-1 overflow-y-auto bg-gray-200">
-              {renderPageContent()}
+              <PageContent {...pageContentProps} />
             </main>
 
             {mobile.isActive(mobile.SURFACES.HAMBURGER) && (
@@ -677,7 +579,7 @@ export default function VariantC() {
 
       <div className="flex flex-1 min-h-0">
         <main className="flex-1 overflow-y-auto relative bg-gray-200">
-          {renderPageContent()}
+          <PageContent {...pageContentProps} />
         </main>
 
         {/* Right side container with split view support (unchanged from VariantA) */}

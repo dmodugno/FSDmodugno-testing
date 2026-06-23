@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useUser } from '../../contexts/UserContext';
+import MegaMenuSearch from './MegaMenuSearch';
 import MegaMenuTrees from './MegaMenuTrees';
 import MegaMenuMemories from './MegaMenuMemories';
 import MegaMenuGetInvolved from './MegaMenuGetInvolved';
@@ -17,11 +18,12 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
 
   // Refs for menu items
   const homeRef = useRef(null);
+  const templeRef = useRef(null);
+  const searchRef = useRef(null);
   const treesRef = useRef(null);
   const memoriesRef = useRef(null);
-  const getInvolvedRef = useRef(null);
   const helpRef = useRef(null);
-  const templeRef = useRef(null);
+  const getInvolvedRef = useRef(null);
   const moreRef = useRef(null);
 
   // Refs for click-outside detection
@@ -42,18 +44,20 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
       const width = window.innerWidth;
       const hidden = [];
 
-      // Progressive hiding based on width
+      // Progressive hiding right-to-left: get-involved → help → memories → trees → search → temple
       if (isLDS) {
-        if (width < 1200) hidden.push('temple');
-        if (width < 1100) hidden.push('help');
-        if (width < 1000) hidden.push('get-involved');
-        if (width < 900) hidden.push('memories');
-        if (width < 800) hidden.push('trees');
+        if (width < 1300) hidden.push('get-involved');
+        if (width < 1150) hidden.push('help');
+        if (width < 1000) hidden.push('memories');
+        if (width < 900) hidden.push('trees');
+        if (width < 800) hidden.push('search');
+        if (width < 700) hidden.push('temple');
       } else {
-        if (width < 1100) hidden.push('help');
-        if (width < 1000) hidden.push('get-involved');
+        if (width < 1150) hidden.push('get-involved');
+        if (width < 1000) hidden.push('help');
         if (width < 900) hidden.push('memories');
         if (width < 800) hidden.push('trees');
+        if (width < 700) hidden.push('search');
       }
 
       setHiddenItems(hidden);
@@ -100,16 +104,18 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
 
     if (currentSection === 'home') {
       activeRef = homeRef;
+    } else if (currentSection === 'temple') {
+      activeRef = templeRef;
+    } else if (currentSection === 'search') {
+      activeRef = searchRef;
     } else if (currentSection === 'trees') {
       activeRef = treesRef;
     } else if (currentSection === 'memories') {
       activeRef = memoriesRef;
-    } else if (currentSection === 'get-involved') {
-      activeRef = getInvolvedRef;
     } else if (currentSection === 'help') {
       activeRef = helpRef;
-    } else if (currentSection === 'temple') {
-      activeRef = templeRef;
+    } else if (currentSection === 'get-involved') {
+      activeRef = getInvolvedRef;
     } else if (currentSection === 'more') {
       activeRef = moreRef;
     }
@@ -176,6 +182,38 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
               <span className="text-sm font-medium">Home</span>
             </div>
 
+            {/* Temple (LDS only) */}
+            {isLDS && !hiddenItems.includes('temple') && (
+              <div
+                ref={templeRef}
+                onClick={() => handleMenuClick('temple')}
+                className={`flex items-center gap-1 pb-1 cursor-pointer px-2 py-1 rounded ${
+                  currentSection === 'temple' ? 'text-[#202121]' : 'text-[#58595b] hover:bg-[#f5f6f6]'
+                }`}
+              >
+                <span className="text-sm font-medium">Temple</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            )}
+
+            {/* Search */}
+            {!hiddenItems.includes('search') && (
+              <div
+                ref={searchRef}
+                onClick={() => handleMenuClick('search')}
+                className={`flex items-center gap-1 pb-1 cursor-pointer px-2 py-1 rounded ${
+                  currentSection === 'search' ? 'text-[#202121]' : 'text-[#58595b] hover:bg-[#f5f6f6]'
+                }`}
+              >
+                <span className="text-sm font-medium">Search</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            )}
+
             {/* Trees */}
             {!hiddenItems.includes('trees') && (
               <div
@@ -208,22 +246,6 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
               </div>
             )}
 
-            {/* Get Involved */}
-            {!hiddenItems.includes('get-involved') && (
-              <div
-                ref={getInvolvedRef}
-                onClick={() => handleMenuClick('get-involved')}
-                className={`flex items-center gap-1 pb-1 cursor-pointer px-2 py-1 rounded ${
-                  currentSection === 'get-involved' ? 'text-[#202121]' : 'text-[#58595b] hover:bg-[#f5f6f6]'
-                }`}
-              >
-                <span className="text-sm font-medium">Get Involved</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            )}
-
             {/* Help */}
             {!hiddenItems.includes('help') && (
               <div
@@ -240,16 +262,16 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
               </div>
             )}
 
-            {/* Temple (LDS only) */}
-            {isLDS && !hiddenItems.includes('temple') && (
+            {/* Get Involved */}
+            {!hiddenItems.includes('get-involved') && (
               <div
-                ref={templeRef}
-                onClick={() => handleMenuClick('temple')}
+                ref={getInvolvedRef}
+                onClick={() => handleMenuClick('get-involved')}
                 className={`flex items-center gap-1 pb-1 cursor-pointer px-2 py-1 rounded ${
-                  currentSection === 'temple' ? 'text-[#202121]' : 'text-[#58595b] hover:bg-[#f5f6f6]'
+                  currentSection === 'get-involved' ? 'text-[#202121]' : 'text-[#58595b] hover:bg-[#f5f6f6]'
                 }`}
               >
-                <span className="text-sm font-medium">Temple</span>
+                <span className="text-sm font-medium">Get Involved</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -285,13 +307,6 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
 
           {/* Utility Icons */}
           <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
-            {/* Search Icon (no action yet) */}
-            <button className="p-2 hover:bg-[#f5f6f6] rounded-lg transition-colors flex-shrink-0" title="Search">
-              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-
             {/* Language Picker → Drawer index 9 */}
             <button
               onClick={() => onDrawerToggle && onDrawerToggle(9)}
@@ -386,20 +401,23 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
           className="fixed top-16 left-0 right-0 bg-white shadow-lg border-b border-gray-200 z-[999]"
         >
           <div className="max-w-[1308px] mx-auto">
+            {openMenu === 'temple' && isLDS && (
+              <MegaMenuTemple onNavigate={handlePageNavigation} />
+            )}
+            {openMenu === 'search' && (
+              <MegaMenuSearch onNavigate={handlePageNavigation} />
+            )}
             {openMenu === 'trees' && (
               <MegaMenuTrees onNavigate={handlePageNavigation} />
             )}
             {openMenu === 'memories' && (
               <MegaMenuMemories onNavigate={handlePageNavigation} />
             )}
-            {openMenu === 'get-involved' && (
-              <MegaMenuGetInvolved onNavigate={handlePageNavigation} />
-            )}
             {openMenu === 'help' && (
               <MegaMenuHelp onNavigate={handlePageNavigation} />
             )}
-            {openMenu === 'temple' && isLDS && (
-              <MegaMenuTemple onNavigate={handlePageNavigation} />
+            {openMenu === 'get-involved' && (
+              <MegaMenuGetInvolved onNavigate={handlePageNavigation} />
             )}
             {openMenu === 'more' && hiddenItems.length > 0 && (
               <MegaMenuMore onNavigate={handlePageNavigation} isLDS={isLDS} hiddenItems={hiddenItems} />

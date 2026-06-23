@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { membershipTypes, experienceLevels } from '../mocks/users';
 
@@ -159,14 +160,14 @@ export default function FloatingTestPanel({ variant }) {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-[50] transition-opacity"
+          className="fixed inset-0 bg-black bg-opacity-30 z-[1100] transition-opacity"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Slide-out Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-[60] transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-[1200] transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -199,8 +200,8 @@ export default function FloatingTestPanel({ variant }) {
             <section>
               <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Variant</h3>
               <div className="grid grid-cols-3 gap-2">
-                <a
-                  href={`${import.meta.env.BASE_URL}`}
+                <Link
+                  to="/"
                   className={`px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant A'
                       ? 'bg-green-100 border-green-600 text-green-900'
@@ -208,9 +209,9 @@ export default function FloatingTestPanel({ variant }) {
                   }`}
                 >
                   Variant A
-                </a>
-                <a
-                  href={`${import.meta.env.BASE_URL}variant-b`}
+                </Link>
+                <Link
+                  to="/variant-b"
                   className={`px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant B'
                       ? 'bg-green-100 border-green-600 text-green-900'
@@ -218,9 +219,9 @@ export default function FloatingTestPanel({ variant }) {
                   }`}
                 >
                   Variant B
-                </a>
-                <a
-                  href={`${import.meta.env.BASE_URL}variant-c`}
+                </Link>
+                <Link
+                  to="/variant-c"
                   className={`px-3 py-2 text-center rounded-md text-sm font-medium border-2 transition-colors ${
                     variant === 'Variant C'
                       ? 'bg-green-100 border-green-600 text-green-900'
@@ -228,7 +229,7 @@ export default function FloatingTestPanel({ variant }) {
                   }`}
                 >
                   Variant C
-                </a>
+                </Link>
               </div>
             </section>
 

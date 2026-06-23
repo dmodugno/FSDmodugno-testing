@@ -92,6 +92,18 @@ export default function LeftNavigation({
       description: 'Your personalized dashboard',
       isLink: true
     },
+    ...(isLDS ? [{
+      id: 'temple',
+      icon: `${baseUrl}icons/PlaceTemple.svg`,
+      label: 'Temple',
+      description: 'Prepare and manage ordinances',
+      subItems: [
+        { label: 'My Reservations', link: '#' },
+        { label: 'Ordinances Ready', link: '#' },
+        { label: 'Family Name Assist', link: '#' },
+        { label: 'Schedule Temple Appointment', link: '#' }
+      ]
+    }] : []),
     {
       id: 'search',
       icon: `${baseUrl}icons/DocumentRecordSearch.svg`,
@@ -130,6 +142,20 @@ export default function LeftNavigation({
       ]
     },
     {
+      id: 'help',
+      icon: `${baseUrl}icons/HelpPreserver.svg`,
+      label: 'Help and learning',
+      description: 'Find answers, learn new skills, and get personalized help',
+      subItems: [
+        { label: 'Locations', link: '#' },
+        { label: 'Getting started', link: '#' },
+        { label: 'Classes and Videos', link: '#' },
+        { label: 'Community', link: '#' },
+        { label: 'One-on-One Help', link: '#' },
+        { label: 'FamilySearch Wiki', link: '#' }
+      ]
+    },
+    {
       id: 'get-involved',
       icon: `${baseUrl}icons/Get Involved.svg`,
       label: 'Get involved',
@@ -145,32 +171,6 @@ export default function LeftNavigation({
             { label: 'Indexing Review', link: '#' }
           ]
         }
-      ]
-    },
-    ...(isLDS ? [{
-      id: 'temple',
-      icon: `${baseUrl}icons/PlaceTemple.svg`,
-      label: 'Temple',
-      description: 'Prepare and manage ordinances',
-      subItems: [
-        { label: 'My Reservations', link: '#' },
-        { label: 'Ordinances Ready', link: '#' },
-        { label: 'Family Name Assist', link: '#' },
-        { label: 'Schedule Temple Appointment', link: '#' }
-      ]
-    }] : []),
-    {
-      id: 'help',
-      icon: `${baseUrl}icons/HelpPreserver.svg`,
-      label: 'Help and learning',
-      description: 'Find answers, learn new skills, and get personalized help',
-      subItems: [
-        { label: 'Locations', link: '#' },
-        { label: 'Getting started', link: '#' },
-        { label: 'Classes and Videos', link: '#' },
-        { label: 'Community', link: '#' },
-        { label: 'One-on-One Help', link: '#' },
-        { label: 'FamilySearch Wiki', link: '#' }
       ]
     },
     {

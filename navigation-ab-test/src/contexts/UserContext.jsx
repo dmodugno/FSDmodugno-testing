@@ -57,12 +57,27 @@ export function UserProvider({ children }) {
     window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   };
 
+  const fieldToParam = {
+    treeSize: 'treeSize',
+    hintsCount: 'hints',
+    duplicatesCount: 'duplicates',
+    ordinancesReadyCount: 'ordinances',
+    lastMode: 'lastMode',
+    entryContext: 'entryContext',
+    lastAction: 'lastAction',
+    isHelper: 'isHelper',
+  };
+
   // Update specific user fields (for testing mode overrides)
   const updateUserField = (field, value) => {
-    setUser(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setUser(prev => ({ ...prev, [field]: value }));
+
+    const paramName = fieldToParam[field];
+    if (paramName) {
+      const params = new URLSearchParams(window.location.search);
+      params.set(paramName, value === null ? 'null' : value);
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    }
   };
 
   // Generate shareable URL with current user state

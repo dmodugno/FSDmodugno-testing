@@ -400,7 +400,7 @@ const MegaMenuNavigation = forwardRef(function MegaMenuNavigation({ currentPage,
           ref={megaMenuRef}
           className="fixed top-16 left-0 right-0 bg-white shadow-lg border-b border-gray-200 z-[999]"
         >
-          <div className="max-w-[1308px] mx-auto">
+          <div className="px-12">
             {openMenu === 'temple' && isLDS && (
               <MegaMenuTemple onNavigate={handlePageNavigation} />
             )}

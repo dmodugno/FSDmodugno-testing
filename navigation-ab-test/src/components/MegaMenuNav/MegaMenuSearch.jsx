@@ -75,13 +75,12 @@ export default function MegaMenuSearch({ onNavigate }) {
   return (
     <div className="flex flex-col gap-4 p-6">
       <p className="text-sm text-[#58595b]">Find ancestors, records, and evidence</p>
-      <div className="flex gap-3 flex-wrap">
+      <div className="grid grid-cols-4 gap-3">
         {items.map((item, index) => (
           <div
             key={index}
             onClick={() => onNavigate(item.page)}
             className="flex gap-3 p-3 rounded-lg hover:bg-[#f5f6f6] cursor-pointer transition-colors"
-            style={{ flexBasis: 'calc(14.28% - 12px)', minWidth: '120px' }}
           >
             <div className="flex-shrink-0">
               {item.icon}
